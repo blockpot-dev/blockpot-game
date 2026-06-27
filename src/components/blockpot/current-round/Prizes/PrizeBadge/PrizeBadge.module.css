@@ -1,0 +1,87 @@
+.prize-badge {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    position: relative;
+    box-sizing: border-box;
+
+    background-clip: padding-box;
+    border: solid 2px transparent;
+    border-radius: 4px;
+}
+
+.prize-badge:before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: -1;
+  margin: -2px;
+  border-radius: inherit;
+}
+
+.prize-badge[data-ordinal=""]:before {
+    background: var(--color-gray-600);
+}
+
+.prize-badge[data-ordinal="1"]:before {
+    background: linear-gradient(135deg, #8C421D 15.43%, #FBE67B 38.47%, #FCFBE7 53.36%, #F7D14E 69.97%, #D4A041 86.26%);
+}
+
+.prize-badge[data-ordinal="2"]:before {
+    background: linear-gradient(320deg, #A8A8A6 15.87%, #696969 48.67%, #F9F8F6 64.17%, #D4D4D4 75.79%, #7F7F7F 88.5%);
+}
+
+.prize-badge[data-ordinal="3"]:before {
+    background: linear-gradient(138deg, #BC6554 2.28%, #62362D 21.75%, #A1503D 40.73%, #CA7561 50.16%, #E2AA9D 67.5%, #62362D 83.07%, #AA5946 95.24%);
+}
+
+.prize-badge[data-filled="true"] {
+    border: solid 1px rgb(var(--halo-color));
+    background-clip: border-box;
+    background-size: 200% 200%;
+    animation:
+        prize-badge-shimmer 3s ease-in-out infinite alternate,
+        prize-badge-halo 2.4s ease-in-out infinite;
+}
+
+.prize-badge[data-filled="true"]:before {
+    content: none;
+}
+
+.prize-badge[data-ordinal="1"][data-filled="true"] {
+    background-image: linear-gradient(135deg, #8C5D1E 0%, #FBE67B 35%, #FFE449 50%, #FBE67B 65%, #D4A041 100%);
+    color: #422A06;
+    --halo-color: 247, 209, 78;
+}
+
+.prize-badge[data-ordinal="2"][data-filled="true"] {
+    background-image: linear-gradient(135deg, #525252 0%, #C9D2DA 35%, #E3EBF3 50%, #C9D2DA 65%, #8A8A8A 100%);
+    color: #0F172A;
+    --halo-color: 212, 212, 212;
+}
+
+.prize-badge[data-ordinal="3"][data-filled="true"] {
+    background-image: linear-gradient(135deg, #7E3D2D 0%, #E2AA9D 35%, #F8C2B0 50%, #E2AA9D 65%, #BC6554 100%);
+    color: #1F0807;
+    --halo-color: 226, 170, 157;
+}
+
+@keyframes prize-badge-shimmer {
+    0%   { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+@keyframes prize-badge-halo {
+    0%, 100% { box-shadow: 0 0 6px -1px rgba(var(--halo-color), 0.3); }
+    50%      { box-shadow: 0 0 14px -1px rgba(var(--halo-color), 0.6); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .prize-badge[data-filled="true"] {
+        animation: none;
+        background-size: 100% 100%;
+        box-shadow: 0 0 8px -1px rgba(var(--halo-color), 0.4);
+    }
+}

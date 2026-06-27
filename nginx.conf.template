@@ -1,0 +1,37 @@
+server {
+    # ${PORT} is substituted by nginx's docker-entrypoint at container start
+    # (envsubst). Railway sets PORT to the port its proxy and healthchecker
+    # target — hardcoding 80 here makes both fail.
+    listen       ${PORT};
+    listen  [::]:${PORT};
+    server_name  _;
+
+    root   /usr/share/nginx/html;
+    index  index.html;
+
+    # SPA fallback — everything that isn't a static file resolves to
+    # index.html so TanStack Router can take over client-side.
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Hashed assets (Vite emits `name-<8+ base64url chars>.<ext>` under /js,
+    # /assets, /assets/images, /assets/fonts) are immutable — cache hard.
+    # Quoted regex: nginx parses unquoted '{' / '}' as block delimiters.
+    location ~* "^/(js|assets)/.*-[A-Za-z0-9_-]{8,}\.[^/]+$" {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
+    # Never cache the entry HTML — Railway redeploys swap the bundle hash
+    # but the URL stays /index.html, so a cached copy would pin the old build.
+    location = /index.html {
+        add_header Cache-Control "no-store, no-cache, must-revalidate";
+    }
+
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_types text/plain text/css text/javascript application/javascript application/json application/xml image/svg+xml;
+}

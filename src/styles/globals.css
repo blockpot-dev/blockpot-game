@@ -1,0 +1,190 @@
+@property --angle {
+    syntax: '<angle>';
+    initial-value: 90deg;
+    inherits: true;
+}
+  
+@property --gradX {
+    syntax: '<percentage>';
+    initial-value: 0%;
+    inherits: true;
+}
+
+@property --gradY {
+    syntax: '<percentage>';
+    initial-value: 0%;
+    inherits: true;
+}
+
+@property --gx {
+    syntax: '<percentage>';
+    initial-value: 0%;
+    inherits: true;
+}
+
+@property --gy {
+    syntax: '<percentage>';
+    initial-value: 0%;
+    inherits: true;
+}
+
+@property --inset {
+    syntax: '<length>';
+    initial-value: 20px;
+    inherits: true;
+}
+
+:root {
+    --inset: 20px;
+    --d: 2000ms;
+    --angle: 90deg;
+    --gradX: 100%;
+    --gradY: 50%;
+    --c1: var(--primitive-green-600);
+    --c2: transparent;
+    --center-blue-glow: radial-gradient(#2F78E0E5, #0B4AA340);
+    --glow-border: linear-gradient(#3D8AF899, #73737300, #FFFFFF1A);
+}
+
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+    font-variant-ligatures: no-contextual;
+}
+
+#root {
+    height: 100%;
+}
+
+.blockpot-body {
+    background-color: var(--color-gray-950);
+}
+
+/*
+ * Shadcn semantic tokens. Kept in globals.css (not tailwind.css) because
+ * `@tailwindcss/postcss` tree-shakes top-level `:root` declarations when
+ * they're paired with `@theme inline` mappings — only the inlined values
+ * survive, and the raw references (`var(--card)` emitted from utilities
+ * like `bg-card`) are then undefined. Defining them outside the Tailwind
+ * pipeline keeps them in the final compiled CSS.
+ */
+:root {
+    --color-header-surface: #212439;
+    --background: var(--color-gray-950);
+    --foreground: var(--color-gray-50);
+    --card: var(--color-gray-900);
+    --card-foreground: var(--color-gray-50);
+    --popover: var(--color-gray-800);
+    --popover-foreground: var(--color-gray-50);
+    --primary: var(--color-gray-200);
+    --primary-foreground: var(--color-gray-900);
+    --secondary: var(--color-gray-800);
+    --secondary-foreground: var(--color-gray-50);
+    --muted: var(--color-gray-800);
+    --muted-foreground: var(--color-gray-400);
+    --accent: var(--color-gray-700);
+    --accent-foreground: var(--color-gray-50);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: var(--color-gray-700);
+    --input: var(--color-gray-800);
+    --ring: var(--color-gray-500);
+    --chart-1: oklch(0.488 0.243 264.376);
+    --chart-2: oklch(0.696 0.17 162.48);
+    --chart-3: oklch(0.769 0.188 70.08);
+    --chart-4: oklch(0.627 0.265 303.9);
+    --chart-5: oklch(0.645 0.246 16.439);
+    --sidebar: var(--color-gray-900);
+    --sidebar-foreground: var(--color-gray-50);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: var(--color-gray-50);
+    --sidebar-accent: var(--color-gray-800);
+    --sidebar-accent-foreground: var(--color-gray-50);
+    --sidebar-border: var(--color-gray-50 / 10%);
+    --sidebar-ring: var(--color-gray-600);
+}
+
+body>div[data-rk] {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+.app-shell {
+    width: 100%;
+    height: 100%;
+}
+
+.ProseMirror {
+    padding: 0px !important;
+}
+
+.no-hyperlink,
+a,
+a:hover,
+a:visited,
+a:active {
+    color: inherit;
+    text-decoration: none;
+}
+
+.mantine-Modal-content>div {
+    max-height: 100%;
+}
+
+[class*="confetti-explosion-screen"] {
+    z-index: 250;
+}
+
+/* Common */
+.tertiaryIcon {
+    color: var(--content-color-tertiary);
+}
+
+.spacer {
+    flex-grow: 1;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.fadeout-button {
+    cursor: pointer;
+}
+
+.fadeout-button:hover {
+    opacity: 0.8 !important;
+}
+
+.fadeout-button:active {
+    transform: translate(0px, 1px);
+}
+
+
+.raffle {
+    mask-image: url('/ticket.svg');
+    mask-size: cover;
+    mask-repeat: none;
+    background: var(--color-background-tertiary);
+    aspect-ratio: calc(8 / 4.5);
+}
+  
+  .label {
+    opacity: 0;
+    transition: opacity 2s ease-in;
+    display: none;
+  }
+  
+  .label.show {
+    opacity: 1;
+    display: block;
+  }

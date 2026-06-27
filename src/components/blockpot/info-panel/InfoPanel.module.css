@@ -1,0 +1,20 @@
+.infoPanelPurchases {
+    scrollbar-gutter: stable;
+    scroll-behavior: smooth;
+}
+.infoPanelPurchases::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+.infoPanelPurchases::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+.infoPanelPurchases::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+.infoPanelPurchases::-webkit-scrollbar-track {
+    background: #f1f1f122;
+    border-radius: 4px;
+}

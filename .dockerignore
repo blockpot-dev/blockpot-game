@@ -1,0 +1,15 @@
+node_modules
+dist
+build
+storybook-static
+coverage
+.env
+.env.local
+.env.*.local
+.git
+.gitignore
+.DS_Store
+*.log
+plan
+docs
+typechain-types

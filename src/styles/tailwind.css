@@ -1,0 +1,68 @@
+@import 'tailwindcss';
+@import '@blockpot-dev/block-pot-design-system/theme.css';
+@import '@blockpot-dev/block-pot-design-system/base.css';
+@source '../../node_modules/@blockpot-dev/block-pot-design-system/dist';
+
+@theme {
+
+  --animate-pulse-positive: pulse-positive 2s ease-in-out infinite;
+
+  @keyframes pulse-positive {
+    0%, 100% {
+      background-color: var(--color-lime-600);
+    }
+    50% {
+      background-color: var(--color-lime-300);
+    }
+  }
+
+  --animate-grow-in: grow-in 600ms cubic-bezier(0.175, 0.885, 0.32, 1.27) both;
+
+  @keyframes grow-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.25) rotateX(60deg);
+    }
+
+    100% {
+      opacity: 1;
+      transform: scale(1) rotateX(0deg);
+    }
+  }
+
+  --animate-reveal-in-out: reveal-in-out 2.5s cubic-bezier(0.175, 0.885, 0.32, 1.27) both;
+
+  @keyframes reveal-in-out {
+    0% {
+      opacity: 0;
+      transform: scale(0.01);
+    }
+
+    15% {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    85% {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scale(2);
+    }
+  }
+
+  /* Frontend-specific semantic tokens (not in the design system's theme.css) */
+  --color-progress-track: var(--color-gray-700);
+
+  --color-positive: var(--color-lime-600);
+  --color-positive-foreground: var(--color-lime-50);
+
+  --color-warning: var(--color-amber-400);
+  --color-warning-foreground: var(--color-amber-950);
+
+  --color-in-progress: var(--color-blue-600);
+  --color-in-progress-foreground: var(--color-blue-50);
+}
