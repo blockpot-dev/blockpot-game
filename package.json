@@ -53,6 +53,8 @@
     "@types/uuid": "^11.0.0",
     "@web3-storage/w3up-client": "^17.3.0",
     "axios": "^1.13.2",
+    "baseline-browser-mapping": "^2.10.40",
+    "caniuse-lite": "^1.0.30001799",
     "canvas-confetti": "^1.9.4",
     "chart.js": "^4.5.1",
     "class-variance-authority": "^0.7.1",
