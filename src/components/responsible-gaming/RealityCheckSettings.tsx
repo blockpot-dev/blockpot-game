@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Loader2 } from 'lucide-react'
-import { Button, InfoBanner, Input } from '@blockpot-dev/block-pot-design-system'
+import { Button, InfoBanner, Input } from '@blockpot-dev/blockpot-design-system'
 import { Checkbox } from '@/components/ui/checkbox'
 import VStack from '@/components/core/VStack/VStack'
 import HStack from '@/components/core/HStack/HStack'

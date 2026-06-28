@@ -1,4 +1,4 @@
-import { Button } from '@blockpot-dev/block-pot-design-system'
+import { Button } from '@blockpot-dev/blockpot-design-system'
 import HStack from '@/components/core/HStack/HStack'
 import VStack from '@/components/core/VStack/VStack'
 import { ClaimDecision } from '@/hooks/claim/types'

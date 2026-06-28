@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAccount, useEnsAvatar, useEnsName } from 'wagmi'
-import { Button } from '@blockpot-dev/block-pot-design-system'
+import { Button } from '@blockpot-dev/blockpot-design-system'
 import { Wallet } from 'lucide-react'
 import { formatAccountAddress } from '@/utilities/formatters'
 import { useWalletOptionsDialogOpen } from '@/providers/ModalOpenStateProvider'

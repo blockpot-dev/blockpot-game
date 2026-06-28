@@ -8,7 +8,7 @@ import {
     DialogContent,
     DialogTopSection,
     Markdown,
-} from '@blockpot-dev/block-pot-design-system'
+} from '@blockpot-dev/blockpot-design-system'
 import { Loader2 } from 'lucide-react'
 import VStack from '@/components/core/VStack/VStack'
 import { BLOCKED_COUNTRY_CODES, isBlockedCountry } from '@/constants/blocked-jurisdictions'

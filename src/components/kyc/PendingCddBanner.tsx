@@ -1,4 +1,4 @@
-import { InfoBanner } from '@blockpot-dev/block-pot-design-system'
+import { InfoBanner } from '@blockpot-dev/blockpot-design-system'
 import { PlayerKycStatus } from '@/hooks/player/usePlayerKyc'
 
 export type PendingCddBannerProps = {

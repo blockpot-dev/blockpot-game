@@ -3,7 +3,7 @@
 const fs = require('fs-extra')
 const path = require('path')
 
-const assetRoot = path.join(__dirname, '../node_modules/@blockpot-dev/block-pot-design-system/dist/assets')
+const assetRoot = path.join(__dirname, '../node_modules/@blockpot-dev/blockpot-design-system/dist/assets')
 const publicRoot = path.join(__dirname, '../public/assets')
 
 // Copy svgs, pngs, and fonts. SVGs are referenced at absolute paths like
@@ -21,4 +21,4 @@ for (const sub of ['svgs', 'pngs', 'fonts']) {
     }
 }
 
-console.log('✅ Copied svgs/pngs/fonts from block-pot-design-system to /public/assets/')
+console.log('✅ Copied svgs/pngs/fonts from blockpot-design-system to /public/assets/')

@@ -1,5 +1,5 @@
 import HStack from '@/components/core/HStack/HStack'
-import { Container } from '@blockpot-dev/block-pot-design-system'
+import { Container } from '@blockpot-dev/blockpot-design-system'
 import RoundInfoStat, { RoundInfoStatProps } from '../../../common/RoundInfoStat/RoundInfoStat'
 import { ReactNode } from 'react'
 import { cn } from '@/lib/utils'

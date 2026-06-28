@@ -2,7 +2,7 @@ import AnimatingNumber from '@/components/core/display/AnimatingNumber/Animating
 import HStack from '@/components/core/HStack/HStack'
 import VStack from '@/components/core/VStack/VStack'
 import { formatEtherMaxDecimalsGreedy } from '@/utilities/formatters'
-import { Container, Vortex } from '@blockpot-dev/block-pot-design-system'
+import { Container, Vortex } from '@blockpot-dev/blockpot-design-system'
 
 export type JackpotProps = {
     nativeAmount: bigint

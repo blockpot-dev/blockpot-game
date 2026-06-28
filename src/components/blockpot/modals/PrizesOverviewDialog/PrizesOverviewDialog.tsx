@@ -1,5 +1,5 @@
 import VStack from '@/components/core/VStack/VStack'
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle } from '@blockpot-dev/block-pot-design-system'
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle } from '@blockpot-dev/blockpot-design-system'
 import { XIcon } from 'lucide-react'
 import HStack from '@/components/core/HStack/HStack'
 import { Table, TableRow, TableHeader, TableHead, TableBody, TableCell } from '@/components/ui/table'

@@ -1,6 +1,6 @@
 import { Loader2, CheckCircle2 } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
-import { Button } from '@blockpot-dev/block-pot-design-system'
+import { Button } from '@blockpot-dev/blockpot-design-system'
 import { Address } from 'viem'
 import VStack from '@/components/core/VStack/VStack'
 import usePlayerKyc, { KycTier, PlayerKycStatus } from '@/hooks/player/usePlayerKyc'

@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle } from '@blockpot-dev/block-pot-design-system'
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle } from '@blockpot-dev/blockpot-design-system'
 import { XIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import HStack from '@/components/core/HStack/HStack'

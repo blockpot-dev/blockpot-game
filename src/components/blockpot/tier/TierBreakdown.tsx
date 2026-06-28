@@ -1,4 +1,4 @@
-import { Button } from '@blockpot-dev/block-pot-design-system'
+import { Button } from '@blockpot-dev/blockpot-design-system'
 import { CheckCircle2, Loader2, Lock } from 'lucide-react'
 import HStack from '@/components/core/HStack/HStack'
 import VStack from '@/components/core/VStack/VStack'

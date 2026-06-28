@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Loader2 } from 'lucide-react'
-import { InfoBanner } from '@blockpot-dev/block-pot-design-system'
+import { InfoBanner } from '@blockpot-dev/blockpot-design-system'
 import type { SnsWebSdk } from '@sumsub/websdk'
 import { KycTier } from '@/hooks/player/usePlayerKyc'
 import useKycToken from '@/hooks/player/useKycToken'

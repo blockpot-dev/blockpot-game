@@ -3,7 +3,7 @@ import {
     AttestationCheckbox,
     Button,
     InfoBanner,
-} from '@blockpot-dev/block-pot-design-system'
+} from '@blockpot-dev/blockpot-design-system'
 import VStack from '@/components/core/VStack/VStack'
 import { ApiError } from '@/api/gamingServiceClient'
 import useSelfExclusion, {

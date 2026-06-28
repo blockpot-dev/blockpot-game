@@ -1,7 +1,7 @@
 import { usePrevious } from '@/hooks/utilities/usePrevious'
 import { useTimeout } from '@/hooks/utilities/useTimeout'
 import { InterfaceStatus } from '@/types/ui/interface-status'
-import { Button } from '@blockpot-dev/block-pot-design-system'
+import { Button } from '@blockpot-dev/blockpot-design-system'
 import { CheckIcon, Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 

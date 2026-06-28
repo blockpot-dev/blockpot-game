@@ -1,5 +1,5 @@
-import { Dialog, DialogContent, DialogTopSection, Button } from '@blockpot-dev/block-pot-design-system'
-import { ElevatedIcon } from '@blockpot-dev/block-pot-design-system'
+import { Dialog, DialogContent, DialogTopSection, Button } from '@blockpot-dev/blockpot-design-system'
+import { ElevatedIcon } from '@blockpot-dev/blockpot-design-system'
 import { XIcon } from 'lucide-react'
 import useLotteryRound from '@/hooks/contracts/lottery/useLotteryRound'
 import { useMissedDraw } from '@/providers/MissedDrawProvider'

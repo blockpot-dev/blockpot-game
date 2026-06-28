@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Container } from '@blockpot-dev/block-pot-design-system'
+import { Container } from '@blockpot-dev/blockpot-design-system'
 import VStack from '@/components/core/VStack/VStack'
 
 export const Route = createFileRoute('/cookies')({

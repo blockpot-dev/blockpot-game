@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Button, Container } from '@blockpot-dev/block-pot-design-system'
+import { Button, Container } from '@blockpot-dev/blockpot-design-system'
 import VStack from '@/components/core/VStack/VStack'
 import KycVerificationView from '@/components/kyc/KycVerificationView'
 import type { KycTier } from '@/hooks/player/usePlayerKyc'

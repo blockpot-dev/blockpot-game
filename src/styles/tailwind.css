@@ -1,7 +1,7 @@
 @import 'tailwindcss';
-@import '@blockpot-dev/block-pot-design-system/theme.css';
-@import '@blockpot-dev/block-pot-design-system/base.css';
-@source '../../node_modules/@blockpot-dev/block-pot-design-system/dist';
+@import '@blockpot-dev/blockpot-design-system/theme.css';
+@import '@blockpot-dev/blockpot-design-system/base.css';
+@source '../../node_modules/@blockpot-dev/blockpot-design-system/dist';
 
 @theme {
 

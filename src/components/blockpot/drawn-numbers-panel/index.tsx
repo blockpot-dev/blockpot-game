@@ -1,5 +1,5 @@
 import styles from './DrawnNumbersPanel.module.css'
-import { Container } from '@blockpot-dev/block-pot-design-system'
+import { Container } from '@blockpot-dev/blockpot-design-system'
 import VStack from '@/components/core/VStack/VStack'
 import { ContainerHeading } from '@/components/core/ContainerHeading'
 import DrawnNumberTicket from '../common/DrawnNumberTicket/DrawnNumberTicket'

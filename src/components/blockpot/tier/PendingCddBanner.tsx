@@ -1,4 +1,4 @@
-import { Button, InfoBanner } from '@blockpot-dev/block-pot-design-system'
+import { Button, InfoBanner } from '@blockpot-dev/blockpot-design-system'
 import { PlayerActivityState } from '@/hooks/player-summary/usePlayerActivityState'
 
 export type PendingCddBannerProps = {

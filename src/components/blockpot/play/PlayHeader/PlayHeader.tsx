@@ -1,6 +1,6 @@
 import HStack from '@/components/core/HStack/HStack'
 import GameTypeItem from '../../header/GameTypeItem'
-import { Button } from '@blockpot-dev/block-pot-design-system'
+import { Button } from '@blockpot-dev/blockpot-design-system'
 import Binding from '@/utilities/binding'
 import { History } from 'lucide-react'
 import { GameType, useSelectedGame } from '@/providers/SelectedGameProvider'

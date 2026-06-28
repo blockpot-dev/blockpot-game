@@ -1,5 +1,5 @@
 import { useWalletOptionsDialogOpen } from '@/providers/ModalOpenStateProvider'
-import { Button, Container } from '@blockpot-dev/block-pot-design-system'
+import { Button, Container } from '@blockpot-dev/blockpot-design-system'
 import VStack from '@/components/core/VStack/VStack'
 
 export default function ConnectWalletPanel() {

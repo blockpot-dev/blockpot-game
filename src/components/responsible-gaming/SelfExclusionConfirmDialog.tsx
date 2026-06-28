@@ -4,7 +4,7 @@ import {
     Dialog,
     DialogContent,
     DialogTopSection,
-} from '@blockpot-dev/block-pot-design-system'
+} from '@blockpot-dev/blockpot-design-system'
 import VStack from '@/components/core/VStack/VStack'
 import {
     SelfExclusionDuration,

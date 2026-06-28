@@ -1,4 +1,4 @@
-import { Button } from '@blockpot-dev/block-pot-design-system'
+import { Button } from '@blockpot-dev/blockpot-design-system'
 import { Check, Copy, Wallet } from 'lucide-react'
 import { useState } from 'react'
 import { useAccount, useBalance, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi'

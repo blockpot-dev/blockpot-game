@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { InfoBanner } from '@blockpot-dev/block-pot-design-system'
+import { InfoBanner } from '@blockpot-dev/blockpot-design-system'
 import useLossLimits, {
     LossLimit,
     LossLimitPeriod,

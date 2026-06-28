@@ -1,7 +1,7 @@
 import CountdownTime from './CountdownTime/CountdownTime'
 import { useEffect, useState } from 'react'
 import { useInterval } from '@/hooks/utilities/useInterval'
-import { Container } from '@blockpot-dev/block-pot-design-system'
+import { Container } from '@blockpot-dev/blockpot-design-system'
 
 export type CountdownProps = {
         timeBetweenRounds: number

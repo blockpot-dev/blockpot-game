@@ -1,4 +1,4 @@
-import { Button, ConsentDialog, InfoBanner } from '@blockpot-dev/block-pot-design-system'
+import { Button, ConsentDialog, InfoBanner } from '@blockpot-dev/blockpot-design-system'
 import { PretxRequiredAction } from '@/hooks/player/usePretxDeposit'
 import { ClaimDecision } from '@/hooks/claim/types'
 

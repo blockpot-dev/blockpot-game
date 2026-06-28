@@ -1,6 +1,6 @@
 import { useCountry } from '@/providers/CountryProvider'
-import { Dialog, DialogContent, DialogTopSection, SocialButton } from '@blockpot-dev/block-pot-design-system'
-import { ElevatedIcon } from '@blockpot-dev/block-pot-design-system'
+import { Dialog, DialogContent, DialogTopSection, SocialButton } from '@blockpot-dev/blockpot-design-system'
+import { ElevatedIcon } from '@blockpot-dev/blockpot-design-system'
 import { SOCIAL_MEDIA } from '@/constants/social-media'
 
 export default function UnsupportedRegionDialog() {

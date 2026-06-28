@@ -1,4 +1,4 @@
-import { Container } from '@blockpot-dev/block-pot-design-system'
+import { Container } from '@blockpot-dev/blockpot-design-system'
 import { Fragment } from 'react'
 import { useChainId } from 'wagmi'
 import VStack from '@/components/core/VStack/VStack'

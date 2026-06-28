@@ -1,4 +1,4 @@
-import { Button, Container } from '@blockpot-dev/block-pot-design-system'
+import { Button, Container } from '@blockpot-dev/blockpot-design-system'
 import VStack from '@/components/core/VStack/VStack'
 import useAccountAddress from '@/hooks/utilities/useAccountAddress'
 import useSiweSignature from '@/hooks/contracts/player-registry/useSiweSignature'

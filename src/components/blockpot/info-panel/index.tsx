@@ -1,5 +1,5 @@
 import styles from './InfoPanel.module.css'
-import { Container } from '@blockpot-dev/block-pot-design-system'
+import { Container } from '@blockpot-dev/blockpot-design-system'
 import VStack from '@/components/core/VStack/VStack'
 import Purchase from './purchases/Purchase'
 import { PurchaseData } from '@/types/lottery/purchase'

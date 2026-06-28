@@ -4,7 +4,7 @@ import Waiting from './DrawStages/Waiting/Waiting'
 import Drawing from './DrawStages/Drawing/Drawing'
 import { Address } from 'viem'
 import { memo } from 'react'
-import { Container, Vortex } from '@blockpot-dev/block-pot-design-system'
+import { Container, Vortex } from '@blockpot-dev/blockpot-design-system'
 
 function RenderDrawStage(props: { draw: LotteryDrawContext, accountAddress: Address }) {
     const { draw, accountAddress } = props

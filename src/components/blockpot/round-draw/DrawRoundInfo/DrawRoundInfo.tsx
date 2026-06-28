@@ -1,6 +1,6 @@
 import HStack from '@/components/core/HStack/HStack'
 import { formatEtherMaxDecimalsGreedy, formatNumber, formatNumberMaxDecimalsGreedy } from '@/utilities/formatters'
-import { Container } from '@blockpot-dev/block-pot-design-system'
+import { Container } from '@blockpot-dev/blockpot-design-system'
 import RoundInfoStat from '../../common/RoundInfoStat/RoundInfoStat'
 import HighlightDivider from '../../common/HighlightDivider/HighlightDivider'
 import { useSelectedGame } from '@/providers/SelectedGameProvider'

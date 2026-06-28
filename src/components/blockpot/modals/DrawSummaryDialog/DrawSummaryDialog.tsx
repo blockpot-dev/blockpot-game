@@ -1,5 +1,5 @@
 import VStack from '@/components/core/VStack/VStack'
-import { Button, Container, Dialog, DialogContent, DialogHeader, DialogTitle } from '@blockpot-dev/block-pot-design-system'
+import { Button, Container, Dialog, DialogContent, DialogHeader, DialogTitle } from '@blockpot-dev/blockpot-design-system'
 import DrawnNumberTicket from '../../common/DrawnNumberTicket/DrawnNumberTicket'
 import { PlayIcon, ShareIcon } from 'lucide-react'
 import HStack from '@/components/core/HStack/HStack'

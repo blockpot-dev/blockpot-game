@@ -1,6 +1,6 @@
 import HStack from '@/components/core/HStack/HStack'
 import { cn } from '@/lib/utils'
-import { Container } from '@blockpot-dev/block-pot-design-system'
+import { Container } from '@blockpot-dev/blockpot-design-system'
 import { ReactNode } from 'react'
 
 export type LabeledBalanceProps = {

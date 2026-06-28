@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Loader2, X } from 'lucide-react'
-import { Button, InfoBanner, Input } from '@blockpot-dev/block-pot-design-system'
+import { Button, InfoBanner, Input } from '@blockpot-dev/blockpot-design-system'
 import VStack from '@/components/core/VStack/VStack'
 import HStack from '@/components/core/HStack/HStack'
 import { ApiError } from '@/api/gamingServiceClient'

@@ -3,7 +3,7 @@ import EntryOptions, { EntryOptionsProps } from './EntryOptions/EntryOptions'
 import EntrySummary, { EntrySummaryProps } from './EntrySummary/EntrySummary'
 import VStack from '@/components/core/VStack/VStack'
 import { InterfaceStatus } from '@/types/ui/interface-status'
-import { Container } from '@blockpot-dev/block-pot-design-system'
+import { Container } from '@blockpot-dev/blockpot-design-system'
 import EntryButton, { RegistrationMode } from './EntryButton/EntryButton'
 import LossLimitWarning from '@/components/responsible-gaming/LossLimitWarning'
 

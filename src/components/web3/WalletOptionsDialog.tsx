@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogContent, DialogTitle } from '@blockpot-dev/block-pot-design-system'
+import { Button, Dialog, DialogContent, DialogTitle } from '@blockpot-dev/blockpot-design-system'
 import { Config, Connector, CreateConnectorFn, useConnect } from 'wagmi'
 import { ConnectMutate } from 'wagmi/query'
 import VStack from '../core/VStack/VStack'

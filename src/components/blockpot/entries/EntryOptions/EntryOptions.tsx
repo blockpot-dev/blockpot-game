@@ -3,7 +3,7 @@ import VStack from '@/components/core/VStack/VStack'
 import { EntryAmount } from '@/types/lottery/entry'
 import { Amounts } from '@/types/lottery/tokens'
 import Binding from '@/utilities/binding'
-import { SegmentedControl, Input } from '@blockpot-dev/block-pot-design-system'
+import { SegmentedControl, Input } from '@blockpot-dev/blockpot-design-system'
 import EntryCost from './EntryCost/EntryCost'
 
 export type EntryOptionsProps = {

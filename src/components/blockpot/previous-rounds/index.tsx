@@ -1,7 +1,7 @@
 import HStack from '@/components/core/HStack/HStack'
 import VStack from '@/components/core/VStack/VStack'
 import usePreviousRoundsList, { PreviousRoundsFilter } from '@/hooks/contracts/lottery/usePreviousRoundsList'
-import { Button, SegmentedControl } from '@blockpot-dev/block-pot-design-system'
+import { Button, SegmentedControl } from '@blockpot-dev/blockpot-design-system'
 import { IconHistory } from '@tabler/icons-react'
 import { XIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'

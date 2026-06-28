@@ -1,4 +1,4 @@
-import { Button, InfoBanner } from '@blockpot-dev/block-pot-design-system'
+import { Button, InfoBanner } from '@blockpot-dev/blockpot-design-system'
 import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import { PlayerActivityState } from '@/hooks/player-summary/usePlayerActivityState'
