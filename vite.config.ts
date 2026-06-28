@@ -54,6 +54,23 @@ export default defineConfig({
             },
             // Prevent hoisting issues
             treeshake: true,
+            onwarn(warning, warn) {
+                // `ox` (a viem dependency) ships /*#__PURE__*/ annotations in
+                // positions Rollup cannot interpret; the comment is harmlessly
+                // stripped. Silence only that specific third-party annotation
+                // notice and forward every other warning untouched.
+                if (
+                    (warning.code === 'INVALID_ANNOTATION' ||
+                        warning.message?.includes(
+                            'contains an annotation that Rollup cannot interpret'
+                        )) &&
+                    (warning.id?.includes('node_modules') ||
+                        warning.message?.includes('node_modules'))
+                ) {
+                    return
+                }
+                warn(warning)
+            },
         },
         commonjsOptions: {
             transformMixedEsModules: true, // Handle mixed module formats
