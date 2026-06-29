@@ -97,7 +97,7 @@ export function _PrizesOverviewDialog(props: _PrizesOverviewDialogProps) {
                         </p>
                     </div>
                     
-                    <Table className='after:content-[""] after:absolute after:inset-0 after:border after:border-gray-700 after:rounded-lg'>
+                    <Table className='after:content-[""] after:absolute after:inset-0 after:border after:border-gray-700 after:rounded-lg [&_tr]:border-gray-700'>
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="pl-4">Drawn Number</TableHead>
