@@ -33,8 +33,11 @@ function createPrizes(pots: readonly bigint[], fiatConverter: FiatConverter) {
         tokenAmountFormatted: formatEtherMaxDecimalsGreedy(pot, 2),
         fiatFormatted: fiatConverter(pot).formattedValue
     }))
-    const otherPrizes = pots.slice(3).reduce((acc, pot) => (acc + pot), 0n)
-    if (otherPrizes > 0n) {
+    const extraPots = pots.slice(3)
+    const otherPrizes = extraPots.reduce((acc, pot) => (acc + pot), 0n)
+    // Show the "+ More" row whenever the round has pots beyond the first three,
+    // even before any entries fund them (their aggregate is 0 ETH / $0).
+    if (extraPots.length > 0) {
         prizes.push({
             nativeToken: 'ETH',
             tokenAmountFormatted: formatEtherMaxDecimalsGreedy(otherPrizes, 2),
