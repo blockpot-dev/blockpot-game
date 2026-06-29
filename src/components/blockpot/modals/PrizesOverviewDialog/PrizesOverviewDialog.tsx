@@ -29,12 +29,13 @@ function labelForOrdinal(ordinal: number): string {
 
 function createPrizesData(pots: readonly bigint[], fiatConverter: FiatConverter, totalPrizePool: bigint): PrizeData[] {
     if (!pots || pots.length === 0) return []
-    if (totalPrizePool === 0n) return []
-    
+
     const prizes: PrizeData[] = pots.map((pot, index) => {
         return {
             ordinal: index + 1,
-            percentage: Number((pot * 10000n / totalPrizePool)) / 100,
+            // Before any entries the pool is empty; show each prize at 0% rather
+            // than dividing by zero (which would throw on bigint division).
+            percentage: totalPrizePool === 0n ? 0 : Number((pot * 10000n / totalPrizePool)) / 100,
             tokenAmountFormatted: formatEtherMaxDecimalsGreedy(pot, 2),
             fiatFormatted: fiatConverter(pot).formattedValue
         }
