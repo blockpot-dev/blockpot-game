@@ -28,7 +28,7 @@ Beyond the v2 protocol baseline, the frontend now hosts a full **regulated-opera
 - **Attestation pinning:** `@web3-storage/w3up-client`
 - **Rich text / docs:** TipTap 3 (used by attestation / T&C surfaces)
 - **Charts:** recharts 3 + chart.js 4 (transparency surfaces)
-- **Styling:** TailwindCSS v4 + CVA + `@blockpot-dev/block-pot-design-system@^0.2.3`
+- **Styling:** TailwindCSS v4 + CVA + `@blockpot-dev/blockpot-design-system@^0.3.6`
 - **Dev tooling:** Storybook 10, ESLint 9 (flat config), TypeScript 5.9
 
 ---
@@ -129,7 +129,7 @@ The legacy `PinataStorageProvider` and `SettingsProvider` were removed in the v2
 
 Four UI tiers. Prefer the highest tier that fits.
 
-**Tier 1 — Design system** (`@blockpot-dev/block-pot-design-system@^0.2.3`)
+**Tier 1 — Design system** (`@blockpot-dev/blockpot-design-system@^0.3.6`)
 Branded primitives consumed by name: `Button`, `Container`, `Dialog*` (incl. `DialogTopSection`), `Input`, `Checkbox`, `SegmentedControl`, `Select*`, `InfoField`, `InfoBanner`, `ElevatedIcon`, `SocialButton`, `Vortex`, `HeadroomMeter`. The 0.2.x design system added `HeadroomMeter` and `InfoBanner` and reshaped a few dialog parts; consult the design system source if you need something not in this list.
 
 **Tier 2 — Local shadcn/Radix UI** (`src/components/ui/`)

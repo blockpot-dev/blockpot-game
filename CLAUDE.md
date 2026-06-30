@@ -28,7 +28,7 @@ The v2 contracts strip BPT, governance, staking, referrals, contributor rewards,
 - **Build / framework**: Vite 7 + React 19 with TanStack Router (SPA, file-based routing under `src/routes/`)
 - **Data layer**: TanStack Query v5 with IndexedDB persistence
 - **Web3**: wagmi 3 + viem 2
-- **Styling**: TailwindCSS v4 (CSS-based `@theme`, no `tailwind.config.js`) + `@blockpot-dev/block-pot-design-system` + local Radix/shadcn primitives under `src/components/ui/`
+- **Styling**: TailwindCSS v4 (CSS-based `@theme`, no `tailwind.config.js`) + `@blockpot-dev/blockpot-design-system` + local Radix/shadcn primitives under `src/components/ui/`
 
 ### Routing
 - File-based, under `src/routes/`
@@ -182,7 +182,7 @@ Prefer `useFormattedCurrencyValues` when you need both native + fiat in one call
 
 ## Key design system components
 
-From `@blockpot-dev/block-pot-design-system`:
+From `@blockpot-dev/blockpot-design-system`:
 - `Button`, `Container`, `Input`, `Checkbox`, `SegmentedControl`, `Vortex`, `Dialog*`, `InfoField`, `SocialButton`, `ElevatedIcon`
 
 Layout (local primitives in `@/components/core/`):
