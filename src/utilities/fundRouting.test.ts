@@ -16,6 +16,15 @@ function sumAmounts(...amounts: bigint[]): bigint {
     return amounts.reduce((acc, a) => acc + a, 0n)
 }
 
+// Quick game: 5 tiers (8000/1000/600/300/100 bps of the current pot), no
+// next-pot reserve, 20% of PEA forwarded to the parent (main) game.
+const quickGameConfig: GameConfig = {
+    ...DEFAULT_GAME_CONFIG,
+    prizeTierAllocations: [8000, 1000, 600, 300, 100],
+    nextPotAllocation: 0,
+    parentGamePotAllocation: 2000,
+}
+
 describe('computeFundRouting — main game', () => {
     it('splits PEA across 3 tiers + a next-pot reserve, with no parent-game row', () => {
         const pea = PEA_PER_ENTRY_WEI // 0.001 ETH = 1e15 wei
@@ -34,6 +43,35 @@ describe('computeFundRouting — main game', () => {
     it('routes every wei of PEA (amounts sum back to PEA)', () => {
         const pea = PEA_PER_ENTRY_WEI
         const routing = computeFundRouting(pea, mainGameConfig)
+        const total = sumAmounts(
+            ...routing.tiers.map(t => t.amount),
+            routing.nextPot?.amount ?? 0n,
+            routing.parentGame?.amount ?? 0n,
+        )
+        expect(total).toBe(pea)
+    })
+})
+
+describe('computeFundRouting — quick game', () => {
+    it('splits PEA across 5 tiers + a parent-game row, with no next-pot reserve', () => {
+        const pea = PEA_PER_ENTRY_WEI
+        const routing = computeFundRouting(pea, quickGameConfig)
+
+        // currentPot = 80% of PEA = 8e14; tiers split that 8000/1000/600/300/100.
+        expect(routing.tiers).toHaveLength(5)
+        expect(routing.tiers.map(t => t.label)).toEqual(['Jackpot', '2nd', '3rd', '4th', '5th'])
+        expect(routing.tiers[0]).toEqual({ label: 'Jackpot', bps: 6400, amount: 640_000_000_000_000n, percent: 64 })
+        expect(routing.tiers[4]).toEqual({ label: '5th', bps: 80, amount: 8_000_000_000_000n, percent: 0.8 })
+
+        expect(routing.parentGame).toEqual({ label: 'Parent game', bps: 2000, amount: 200_000_000_000_000n, percent: 20 })
+        expect(routing.nextPot).toBeUndefined()
+    })
+
+    it('scales linearly for a multi-entry PEA and still sums back to PEA', () => {
+        const pea = PEA_PER_ENTRY_WEI * 7n
+        const routing = computeFundRouting(pea, quickGameConfig)
+
+        expect(routing.parentGame?.amount).toBe(200_000_000_000_000n * 7n)
         const total = sumAmounts(
             ...routing.tiers.map(t => t.amount),
             routing.nextPot?.amount ?? 0n,
