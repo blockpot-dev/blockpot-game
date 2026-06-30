@@ -146,7 +146,7 @@ function Play() {
     const prizes = createPrizes(pots, fiatConverter)
 
     return (
-        <div className='@container flex-1'>
+        <div className='@container flex-1 pb-8'>
             <SelfExclusionRouteGate />
             <RealityCheckHost />
             <PlayHeader isPreviousRoundsOpen={isPreviousRoundsOpen} />
