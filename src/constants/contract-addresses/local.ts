@@ -1,5 +1,6 @@
 // This file is managed by `scripts/sync-addresses.js`. Run `bun sync-addresses`
-// after each local deploy to refresh it from the two contract repos' `addresses.json`.
+// after each local deploy to refresh it from the two contract repos' `addresses.json`,
+// or pipe a Railway-style CHAINS_CONFIG JSON via `--chains-config-json` for hosted chains.
 const LOCAL_ADDRESSES: { [key: string]: `0x${string}` } = {
     'fundsManager': '0x94099942864EA81cCF197E9D71ac53310b1468D8',
     'lottery': '0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6',
