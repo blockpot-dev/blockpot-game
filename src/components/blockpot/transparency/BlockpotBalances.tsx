@@ -1,16 +1,12 @@
 import { Container } from '@blockpot-dev/blockpot-design-system'
 import VStack from '@/components/core/VStack/VStack'
 import HStack from '@/components/core/HStack/HStack'
-import { ContractName, getContractAddress } from '@/constants/contract-addresses'
 import useBalanceAllocations from '@/hooks/contracts/transparency/useBalanceAllocations'
 import useNativeCurrency from '@/hooks/web3/useNativeCurrency'
 import { formatEtherMaxDecimalsGreedy } from '@/utilities/formatters'
-import { useChainId } from 'wagmi'
 
 export function _BlockpotBalances() {
-    const chainId = useChainId()
-    const fundsManagerAddress = getContractAddress(chainId, ContractName.FUNDS_MANAGER_MAIN)
-    const { pot, nextPot, parentGame, contractBalance } = useBalanceAllocations()
+    const { pot, nextPot, parentGame, contractBalance, fundsManagerAddress } = useBalanceAllocations()
     const total = pot + nextPot + parentGame
     const nativeCurrency = useNativeCurrency()
 
