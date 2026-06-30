@@ -3,6 +3,7 @@ import { Address } from 'viem'
 import useFormattedCurrencyValues from '../utilities/useFormattedCurrencyValues'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { useLottery } from '@/providers/BlockpotProvider'
+import { useSelectedGame } from '@/providers/SelectedGameProvider'
 import useEnterLottery from '../contracts/lottery/actions/useEnterLottery'
 import useErc20WithAllowance from '../contracts/erc20/useErc20WithAllowance'
 import { ContractName, getContractAddress } from '@/constants/contract-addresses'
@@ -66,6 +67,7 @@ export function useEntryForm() {
     const chainId = useChainId()
     const [entries, setEntries] = useState<EntryAmount>({ type: 'fixed', amount: 1 })
     const lottery = useLottery()
+    const { selectedGame } = useSelectedGame()
     const nativeToken = useNativeCurrency()
 
     const { address } = useAccount()
@@ -188,6 +190,8 @@ export function useEntryForm() {
         cfBasisPoints: CF_BASIS_POINTS,
         ofBasisPoints: operatorFeeBps,
         basisPointsDivisor: BASIS_POINTS_DIVISOR,
+        gameConfig: lottery.gameConfig,
+        selectedGame,
 
         error,
         purchasingStatus: transactionStatusToInterfaceStatus(enterLotteryAction.status),

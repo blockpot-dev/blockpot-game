@@ -59,6 +59,8 @@ function Play() {
         cfBasisPoints,
         ofBasisPoints,
         basisPointsDivisor,
+        gameConfig,
+        selectedGame,
         error,
         purchasingStatus,
         canEnter,
@@ -174,6 +176,8 @@ function Play() {
                                     cfBasisPoints={cfBasisPoints}
                                     ofBasisPoints={ofBasisPoints}
                                     basisPointsDivisor={basisPointsDivisor}
+                                    gameConfig={gameConfig}
+                                    selectedGame={selectedGame}
                                     error={error}
                                     canEnter={canEnter}
                                     disabledReason={disabledReason}

@@ -43,6 +43,8 @@ export default function EntryPanel(props: EntryPanelProps) {
                         cfBasisPoints={props.cfBasisPoints}
                         ofBasisPoints={props.ofBasisPoints}
                         basisPointsDivisor={props.basisPointsDivisor}
+                        gameConfig={props.gameConfig}
+                        selectedGame={props.selectedGame}
                     />
                 </div>
                 <VStack className='gap-3'>

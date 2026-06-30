@@ -5,6 +5,7 @@ export type ModalOpenStateContextType = {
   drawSummaryDialogOpen: Binding<boolean>
   previousRoundsPanelOpen: Binding<boolean>
   prizesOverviewDialogOpen: Binding<boolean>
+  fundRoutingDialogOpen: Binding<boolean>
   walletOptionsDialogOpen: Binding<boolean>
   missedDrawDialogOpen: Binding<boolean>
 }
@@ -19,6 +20,7 @@ export default function ModalOpenStateProvider({ children }: Props): React.React
     const [drawSummaryDialogOpen, setDrawSummaryDialogOpen] = useState(false)
     const [previousRoundsPanelOpen, setPreviousRoundsPanelOpen] = useState(false)
     const [prizesOverviewDialogOpen, setPrizesOverviewDialogOpen] = useState(false)
+    const [fundRoutingDialogOpen, setFundRoutingDialogOpen] = useState(false)
     const [walletOptionsDialogOpen, setWalletOptionsDialogOpen] = useState(false)
     const [missedDrawDialogOpen, setMissedDrawDialogOpen] = useState(false)
 
@@ -34,6 +36,10 @@ export default function ModalOpenStateProvider({ children }: Props): React.React
         prizesOverviewDialogOpen: {
             value: prizesOverviewDialogOpen,
             update: setPrizesOverviewDialogOpen
+        },
+        fundRoutingDialogOpen: {
+            value: fundRoutingDialogOpen,
+            update: setFundRoutingDialogOpen
         },
         walletOptionsDialogOpen: {
             value: walletOptionsDialogOpen,
@@ -70,6 +76,10 @@ export const usePreviousRoundsPanelOpen = () => {
 
 export const usePrizesOverviewDialogOpen = () => {
     return useModalOpenState().prizesOverviewDialogOpen
+}
+
+export const useFundRoutingDialogOpen = () => {
+    return useModalOpenState().fundRoutingDialogOpen
 }
 
 export const useWalletOptionsDialogOpen = () => {

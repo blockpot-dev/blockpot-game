@@ -1,8 +1,13 @@
 import { useState } from 'react'
+import { InfoIcon } from 'lucide-react'
 import VStack from '@/components/core/VStack/VStack'
 import HStack from '@/components/core/HStack/HStack'
 import Token from '@/components/core/Token/Token'
 import { Amounts } from '@/types/lottery/tokens'
+import { GameConfig } from '@/types/lottery/config'
+import { GameType } from '@/providers/SelectedGameProvider'
+import { useFundRoutingDialogOpen } from '@/providers/ModalOpenStateProvider'
+import FundRoutingDialog from '../../modals/FundRoutingDialog/FundRoutingDialog'
 
 export type EntrySummaryProps = {
     pea: Amounts
@@ -13,6 +18,8 @@ export type EntrySummaryProps = {
     cfBasisPoints: bigint
     ofBasisPoints: bigint
     basisPointsDivisor: bigint
+    gameConfig: GameConfig
+    selectedGame: GameType
 };
 
 function bpsToPercent(bps: bigint, divisor: bigint): string {
@@ -20,17 +27,26 @@ function bpsToPercent(bps: bigint, divisor: bigint): string {
     return `${percent.toFixed(percent % 1 === 0 ? 0 : 2)}%`
 }
 
-function BreakdownRow({ label, amount }: { label: string, amount: Amounts }) {
+function BreakdownRow({ label, amount, onClick }: { label: string, amount: Amounts, onClick?: () => void }) {
+    const interactive = onClick !== undefined
+    const Tag = interactive ? 'button' : 'div'
     return (
-        <HStack className='justify-between items-center bg-secondary border border-border rounded-sm px-2.5 py-1'>
-            <span className='text-xs text-secondary-foreground'>{label}</span>
+        <Tag
+            type={interactive ? 'button' : undefined}
+            onClick={onClick}
+            className={`w-full flex justify-between items-center bg-secondary border border-border rounded-sm px-2.5 py-1 text-left${interactive ? ' cursor-pointer hover:border-secondary-foreground/50 transition-colors' : ''}`}
+        >
+            <span className='flex items-center gap-1 text-xs text-secondary-foreground'>
+                {label}
+                {interactive && <InfoIcon className='size-3' aria-label='See where these funds go' />}
+            </span>
             <div className='flex flex-col items-end leading-tight'>
                 <span className='text-xs font-bold text-foreground'>
                     {amount.amountFormatted} <span className='font-normal text-secondary-foreground'>{amount.nativeToken}</span>
                 </span>
                 <span className='text-[10px] text-secondary-foreground'>{amount.fiatFormatted}</span>
             </div>
-        </HStack>
+        </Tag>
     )
 }
 
@@ -43,8 +59,9 @@ function OperatorDivider({ symbol }: { symbol: '+' | '=' }) {
 }
 
 export default function EntrySummary(props: EntrySummaryProps) {
-    const { pea, cf, of, total, baseBalance, cfBasisPoints, ofBasisPoints, basisPointsDivisor } = props
+    const { pea, cf, of, total, baseBalance, cfBasisPoints, ofBasisPoints, basisPointsDivisor, gameConfig, selectedGame } = props
     const [expanded, setExpanded] = useState(false)
+    const fundRoutingDialogOpen = useFundRoutingDialogOpen()
 
     return (
         <div className='w-full'>
@@ -88,7 +105,7 @@ export default function EntrySummary(props: EntrySummaryProps) {
                             <div className='overflow-hidden'>
                                 <div className='border-t border-border -mx-3' />
                                 <div className='py-4'>
-                                    <BreakdownRow label='Prize pool' amount={pea} />
+                                    <BreakdownRow label='Prize pool' amount={pea} onClick={() => fundRoutingDialogOpen.update(true)} />
                                     <OperatorDivider symbol='+' />
                                     <BreakdownRow label={`Protocol fee (${bpsToPercent(cfBasisPoints, basisPointsDivisor)})`} amount={cf} />
                                     {ofBasisPoints > 0n && (
@@ -105,6 +122,13 @@ export default function EntrySummary(props: EntrySummaryProps) {
                     </div>
                 </VStack>
             </VStack>
+            <FundRoutingDialog
+                open={fundRoutingDialogOpen.value}
+                onClose={() => fundRoutingDialogOpen.update(false)}
+                pea={pea.amount}
+                gameConfig={gameConfig}
+                selectedGame={selectedGame}
+            />
         </div>
     )
 }
