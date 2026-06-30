@@ -4,6 +4,7 @@ import { Button, Dialog, DialogContent, DialogHeader, DialogTitle } from '@block
 import { XIcon } from 'lucide-react'
 import { Table, TableRow, TableHeader, TableHead, TableBody, TableCell } from '@/components/ui/table'
 import useFiatConverter, { FiatConverter } from '@/hooks/utilities/useFiatConverter'
+import { formatEther } from 'viem'
 import { formatEtherMaxDecimalsGreedy, formatNumberMaxDecimalsGreedy } from '@/utilities/formatters'
 import PrizeBadge from '../../current-round/Prizes/PrizeBadge/PrizeBadge'
 import { computeFundRouting, FundRoutingEntry } from '@/utilities/fundRouting'
@@ -19,7 +20,9 @@ function parentLabel(selectedGame: GameType, fallback: string): string {
 function AmountCell({ amount, fiatConverter }: { amount: bigint, fiatConverter: FiatConverter }) {
     return (
         <div>
-            <div className='font-medium'>{formatEtherMaxDecimalsGreedy(amount, 2)} ETH</div>
+            {/* Exact ETH — these per-pot amounts are sub-0.01 ETH and must not be
+                rounded to 0; formatEther trims trailing zeros without truncating. */}
+            <div className='font-medium'>{formatEther(amount)} ETH</div>
             <div className='text-sm text-secondary-foreground'>{fiatConverter(amount).formattedValue}</div>
         </div>
     )
@@ -137,7 +140,9 @@ export type FundRoutingDialogProps = {
 
 export default function FundRoutingDialog(props: FundRoutingDialogProps) {
     const { open, onClose, pea, gameConfig, selectedGame } = props
-    const fiatConverter = useFiatConverter({ maxDecimals: 0 })
+    // 4 fiat decimals to match the EntrySummary breakdown — these routing
+    // amounts are fractions of a cent, so $0/$1 rounding hides the real values.
+    const fiatConverter = useFiatConverter({ maxDecimals: 4 })
 
     return <_FundRoutingDialog
         open={open}

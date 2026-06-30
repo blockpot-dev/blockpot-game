@@ -47,6 +47,26 @@ describe('<FundRoutingDialog>', () => {
         expect(screen.queryByText('Main game')).not.toBeInTheDocument()
     })
 
+    it('shows the full ETH amount per row without rounding it to 0', async () => {
+        renderWithProviders(
+            <_FundRoutingDialog
+                open
+                onClose={vi.fn()}
+                pea={PEA_PER_ENTRY_WEI}
+                gameConfig={mainGameConfig}
+                selectedGame='main'
+                fiatConverter={fiatConverter}
+            />,
+        )
+
+        // Jackpot = 81% of 0.001 ETH = 0.00081 ETH. It must render in full, not
+        // collapse to "0 ETH" under a 2-decimal rounding.
+        expect(await screen.findByText('0.00081 ETH')).toBeInTheDocument()
+        // Next-pot reserve = 10% = 0.0001 ETH.
+        expect(screen.getByText('0.0001 ETH')).toBeInTheDocument()
+        expect(screen.queryByText('0 ETH')).not.toBeInTheDocument()
+    })
+
     it('shows a parent (Main game) row and no next-pot reserve for the quick game', async () => {
         renderWithProviders(
             <_FundRoutingDialog
