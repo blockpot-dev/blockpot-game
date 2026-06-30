@@ -6,7 +6,6 @@ import { usePlayerSession } from '@/providers/PlayerSessionProvider'
 import { ZERO_ADDRESS } from '@/web3/constants'
 import SelfExclusionPanel from './SelfExclusionPanel'
 import LossLimitsPanel from './LossLimitsPanel'
-import RealityCheckSettings from './RealityCheckSettings'
 import ProblemGamblingResources from './ProblemGamblingResources'
 
 export type ResponsibleGamingPanelProps = {
@@ -42,9 +41,9 @@ export default function ResponsibleGamingPanel({ className }: ResponsibleGamingP
 // `/responsible-gaming` can be reached by direct URL navigation, so we cannot
 // assume onboarding already minted a Bearer token. Mirror the /verify pattern:
 // short-circuit on no wallet, then gate on no SIWE session before mounting the
-// settings panels. Without the session gate, the loss-limits and reality-check
-// queries would stay disabled (they require activeToken()), leaving the panels
-// stuck on "Loading…" with no fetch and no error.
+// settings panels. Without the session gate, the loss-limits query would stay
+// disabled (it requires activeToken()), leaving the panels stuck on "Loading…"
+// with no fetch and no error.
 function GatedSettings() {
     const address = useAccountAddress()
     const { session } = usePlayerSession()
@@ -86,7 +85,6 @@ function GatedSettings() {
         <>
             <SelfExclusionPanel walletConnected />
             <LossLimitsPanel walletConnected />
-            <RealityCheckSettings walletConnected />
         </>
     )
 }

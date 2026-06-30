@@ -15,7 +15,7 @@ The v2 protocol is deliberately minimal: no token, no governance, no staking, no
 Beyond the v2 protocol baseline, the frontend now hosts a full **regulated-operator surface**:
 - KYC ladder (T0–T4) with a per-tier required-gates bitmap and EUR-minor wager / single-win thresholds (`KYCRegistry.activePolicy`)
 - SumSub IDV via `@sumsub/websdk`, hosted at `/verify`
-- Responsible-gaming controls (loss limits, reality checks, self-exclusion) at `/responsible-gaming`
+- Responsible-gaming controls (loss limits, self-exclusion) at `/responsible-gaming`
 - Player session backed by SIWE + a Bearer-token gaming service (`VITE_GAMING_SERVICE_URL`)
 - Pre-tx deposit/wager evaluator that can route the user to `/verify` before any wallet prompt
 
@@ -119,7 +119,7 @@ Inside the shell, directly below `<Header/>`: `<LGOWhitelistBanner/>` then `<Sel
 
 `<AttestationModal/>` is mounted inside `Play` (`src/components/blockpot/play/index.tsx`), gated by `usePlayerRegistration().attestationModalOpen`. It collects the user's DOB, jurisdiction, and TOS acknowledgment **before** the SIWE register call, and stores the attestation receipt via `@web3-storage/w3up-client`.
 
-`<RealityCheckHost/>` and `<SelfExclusionRouteGate/>` are mounted inside `Play` to enforce session-time reality checks and to redirect a self-excluded player off the play surface.
+`<SelfExclusionRouteGate/>` is mounted inside `Play` to redirect a self-excluded player off the play surface.
 
 The legacy `PinataStorageProvider` and `SettingsProvider` were removed in the v2 refactor.
 
@@ -141,7 +141,7 @@ Hand-maintained CVA-variant wrappers: `badge`, `button`, `card`, `chart`, `check
 **Tier 4 — Feature components** (`src/components/blockpot/`)
 | Folder | Surface | Notes |
 | --- | --- | --- |
-| `play/` | `/play` | Orchestrator: PlayHeader + CurrentRound/DrawnNumbersPanel + EntryPanel/RoundDraw + InfoPanel + PreviousRounds. Mounts `AttestationModal`, `RealityCheckHost`, `SelfExclusionRouteGate`. |
+| `play/` | `/play` | Orchestrator: PlayHeader + CurrentRound/DrawnNumbersPanel + EntryPanel/RoundDraw + InfoPanel + PreviousRounds. Mounts `AttestationModal`, `SelfExclusionRouteGate`. |
 | `current-round/` | embedded | Countdown, Jackpot, Prizes, RoundInfo |
 | `drawn-numbers-panel/` | embedded | Rolling list of drawn numbers |
 | `round-draw/` | embedded | Waiting/Drawing/Complete stages + DrawRoundInfo |
@@ -159,7 +159,7 @@ Hand-maintained CVA-variant wrappers: `badge`, `button`, `card`, `chart`, `check
 
 **Top-level feature folders outside `blockpot/`** (cross-cutting concerns):
 - `src/components/kyc/` — `AgeRejectionBanner`, `KycVerificationView` (host shown at `/verify`), `PendingCddBanner`, `SumsubSdkHost` (mounts the SumSub web SDK)
-- `src/components/responsible-gaming/` — `LossLimitsPanel`, `LossLimitWarning`, `ProblemGamblingResources`, `RealityCheckHost`, `RealityCheckModal`, `RealityCheckSettings`, `ResponsibleGamingPanel` (`/responsible-gaming`), `SelfExclusionBanner`, `SelfExclusionConfirmDialog`, `SelfExclusionPanel`, `SelfExclusionRouteGate`. Shared copy in `lossLimitCopy.ts` and `selfExclusionCopy.ts`.
+- `src/components/responsible-gaming/` — `LossLimitsPanel`, `LossLimitWarning`, `ProblemGamblingResources`, `ResponsibleGamingPanel` (`/responsible-gaming`), `SelfExclusionBanner`, `SelfExclusionConfirmDialog`, `SelfExclusionPanel`, `SelfExclusionRouteGate`. Shared copy in `lossLimitCopy.ts` and `selfExclusionCopy.ts`.
 - `src/components/onboarding/AttestationModal.tsx` — pre-register DOB / jurisdiction / TOS attestation; receipt pinned via `@web3-storage/w3up-client`
 - `src/components/tools/NumberMeasure.tsx` — internal dev helper
 - `src/components/web3/WalletOptionsDialog.tsx` — opened from `ConnectWalletItem`
@@ -233,12 +233,10 @@ src/hooks/
 ├── player-summary/                           # Derived player view
 │   ├── useJackpotContext.ts
 │   └── usePlayerActivityState.ts             # PlayerActivityState — dual-track tier state (§8.5)
-├── responsible-gaming/                       # Loss limits, reality checks, self-exclusion
+├── responsible-gaming/                       # Loss limits, self-exclusion
 │   ├── useApplySelfExclusion.ts
 │   ├── useLossLimits.ts
-│   ├── useRealityCheck.ts
-│   ├── useSelfExclusion.ts
-│   └── useSessionTimer.ts
+│   └── useSelfExclusion.ts
 ├── tos/useCurrentTos.ts                      # Versioned TOS document for the AttestationModal
 ├── utilities/    useAccountAddress, useFiatConverter, useFormattedCurrencyValues,
 │                 useInterval, useTimeout, usePrevious, useDebouncedValue, useChanged,
@@ -520,9 +518,8 @@ When `VITE_GAMING_SERVICE_URL` is unset, authenticated calls throw `ApiError({ c
 
 Operator-side controls live in the gaming service; the frontend renders state and routes mutations through it.
 
-- `/responsible-gaming` (`src/components/responsible-gaming/ResponsibleGamingPanel.tsx`) — landing page with `LossLimitsPanel`, `RealityCheckSettings`, and `SelfExclusionPanel`. Lazy-loaded.
+- `/responsible-gaming` (`src/components/responsible-gaming/ResponsibleGamingPanel.tsx`) — landing page with `LossLimitsPanel` and `SelfExclusionPanel`. Lazy-loaded.
 - `LossLimitsPanel` / `useLossLimits()` — daily / weekly / monthly limits with a 24h cooldown on increases.
-- `RealityCheckHost` + `RealityCheckModal` + `useRealityCheck()` / `useSessionTimer()` — periodic break prompts, mounted inside `Play`.
 - `SelfExclusionPanel` + `SelfExclusionConfirmDialog` + `useApplySelfExclusion()` — apply a fixed-period self-exclusion. `useSelfExclusion()` returns the active period; `SelfExclusionBanner` (mounted below `<Header/>`) renders site-wide while it is in effect; `SelfExclusionRouteGate` (mounted inside `Play`) bounces the player off the play surface.
 - `EntryForm.lossLimitBreached` — propagated into `EntryPanel` so the "ENTER" button copy reflects the breach.
 

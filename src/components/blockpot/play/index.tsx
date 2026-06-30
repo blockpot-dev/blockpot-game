@@ -25,7 +25,6 @@ import AttestationModal from '@/components/onboarding/AttestationModal'
 import useCurrentTos from '@/hooks/tos/useCurrentTos'
 import { useCountry } from '@/providers/CountryProvider'
 import SelfExclusionRouteGate from '@/components/responsible-gaming/SelfExclusionRouteGate'
-import RealityCheckHost from '@/components/responsible-gaming/RealityCheckHost'
 
 function createPrizes(pots: readonly bigint[], fiatConverter: FiatConverter) {
     const prizes = pots.slice(0, 3).map((pot) => ({
@@ -148,7 +147,6 @@ function Play() {
     return (
         <div className='@container flex-1 pb-8'>
             <SelfExclusionRouteGate />
-            <RealityCheckHost />
             <PlayHeader isPreviousRoundsOpen={isPreviousRoundsOpen} />
             <Container_Deprecated className='dark mt-8 mb-auto relative'>
                 <HStack className='gap-4 justify-center'>
