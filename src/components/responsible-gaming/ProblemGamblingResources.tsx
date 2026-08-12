@@ -1,44 +1,13 @@
 import VStack from '@/components/core/VStack/VStack'
+import {
+    ACTIVE_JURISDICTION,
+    RESOURCES_BY_JURISDICTION,
+} from '@/config/problemGamblingResources'
 
-type Resource = {
-    name: string
-    href: string
-    region: string
-    description: string
-}
-
-const RESOURCES: Resource[] = [
-    {
-        name: 'BeGambleAware',
-        href: 'https://www.begambleaware.org/',
-        region: 'UK / Isle of Man',
-        description: 'Free, confidential support and treatment options.',
-    },
-    {
-        name: 'Gamblers Anonymous',
-        href: 'https://www.gamblersanonymous.org/',
-        region: 'International',
-        description: 'Peer fellowship for people recovering from problem gambling.',
-    },
-    {
-        name: 'Spillemyndigheden — StopSpillet',
-        href: 'https://www.stopspillet.dk/',
-        region: 'Denmark',
-        description: 'Danish helpline operated by the gambling authority.',
-    },
-    {
-        name: 'Gordon Moody',
-        href: 'https://www.gordonmoody.org.uk/',
-        region: 'UK',
-        description: 'Residential and online treatment for severe gambling addiction.',
-    },
-    {
-        name: 'Jogo Remoto / SICAD',
-        href: 'https://www.jogoremoto.pt/pt/jogo-responsavel/',
-        region: 'Portugal',
-        description: 'Portuguese self-help and clinical referral resources.',
-    },
-]
+// Resource content is jurisdiction-pluggable (task 113): the list below is
+// resolved from config, so choosing the launch jurisdiction is a config-only
+// change in src/config/problemGamblingResources.ts.
+const RESOURCES = RESOURCES_BY_JURISDICTION[ACTIVE_JURISDICTION]
 
 const SUPPORT_EMAIL = 'support@blockpot.com'
 
