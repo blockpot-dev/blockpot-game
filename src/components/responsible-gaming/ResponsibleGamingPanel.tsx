@@ -6,6 +6,7 @@ import { usePlayerSession } from '@/providers/PlayerSessionProvider'
 import { ZERO_ADDRESS } from '@/web3/constants'
 import SelfExclusionPanel from './SelfExclusionPanel'
 import LossLimitsPanel from './LossLimitsPanel'
+import RealityCheckSettings from './RealityCheckSettings'
 import ProblemGamblingResources from './ProblemGamblingResources'
 
 export type ResponsibleGamingPanelProps = {
@@ -85,6 +86,7 @@ function GatedSettings() {
         <>
             <SelfExclusionPanel walletConnected />
             <LossLimitsPanel walletConnected />
+            <RealityCheckSettings walletConnected />
         </>
     )
 }
