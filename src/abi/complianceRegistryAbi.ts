@@ -24,6 +24,32 @@ export const complianceRegistryAbi = [
         'type': 'function'
     },
     {
+        'inputs': [
+            {
+                'internalType': 'address',
+                'name': 'newOwner',
+                'type': 'address'
+            }
+        ],
+        'name': 'addOwner',
+        'outputs': [],
+        'stateMutability': 'nonpayable',
+        'type': 'function'
+    },
+    {
+        'inputs': [],
+        'name': 'getOwners',
+        'outputs': [
+            {
+                'internalType': 'address[]',
+                'name': '',
+                'type': 'address[]'
+            }
+        ],
+        'stateMutability': 'view',
+        'type': 'function'
+    },
+    {
         'inputs': [],
         'name': 'getWhitelistedOperators',
         'outputs': [
@@ -31,6 +57,25 @@ export const complianceRegistryAbi = [
                 'internalType': 'address[]',
                 'name': '',
                 'type': 'address[]'
+            }
+        ],
+        'stateMutability': 'view',
+        'type': 'function'
+    },
+    {
+        'inputs': [
+            {
+                'internalType': 'address',
+                'name': 'account',
+                'type': 'address'
+            }
+        ],
+        'name': 'isOwner',
+        'outputs': [
+            {
+                'internalType': 'bool',
+                'name': '',
+                'type': 'bool'
             }
         ],
         'stateMutability': 'view',
@@ -56,19 +101,6 @@ export const complianceRegistryAbi = [
         'type': 'function'
     },
     {
-        'inputs': [],
-        'name': 'owner',
-        'outputs': [
-            {
-                'internalType': 'address',
-                'name': '',
-                'type': 'address'
-            }
-        ],
-        'stateMutability': 'view',
-        'type': 'function'
-    },
-    {
         'inputs': [
             {
                 'internalType': 'address',
@@ -77,6 +109,19 @@ export const complianceRegistryAbi = [
             }
         ],
         'name': 'removeOperator',
+        'outputs': [],
+        'stateMutability': 'nonpayable',
+        'type': 'function'
+    },
+    {
+        'inputs': [
+            {
+                'internalType': 'address',
+                'name': 'owner',
+                'type': 'address'
+            }
+        ],
+        'name': 'removeOwner',
         'outputs': [],
         'stateMutability': 'nonpayable',
         'type': 'function'
@@ -133,18 +178,28 @@ export const complianceRegistryAbi = [
             {
                 'indexed': true,
                 'internalType': 'address',
-                'name': 'previousOwner',
+                'name': 'account',
                 'type': 'address'
             },
             {
-                'indexed': true,
-                'internalType': 'address',
-                'name': 'newOwner',
-                'type': 'address'
+                'indexed': false,
+                'internalType': 'bool',
+                'name': 'isOwner',
+                'type': 'bool'
             }
         ],
-        'name': 'OwnershipTransferred',
+        'name': 'OwnershipChange',
         'type': 'event'
+    },
+    {
+        'inputs': [],
+        'name': 'CannotRemoveLastOwner',
+        'type': 'error'
+    },
+    {
+        'inputs': [],
+        'name': 'NotAnOwner',
+        'type': 'error'
     },
     {
         'inputs': [
@@ -169,30 +224,13 @@ export const complianceRegistryAbi = [
         'type': 'error'
     },
     {
-        'inputs': [
-            {
-                'internalType': 'address',
-                'name': 'owner',
-                'type': 'address'
-            }
-        ],
-        'name': 'OwnableInvalidOwner',
-        'type': 'error'
-    },
-    {
-        'inputs': [
-            {
-                'internalType': 'address',
-                'name': 'account',
-                'type': 'address'
-            }
-        ],
-        'name': 'OwnableUnauthorizedAccount',
+        'inputs': [],
+        'name': 'ZeroAddress',
         'type': 'error'
     },
     {
         'inputs': [],
-        'name': 'ZeroAddress',
+        'name': 'ZeroAddressOwner',
         'type': 'error'
     }
 ] as const
