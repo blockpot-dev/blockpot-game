@@ -18,7 +18,8 @@ const meta: Meta<typeof _DrawSummaryDialog> = {
     args: {
         open: true,
         onClose: () => { },
-        gameType: 'main'
+        gameType: 'main',
+        proofRoundIndex: 7
     },
     argTypes: {}
 }

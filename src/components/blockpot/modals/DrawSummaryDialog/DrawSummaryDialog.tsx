@@ -1,7 +1,8 @@
 import VStack from '@/components/core/VStack/VStack'
 import { Button, Container, Dialog, DialogContent, DialogHeader, DialogTitle } from '@blockpot-dev/blockpot-design-system'
 import DrawnNumberTicket from '../../common/DrawnNumberTicket/DrawnNumberTicket'
-import { PlayIcon, ShareIcon } from 'lucide-react'
+import { PlayIcon, ShareIcon, ShieldCheckIcon } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 import HStack from '@/components/core/HStack/HStack'
 import { Table, TableRow, TableHeader, TableHead, TableBody, TableCell } from '@/components/ui/table'
 import { DisplayDrawnNumberData } from '@/types/lottery/display-drawn-number-data'
@@ -41,10 +42,13 @@ export type _DrawSummaryDialogProps = {
     purchases: LotteryEntry[]
     gameType: GameType
     onReplayDraw: (roundIndex: number) => void
+    // Contract-level round index (not the in-pot display index) — target of the
+    // /transparency fairness-proof link.
+    proofRoundIndex: number
 }
 
 export function _DrawSummaryDialog(props: _DrawSummaryDialogProps) {
-    const { displayDrawnNumberData, roundId, formattedChance, purchases, formattedDate, gameType, onReplayDraw } = props
+    const { displayDrawnNumberData, roundId, formattedChance, purchases, formattedDate, gameType, onReplayDraw, proofRoundIndex } = props
 
     const totalTickets = purchases.reduce((acc, purchase) => acc + (purchase.amount), 0)
 
@@ -89,6 +93,12 @@ export function _DrawSummaryDialog(props: _DrawSummaryDialogProps) {
                         <ShareIcon size={24} />
                         <span>Share</span>
                     </Button>
+                    <Link to='/transparency' search={{ round: proofRoundIndex }} className='flex-1' onClick={onClose}>
+                        <Button variant='outline' className='w-full'>
+                            <ShieldCheckIcon size={24} />
+                            <span>Fairness proof</span>
+                        </Button>
+                    </Link>
                 </HStack>
                 <VStack>
                     <HStack className='justify-between'>
@@ -163,5 +173,6 @@ export default function DrawSummaryDialog(props: DrawSummaryDialogProps) {
         formattedDate={formattedDate}
         gameType={gameType}
         onReplayDraw={() => onReplayDraw(Number(roundIndex))}
+        proofRoundIndex={Number(roundIndex)}
     />
 }
