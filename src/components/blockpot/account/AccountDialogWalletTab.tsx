@@ -8,6 +8,7 @@ import { formatEtherMaxDecimals } from '@/utilities/formatters'
 import LifetimeStatsRow from '@/components/blockpot/winnings/LifetimeStatsRow'
 import ClaimDecisionView from '@/components/blockpot/winnings/ClaimDecision'
 import JackpotPreCommitBanner from '@/components/blockpot/tier/JackpotPreCommitBanner'
+import CoolOffStatusBanner from '@/components/responsible-gaming/CoolOffStatusBanner'
 import AccountDialogWalletSection from './AccountDialogWalletSection'
 
 export type AccountDialogWalletTabProps = {
@@ -21,6 +22,8 @@ export type AccountDialogWalletTabProps = {
     wonEurMinor: bigint
     profitEurMinor: bigint
     isCompliant: boolean
+    /** Cool-off end (epoch seconds); 0n = not blocked. */
+    blockedUntil?: bigint
 
     decision: ClaimDecision | null
     isClaiming: boolean
@@ -47,6 +50,7 @@ export default function AccountDialogWalletTab(props: AccountDialogWalletTabProp
     const {
         state, draw, jackpotContext,
         eth, weth, wageredEurMinor, wonEurMinor, profitEurMinor, isCompliant,
+        blockedUntil,
         decision, isClaiming, claimRequestPending, opStatus, opError,
         onClaim, onReleasePending, onVerify, onClearDecision, onAfterDisconnect,
     } = props
@@ -65,6 +69,7 @@ export default function AccountDialogWalletTab(props: AccountDialogWalletTabProp
     return (
         <VStack className='gap-6'>
             <AccountDialogWalletSection onAfterDisconnect={onAfterDisconnect} />
+            <CoolOffStatusBanner blockedUntil={blockedUntil ?? 0n} />
             <LifetimeStatsRow
                 wageredEurMinor={wageredEurMinor}
                 wonEurMinor={wonEurMinor}

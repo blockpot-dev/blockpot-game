@@ -12,6 +12,7 @@ import useActivePolicy from '@/hooks/contracts/kyc/useActivePolicy'
 import usePlayerBalances from '@/hooks/contracts/lgo/usePlayerBalances'
 import useLifetimeSnapshot from '@/hooks/contracts/lgo/useLifetimeSnapshot'
 import useIsCompliant from '@/hooks/contracts/kyc-registry/useIsCompliant'
+import useEntryBlockedUntil from '@/hooks/contracts/kyc-registry/useEntryBlockedUntil'
 import usePlayerGates from '@/hooks/contracts/kyc-registry/usePlayerGates'
 import useClaimRequest from '@/hooks/claim/useClaimRequest'
 import useClaimOperation from '@/hooks/claim/useClaimOperation'
@@ -30,6 +31,7 @@ export default function AccountDialog({ open, onOpenChange }: AccountDialogProps
     const navigate = useNavigate()
     const chainId = useChainId()
     const address = useAccountAddress()
+    const { blockedUntil } = useEntryBlockedUntil(address as `0x${string}`)
 
     const { state } = usePlayerActivityState()
     const { draw } = useLotteryDraw()
@@ -150,6 +152,7 @@ export default function AccountDialog({ open, onOpenChange }: AccountDialogProps
             wonEurMinor={wonEurMinor}
             profitEurMinor={profitEurMinor}
             isCompliant={isCompliant}
+            blockedUntil={blockedUntil}
             decision={decision}
             isClaiming={isClaiming}
             claimRequestPending={claimRequest.isPending}

@@ -30,6 +30,8 @@ export type AccountDialogViewProps = {
     wonEurMinor: bigint
     profitEurMinor: bigint
     isCompliant: boolean
+    /** Cool-off end (epoch seconds); 0n = not blocked. */
+    blockedUntil?: bigint
 
     decision: ClaimDecision | null
     isClaiming: boolean
@@ -48,6 +50,7 @@ export default function AccountDialogView(props: AccountDialogViewProps) {
         open, onOpenChange,
         state, draw, jackpotContext, kycGates, onChainGates, tiers,
         eth, weth, wageredEurMinor, wonEurMinor, profitEurMinor, isCompliant,
+        blockedUntil,
         decision, isClaiming, claimRequestPending, opStatus, opError,
         onClaim, onReleasePending, onVerify, onClearDecision,
     } = props
@@ -105,6 +108,7 @@ export default function AccountDialogView(props: AccountDialogViewProps) {
                                         wonEurMinor={wonEurMinor}
                                         profitEurMinor={profitEurMinor}
                                         isCompliant={isCompliant}
+                                        blockedUntil={blockedUntil}
                                         decision={decision}
                                         isClaiming={isClaiming}
                                         claimRequestPending={claimRequestPending}
