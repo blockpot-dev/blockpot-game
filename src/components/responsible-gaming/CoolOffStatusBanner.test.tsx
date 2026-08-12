@@ -43,7 +43,7 @@ describe('<CoolOffStatusBanner>', () => {
         const { endLabel } = deriveCoolOffStatus(blockedUntil, NOW_SECONDS)
         render(<CoolOffStatusBanner blockedUntil={blockedUntil} />)
 
-        expect(screen.getByText(new RegExp(`Entries reopen`))).toBeInTheDocument()
+        expect(screen.getByText(new RegExp('Entries reopen'))).toBeInTheDocument()
         expect(screen.getByText(new RegExp(endLabel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))).toBeInTheDocument()
         expect(screen.getByText(/in 3 hours/)).toBeInTheDocument()
     })
