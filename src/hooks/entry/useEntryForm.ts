@@ -24,6 +24,7 @@ import { useNativeCurrencyToUSDPrice } from '../contracts/chainlink/useNativeCur
 import { useEurToUSDPrice } from '../contracts/chainlink/useEurToUSDPrice'
 import priceWeiEurMinor from '@/utilities/priceWeiEurMinor'
 import { ZERO_ADDRESS } from '@/web3/constants'
+import { deriveCoolOffStatus } from '@/components/responsible-gaming/coolOffStatus'
 
 function pretxReasonCopy(action: PretxRequiredAction): string | undefined {
     switch (action) {
@@ -90,7 +91,7 @@ export function useEntryForm() {
     const { operatorFeeBps } = useOperatorFeeBps()
     const { decision: pretxDecision } = usePretxDepositPreview(quote.total)
     const { isCompliant } = useIsCompliant((address ?? ZERO_ADDRESS) as Address)
-    const { isBlocked: entryBlocked } = useEntryBlockedUntil((address ?? ZERO_ADDRESS) as Address)
+    const { blockedUntil, isBlocked: entryBlocked } = useEntryBlockedUntil((address ?? ZERO_ADDRESS) as Address)
     const { state: activityState } = usePlayerActivityState()
     const ethUsd = useNativeCurrencyToUSDPrice()
     const eurUsd = useEurToUSDPrice()
@@ -118,7 +119,9 @@ export function useEntryForm() {
     // inflow cap. Mirror both client-side so the button disables with an
     // explanation instead of letting the wallet surface a revert.
     const entryBlockedReason = address && entryBlocked
-        ? 'Entries are temporarily paused on your account. Please try again later.'
+        ? `Entries are temporarily paused on your account. Entries reopen ${
+            deriveCoolOffStatus(blockedUntil, Date.now() / 1000).endLabel
+        }.`
         : undefined
     const betEurMinor = priceWeiEurMinor(quote.total, ethUsd, eurUsd)
     const inflowHeadroomReason = activityState
