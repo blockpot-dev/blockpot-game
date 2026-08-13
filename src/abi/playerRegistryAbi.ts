@@ -318,6 +318,19 @@ export const playerRegistryAbi = [
         'type': 'function'
     },
     {
+        'inputs': [],
+        'name': 'typeAndVersion',
+        'outputs': [
+            {
+                'internalType': 'string',
+                'name': '',
+                'type': 'string'
+            }
+        ],
+        'stateMutability': 'pure',
+        'type': 'function'
+    },
+    {
         'inputs': [
             {
                 'internalType': 'address',

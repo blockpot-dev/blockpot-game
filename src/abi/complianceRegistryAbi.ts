@@ -147,6 +147,19 @@ export const complianceRegistryAbi = [
         'type': 'function'
     },
     {
+        'inputs': [],
+        'name': 'typeAndVersion',
+        'outputs': [
+            {
+                'internalType': 'string',
+                'name': '',
+                'type': 'string'
+            }
+        ],
+        'stateMutability': 'pure',
+        'type': 'function'
+    },
+    {
         'anonymous': false,
         'inputs': [
             {
