@@ -12,6 +12,7 @@ import BlockpotProvider from '@/providers/BlockpotProvider'
 import QueryClientProvider from '@/providers/QueryClientProvider'
 import { SelectedGameProvider } from '@/providers/SelectedGameProvider'
 import Header from '@/components/blockpot/header/Header'
+import ContractIdentityWatcher from '@/components/web3/ContractIdentityWatcher'
 import BlockpotDrawProvider from '@/providers/BlockpotDrawProvider'
 import Modals from '@/components/blockpot/modals'
 import { Toaster } from '@/components/ui/sonner'
@@ -57,6 +58,7 @@ export const Route = createRootRoute({
                                                                 <div style={{ width: '100%', height: '100%' }}>
                                                                     <div className="app-shell">
                                                                         <div className='flex flex-col h-full'>
+                                                                            <ContractIdentityWatcher />
                                                                             <Header />
                                                                             <LGOWhitelistBanner />
                                                                             <SelfExclusionBanner />

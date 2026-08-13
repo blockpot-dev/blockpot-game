@@ -11,14 +11,14 @@ import { ContractName } from '@/constants/contract-addresses'
 
 export type ContractIdentityStatus =
     | { kind: 'ok', type: string, version: string }
-    | { kind: 'no-code' }                        // address has no bytecode on this chain
-    | { kind: 'not-identifiable' }               // code present, typeAndVersion() reverted
-    | { kind: 'type-mismatch', found: string }   // e.g. expected KYCRegistry, found Lottery
+    | { kind: 'no-code' } // address has no bytecode on this chain
+    | { kind: 'not-identifiable' } // code present, typeAndVersion() reverted
+    | { kind: 'type-mismatch', found: string } // e.g. expected KYCRegistry, found Lottery
     | { kind: 'version-mismatch', found: string } // type ok, major version differs
 
 export interface ExpectedIdentity {
-    type: string          // e.g. 'KYCRegistry' — the Solidity contract name
-    majorVersion: number  // mismatch warns, does not block
+    type: string // e.g. 'KYCRegistry' — the Solidity contract name
+    majorVersion: number // mismatch warns, does not block
 }
 
 // null = third-party contract (no typeAndVersion()) — skipped, never flagged.
