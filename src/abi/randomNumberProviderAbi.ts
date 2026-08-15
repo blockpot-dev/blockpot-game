@@ -167,7 +167,7 @@ export const randomNumberProviderAbi = [
                 'type': 'uint16'
             }
         ],
-        'stateMutability': 'view',
+        'stateMutability': 'pure',
         'type': 'function'
     },
     {
@@ -642,6 +642,11 @@ export const randomNumberProviderAbi = [
     {
         'inputs': [],
         'name': 'RequestNotFound',
+        'type': 'error'
+    },
+    {
+        'inputs': [],
+        'name': 'ZeroAddress',
         'type': 'error'
     },
     {

@@ -77,6 +77,11 @@ export const lotteryAbi = [
                         'internalType': 'uint24',
                         'name': 'chanceMax',
                         'type': 'uint24'
+                    },
+                    {
+                        'internalType': 'uint48',
+                        'name': 'vrfRetryTimeout',
+                        'type': 'uint48'
                     }
                 ],
                 'internalType': 'struct GameConfig',
@@ -210,6 +215,11 @@ export const lotteryAbi = [
                         'internalType': 'uint24',
                         'name': 'chanceMax',
                         'type': 'uint24'
+                    },
+                    {
+                        'internalType': 'uint48',
+                        'name': 'vrfRetryTimeout',
+                        'type': 'uint48'
                     }
                 ],
                 'internalType': 'struct GameConfig',
@@ -995,6 +1005,13 @@ export const lotteryAbi = [
     },
     {
         'inputs': [],
+        'name': 'seedPot',
+        'outputs': [],
+        'stateMutability': 'payable',
+        'type': 'function'
+    },
+    {
+        'inputs': [],
         'name': 'totalEntryPrice',
         'outputs': [
             {
@@ -1031,6 +1048,25 @@ export const lotteryAbi = [
         ],
         'stateMutability': 'view',
         'type': 'function'
+    },
+    {
+        'anonymous': false,
+        'inputs': [
+            {
+                'indexed': true,
+                'internalType': 'address',
+                'name': 'operator',
+                'type': 'address'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint256',
+                'name': 'amount',
+                'type': 'uint256'
+            }
+        ],
+        'name': 'ContributorFeeForfeited',
+        'type': 'event'
     },
     {
         'anonymous': false,
@@ -1153,18 +1189,27 @@ export const lotteryAbi = [
         'type': 'event'
     },
     {
-        'inputs': [],
-        'name': 'AlreadyDrawingNumbers',
-        'type': 'error'
+        'anonymous': false,
+        'inputs': [
+            {
+                'indexed': true,
+                'internalType': 'address',
+                'name': 'operator',
+                'type': 'address'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint256',
+                'name': 'amount',
+                'type': 'uint256'
+            }
+        ],
+        'name': 'PotSeeded',
+        'type': 'event'
     },
     {
         'inputs': [],
         'name': 'CannotEnterWhileDrawingNumbers',
-        'type': 'error'
-    },
-    {
-        'inputs': [],
-        'name': 'ContributorFeeTransferFailed',
         'type': 'error'
     },
     {
@@ -1190,11 +1235,6 @@ export const lotteryAbi = [
     {
         'inputs': [],
         'name': 'FundsTransferFailed',
-        'type': 'error'
-    },
-    {
-        'inputs': [],
-        'name': 'InsufficientAmountForPurchase',
         'type': 'error'
     },
     {
@@ -1262,6 +1302,11 @@ export const lotteryAbi = [
     },
     {
         'inputs': [],
+        'name': 'InvalidVrfRetryTimeout',
+        'type': 'error'
+    },
+    {
+        'inputs': [],
         'name': 'NoEntriesInRound',
         'type': 'error'
     },
@@ -1283,22 +1328,33 @@ export const lotteryAbi = [
     },
     {
         'inputs': [],
-        'name': 'PickedForWrongRound',
-        'type': 'error'
-    },
-    {
-        'inputs': [],
         'name': 'ReentrancyGuardReentrantCall',
         'type': 'error'
     },
     {
-        'inputs': [],
-        'name': 'RoundAlreadyReceivedDrawnNumbers',
+        'inputs': [
+            {
+                'internalType': 'uint48',
+                'name': 'elapsed',
+                'type': 'uint48'
+            },
+            {
+                'internalType': 'uint48',
+                'name': 'required',
+                'type': 'uint48'
+            }
+        ],
+        'name': 'RetryTooEarly',
         'type': 'error'
     },
     {
         'inputs': [],
         'name': 'RoundIndexOutOfBounds',
+        'type': 'error'
+    },
+    {
+        'inputs': [],
+        'name': 'RoundNotDrawable',
         'type': 'error'
     },
     {
@@ -1341,6 +1397,11 @@ export const lotteryAbi = [
     {
         'inputs': [],
         'name': 'ZeroAddress',
+        'type': 'error'
+    },
+    {
+        'inputs': [],
+        'name': 'ZeroSeedAmount',
         'type': 'error'
     }
 ] as const

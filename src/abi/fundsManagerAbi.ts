@@ -195,6 +195,13 @@ export const fundsManagerAbi = [
         'type': 'function'
     },
     {
+        'inputs': [],
+        'name': 'seedPot',
+        'outputs': [],
+        'stateMutability': 'payable',
+        'type': 'function'
+    },
+    {
         'inputs': [
             {
                 'internalType': 'address',
@@ -290,6 +297,17 @@ export const fundsManagerAbi = [
             }
         ],
         'name': 'SafeERC20FailedOperation',
+        'type': 'error'
+    },
+    {
+        'inputs': [
+            {
+                'internalType': 'address',
+                'name': 'sender',
+                'type': 'address'
+            }
+        ],
+        'name': 'UnauthorizedDeposit',
         'type': 'error'
     }
 ] as const
