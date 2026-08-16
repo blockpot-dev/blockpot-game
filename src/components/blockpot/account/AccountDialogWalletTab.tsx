@@ -10,6 +10,7 @@ import ClaimDecisionView from '@/components/blockpot/winnings/ClaimDecision'
 import JackpotPreCommitBanner from '@/components/blockpot/tier/JackpotPreCommitBanner'
 import CoolOffStatusBanner from '@/components/responsible-gaming/CoolOffStatusBanner'
 import AccountDialogWalletSection from './AccountDialogWalletSection'
+import ReferralEarningsSection from './ReferralEarningsSection'
 
 export type AccountDialogWalletTabProps = {
     state: PlayerActivityState
@@ -69,6 +70,7 @@ export default function AccountDialogWalletTab(props: AccountDialogWalletTabProp
     return (
         <VStack className='gap-6'>
             <AccountDialogWalletSection onAfterDisconnect={onAfterDisconnect} />
+            <ReferralEarningsSection />
             <CoolOffStatusBanner blockedUntil={blockedUntil ?? 0n} />
             <LifetimeStatsRow
                 wageredEurMinor={wageredEurMinor}

@@ -15,6 +15,7 @@ export enum ContractName {
     QUICK_GAME,
     WETH,
     LGO,
+    REFERRAL_MANAGER,
     PLAYER_REGISTRY,
     KYC_REGISTRY,
 }
@@ -35,6 +36,7 @@ const KEY_BY_CONTRACT: Record<ContractName, string> = {
     [ContractName.QUICK_GAME]: 'quickGame',
     [ContractName.WETH]: 'weth',
     [ContractName.LGO]: 'lgo',
+    [ContractName.REFERRAL_MANAGER]: 'referralManager',
     [ContractName.PLAYER_REGISTRY]: 'playerRegistry',
     [ContractName.KYC_REGISTRY]: 'kycRegistry',
 }

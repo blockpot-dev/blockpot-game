@@ -12,12 +12,19 @@ import { useSelectedGame } from '@/providers/SelectedGameProvider'
 import usePlayerActivityState, { PlayerTier } from '@/hooks/player-summary/usePlayerActivityState'
 import { evaluatePretxDeposit } from '@/hooks/player/usePretxDeposit'
 import { recordEntryCadence } from '@/providers/SessionSignalProvider'
+import { ZERO_ADDRESS } from '@/web3/constants'
 
 export type EnterLotteryParams = {
     roundIndex: number
     amount: number
     payoutInWeth: boolean
     useWeth: boolean
+    /**
+     * Optional referral code for an unbound wallet's attributed entry (BLO-646). Routed via
+     * the LGO's 5-arg overloads only when a ReferralManager is configured on this chain;
+     * otherwise the legacy 4-arg signatures are used and the code is dropped (fail-soft).
+     */
+    referralCode?: string
 }
 
 export default function useEnterLottery() {
@@ -44,8 +51,13 @@ export default function useEnterLottery() {
         functionName: 'enterWeth',
     })
 
+    const referralManagerAddress = getContractAddress(chainId, ContractName.REFERRAL_MANAGER)
+
     const enter = async (params: EnterLotteryParams) => {
-        const { roundIndex, amount, payoutInWeth, useWeth } = params
+        const { roundIndex, amount, payoutInWeth, useWeth, referralCode } = params
+        // The 5-arg attributed overload is used only when a manager exists to receive the fee
+        // routing; viem resolves the LGO `enter`/`enterWeth` overloads by argument arity.
+        const attributed = Boolean(referralCode) && referralManagerAddress !== ZERO_ADDRESS
 
         if (!isWhitelisted) {
             console.error('[useEnterLottery] LGO not whitelisted in ComplianceRegistry; refusing to enter.')
@@ -93,17 +105,32 @@ export default function useEnterLottery() {
             if (useWeth) {
                 // WETH path: LGO pulls `total` WETH via transferFrom then unwraps;
                 // no msg.value. Allowance must be pre-approved against the LGO address.
-                await enterWethWrite.writeAsync(
-                    [lotteryAddress, roundIndex, amount, payoutInWeth],
-                    label,
-                )
+                if (attributed && referralCode) {
+                    await enterWethWrite.writeAsync(
+                        [lotteryAddress, roundIndex, amount, payoutInWeth, referralCode],
+                        label,
+                    )
+                } else {
+                    await enterWethWrite.writeAsync(
+                        [lotteryAddress, roundIndex, amount, payoutInWeth],
+                        label,
+                    )
+                }
             } else {
                 // ETH path: msg.value must equal LGO.entryQuote(lottery, amount).total.
-                await enterWrite.writeAsync(
-                    [lotteryAddress, roundIndex, amount, payoutInWeth],
-                    label,
-                    { value: total },
-                )
+                if (attributed && referralCode) {
+                    await enterWrite.writeAsync(
+                        [lotteryAddress, roundIndex, amount, payoutInWeth, referralCode],
+                        label,
+                        { value: total },
+                    )
+                } else {
+                    await enterWrite.writeAsync(
+                        [lotteryAddress, roundIndex, amount, payoutInWeth],
+                        label,
+                        { value: total },
+                    )
+                }
             }
             return true
         } catch (error: unknown) {

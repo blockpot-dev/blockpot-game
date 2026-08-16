@@ -33,6 +33,7 @@ export const EXPECTED_IDENTITY: Record<ContractName, ExpectedIdentity | null> = 
     [ContractName.LGO]: { type: 'LGO', majorVersion: 1 },
     [ContractName.PLAYER_REGISTRY]: { type: 'PlayerRegistry', majorVersion: 1 },
     [ContractName.KYC_REGISTRY]: { type: 'KYCRegistry', majorVersion: 1 },
+    [ContractName.REFERRAL_MANAGER]: { type: 'ReferralManager', majorVersion: 1 },
 }
 
 const TYPE_AND_VERSION_ABI = [

@@ -190,6 +190,11 @@ export const lgoAbi = [
                 'internalType': 'bool',
                 'name': 'payoutInWeth',
                 'type': 'bool'
+            },
+            {
+                'internalType': 'string',
+                'name': 'referralCode',
+                'type': 'string'
             }
         ],
         'name': 'enter',
@@ -224,6 +229,79 @@ export const lgoAbi = [
                 'internalType': 'bool',
                 'name': 'payoutInWeth',
                 'type': 'bool'
+            }
+        ],
+        'name': 'enter',
+        'outputs': [
+            {
+                'internalType': 'uint48',
+                'name': 'entryIndex',
+                'type': 'uint48'
+            }
+        ],
+        'stateMutability': 'payable',
+        'type': 'function'
+    },
+    {
+        'inputs': [
+            {
+                'internalType': 'address',
+                'name': 'lottery_',
+                'type': 'address'
+            },
+            {
+                'internalType': 'uint32',
+                'name': 'roundIndex',
+                'type': 'uint32'
+            },
+            {
+                'internalType': 'uint16',
+                'name': 'amount',
+                'type': 'uint16'
+            },
+            {
+                'internalType': 'bool',
+                'name': 'payoutInWeth',
+                'type': 'bool'
+            }
+        ],
+        'name': 'enterWeth',
+        'outputs': [
+            {
+                'internalType': 'uint48',
+                'name': 'entryIndex',
+                'type': 'uint48'
+            }
+        ],
+        'stateMutability': 'nonpayable',
+        'type': 'function'
+    },
+    {
+        'inputs': [
+            {
+                'internalType': 'address',
+                'name': 'lottery_',
+                'type': 'address'
+            },
+            {
+                'internalType': 'uint32',
+                'name': 'roundIndex',
+                'type': 'uint32'
+            },
+            {
+                'internalType': 'uint16',
+                'name': 'amount',
+                'type': 'uint16'
+            },
+            {
+                'internalType': 'bool',
+                'name': 'payoutInWeth',
+                'type': 'bool'
+            },
+            {
+                'internalType': 'string',
+                'name': 'referralCode',
+                'type': 'string'
             }
         ],
         'name': 'enterWeth',
@@ -754,6 +832,19 @@ export const lgoAbi = [
         'type': 'function'
     },
     {
+        'inputs': [],
+        'name': 'referralManager',
+        'outputs': [
+            {
+                'internalType': 'address',
+                'name': '',
+                'type': 'address'
+            }
+        ],
+        'stateMutability': 'view',
+        'type': 'function'
+    },
+    {
         'inputs': [
             {
                 'internalType': 'address',
@@ -1025,6 +1116,19 @@ export const lgoAbi = [
             }
         ],
         'name': 'setOperatorTreasury',
+        'outputs': [],
+        'stateMutability': 'nonpayable',
+        'type': 'function'
+    },
+    {
+        'inputs': [
+            {
+                'internalType': 'address',
+                'name': 'newManager',
+                'type': 'address'
+            }
+        ],
+        'name': 'setReferralManager',
         'outputs': [],
         'stateMutability': 'nonpayable',
         'type': 'function'
@@ -1803,6 +1907,25 @@ export const lgoAbi = [
             }
         ],
         'name': 'Reclaimed',
+        'type': 'event'
+    },
+    {
+        'anonymous': false,
+        'inputs': [
+            {
+                'indexed': false,
+                'internalType': 'address',
+                'name': 'oldManager',
+                'type': 'address'
+            },
+            {
+                'indexed': false,
+                'internalType': 'address',
+                'name': 'newManager',
+                'type': 'address'
+            }
+        ],
+        'name': 'ReferralManagerUpdated',
         'type': 'event'
     },
     {

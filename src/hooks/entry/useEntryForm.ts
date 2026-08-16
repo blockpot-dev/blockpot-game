@@ -5,6 +5,8 @@ import { Dispatch, SetStateAction, useState } from 'react'
 import { useLottery } from '@/providers/BlockpotProvider'
 import { useSelectedGame } from '@/providers/SelectedGameProvider'
 import useEnterLottery from '../contracts/lottery/actions/useEnterLottery'
+import useReferralBinding from '../referral/useReferralBinding'
+import usePendingReferralCode from '../referral/usePendingReferralCode'
 import useErc20WithAllowance from '../contracts/erc20/useErc20WithAllowance'
 import { ContractName, getContractAddress } from '@/constants/contract-addresses'
 import { formatEtherMaxDecimals } from '@/utilities/formatters'
@@ -75,6 +77,8 @@ export function useEntryForm() {
     const { data: balance } = useBalance({ address })
 
     const enterLotteryAction = useEnterLottery()
+    const referralBinding = useReferralBinding()
+    const pendingReferral = usePendingReferralCode()
     const [useWETH, setUseWETH] = useState(false)
     const [payoutInWETH, setPayoutInWETH] = useState(false)
     // Allowance target is the LGO — it pulls WETH via transferFrom and unwraps.
@@ -149,12 +153,19 @@ export function useEntryForm() {
             weth.approve(quote.total)
             return
         }
-        enterLotteryAction.enter({
+        // Attribution rides along only until the wallet is bound on-chain; after the first
+        // attributed entry the immutable binding takes over and the code is consumed.
+        const referralCode = !referralBinding.referrer && pendingReferral.isWellFormed
+            ? pendingReferral.code
+            : undefined
+        const ok = await enterLotteryAction.enter({
             roundIndex: Number(lottery.roundIndex),
             amount: Number(entriesRawValue),
             payoutInWeth: payoutInWETH,
             useWeth: useWETH,
+            referralCode,
         })
+        if (ok && referralCode) pendingReferral.clear()
     }
 
     const enterResult = {

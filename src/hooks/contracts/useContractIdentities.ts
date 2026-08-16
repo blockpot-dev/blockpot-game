@@ -4,6 +4,7 @@ import { toast } from 'sonner'
 import { Address } from 'viem'
 import useAvailablePublicClient from '@/hooks/web3/useAvailablePublicClient'
 import { ContractName, getContractAddress } from '@/constants/contract-addresses'
+import { ZERO_ADDRESS } from '@/web3/constants'
 import {
     ContractIdentityStatus,
     EXPECTED_IDENTITY,
@@ -32,6 +33,9 @@ function describe(
     case 'ok':
         return null
     case 'no-code':
+        // A zero address means "not configured/deployed on this chain yet" (e.g. the
+        // ReferralManager pre-deploy) — a report worth listing, never a toast-worthy fault.
+        if (address === ZERO_ADDRESS) return null
         return `No contract at ${address} on chain ${chainId} (expected ${expected.type}). The configured address is stale or wrong.`
     case 'not-identifiable':
         return `Contract at ${address} on chain ${chainId} does not answer typeAndVersion() (expected ${expected.type}). It is either a third-party contract or predates task 115.`

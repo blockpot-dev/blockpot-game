@@ -20,6 +20,8 @@ import { memo } from 'react'
 import { useAccount } from 'wagmi'
 import PreviousRounds from '@/components/blockpot/previous-rounds'
 import PlayHeader from '@/components/blockpot/play/PlayHeader/PlayHeader'
+import ReferralBanner from '@/components/blockpot/play/ReferralBanner/ReferralBanner'
+import VStack from '@/components/core/VStack/VStack'
 import usePlayerRegistration from '@/hooks/contracts/player-registry/usePlayerRegistration'
 import AttestationModal from '@/components/onboarding/AttestationModal'
 import useCurrentTos from '@/hooks/tos/useCurrentTos'
@@ -163,30 +165,33 @@ function Play() {
                             />
                             :
                             isConnected ?
-                                <EntryPanel
-                                    status={purchasingStatus}
-                                    enter={enter}
-                                    selectedEntries={{
-                                        value: entries,
-                                        update: setEntries,
-                                    }}
-                                    amountPerEntry={amountPerEntry}
-                                    pea={pea}
-                                    cf={cf}
-                                    of={of}
-                                    total={total}
-                                    cfBasisPoints={cfBasisPoints}
-                                    ofBasisPoints={ofBasisPoints}
-                                    basisPointsDivisor={basisPointsDivisor}
-                                    gameConfig={gameConfig}
-                                    selectedGame={selectedGame}
-                                    error={error}
-                                    canEnter={canEnter}
-                                    disabledReason={disabledReason}
-                                    baseBalance={baseBalance}
-                                    registration={registration}
-                                    lossLimitBreached={lossLimitBreached}
-                                />
+                                <VStack className='gap-3'>
+                                    <ReferralBanner />
+                                    <EntryPanel
+                                        status={purchasingStatus}
+                                        enter={enter}
+                                        selectedEntries={{
+                                            value: entries,
+                                            update: setEntries,
+                                        }}
+                                        amountPerEntry={amountPerEntry}
+                                        pea={pea}
+                                        cf={cf}
+                                        of={of}
+                                        total={total}
+                                        cfBasisPoints={cfBasisPoints}
+                                        ofBasisPoints={ofBasisPoints}
+                                        basisPointsDivisor={basisPointsDivisor}
+                                        gameConfig={gameConfig}
+                                        selectedGame={selectedGame}
+                                        error={error}
+                                        canEnter={canEnter}
+                                        disabledReason={disabledReason}
+                                        baseBalance={baseBalance}
+                                        registration={registration}
+                                        lossLimitBreached={lossLimitBreached}
+                                    />
+                                </VStack>
                                 :
                                 <ConnectWalletPanel />
                     }

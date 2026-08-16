@@ -15,6 +15,12 @@ const useAccountMock = vi.fn(() => ({
     chain: { id: 1, name: 'Ethereum' },
 }))
 
+// The wallet tab renders the referral earnings section; mock it at its hook boundary
+// (it is null for non-referrer wallets, which is the state these tests exercise).
+vi.mock('@/hooks/referral/useReferrerDashboard', () => ({
+    default: () => ({ record: null, claim: vi.fn(), isClaiming: false }),
+}))
+
 vi.mock('wagmi', () => ({
     useAccount: () => useAccountMock(),
     useEnsName: () => ({ data: undefined }),
