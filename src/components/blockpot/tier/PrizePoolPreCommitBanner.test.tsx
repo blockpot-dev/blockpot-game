@@ -46,7 +46,7 @@ describe('<PrizePoolPreCommitBanner>', () => {
         )
 
         expect(screen.getByText(/could be worth €5,000/)).toBeInTheDocument()
-        expect(screen.getByText(/≈ €4,500 of a win this size would be held/)).toBeInTheDocument()
+        expect(screen.getByText(/≈ €4,500 of a prize this size would be held/)).toBeInTheDocument()
     })
 
     it('renders nothing when the prize pool fits inside outflow headroom', () => {

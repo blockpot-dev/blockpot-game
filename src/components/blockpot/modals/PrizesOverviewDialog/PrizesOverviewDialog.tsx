@@ -130,7 +130,7 @@ export function _PrizesOverviewDialog(props: _PrizesOverviewDialogProps) {
                 <VStack className='gap-2 mb-2'>
                     <h3 className='font-bold'>How do I win?</h3>
                     <p className='text-sm text-secondary-foreground'>
-                        If any of your tickets have numbers matching the <strong>n<sup>th</sup></strong> number drawn, you will win the corresponding <strong>n<sup>th</sup></strong> prize which will automatically be paid to your wallet.
+                        If any of your tickets have numbers matching the <strong>n<sup>th</sup></strong> number drawn, that ticket wins the corresponding <strong>n<sup>th</sup></strong> prize, paid automatically to your wallet.
                     </p>
                 </VStack>
             </VStack>

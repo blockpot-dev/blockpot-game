@@ -21,7 +21,7 @@ export function getTicketImage(ordinal: number, isPlayerWinner: boolean, winner:
     if (isPlayerWinner) {
         switch (ordinal) {
         case 1:
-            return '/assets/pngs/drawn-ticket-player-jackpot.png'
+            return '/assets/pngs/drawn-ticket-player-top-prize.png'
         case 2:
             return '/assets/pngs/drawn-ticket-player-2nd.png'
         case 3:
@@ -32,7 +32,7 @@ export function getTicketImage(ordinal: number, isPlayerWinner: boolean, winner:
     } else if (!isAddressEqual(winner, ZERO_ADDRESS)) {
         switch (ordinal) {
         case 1:
-            return '/assets/pngs/drawn-ticket-other-jackpot.png'
+            return '/assets/pngs/drawn-ticket-other-top-prize.png'
         case 2:
             return '/assets/pngs/drawn-ticket-other-2nd.png'
         case 3:

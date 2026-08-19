@@ -6,11 +6,11 @@ Reference document for agents working on this codebase. Describes the **v2 LGO f
 
 ## 1. Overview
 
-Blockpot is a licensed on-chain lottery. This repo is **Blockpot's own Licensed Gaming Operator (LGO) frontend**, connecting wallet-connected players to neutral, immutable lottery protocol contracts deployed separately. The stack spans two contract repos:
+Blockpot is a licensed prize draw operator, powered by Unipot Protocol. This repo is **Blockpot's own Licensed Gaming Operator (LGO) frontend**, connecting wallet-connected players to neutral, immutable prize-draw protocol contracts deployed separately. The stack spans two contract repos:
 - `../unipot-contracts` — neutral protocol (Lottery, FundsManager, ComplianceRegistry, WETH)
 - `../blockpot-contracts` — LGO-owned contracts (LGO proxy, PlayerRegistry, KycRegistry)
 
-The v2 protocol is deliberately minimal: no token, no governance, no staking, no referrals, no operator-collected protocol fees in the Lottery itself. Entries must flow through an LGO proxy contract that is whitelisted in `ComplianceRegistry`; the LGO is the on-chain entry beneficiary, fee collector, and player gate. This frontend is Blockpot's licensed operator; future third-party LGOs can deploy their own LGO + frontend against the same protocol.
+The v2 protocol is deliberately minimal: no token, no governance, no staking, no protocol-level referrals (referrals exist at the operator layer via the LGO's ReferralManager), no operator-collected protocol fees in the Draw core itself. Entries must flow through an LGO proxy contract that is whitelisted in `ComplianceRegistry`; the LGO is the on-chain entry beneficiary, fee collector, and player gate. This frontend is Blockpot's licensed operator; future third-party LGOs can deploy their own LGO + frontend against the same protocol.
 
 Beyond the v2 protocol baseline, the frontend now hosts a full **regulated-operator surface**:
 - KYC ladder (T0–T4) with a per-tier required-gates bitmap and EUR-minor wager / single-win thresholds (`KYCRegistry.activePolicy`)

@@ -105,8 +105,9 @@ export default function Footer() {
 
                 <HStack className='flex-col gap-4 items-center @min-md:flex-row @min-md:justify-between @min-md:items-center'>
                     <HStack className='gap-6 items-center'>
+                        <span className='text-xs text-secondary-foreground'>Powered by Unipot Protocol</span>
                         <HStack className='gap-2 items-center'>
-                            <span className='text-xs text-secondary-foreground'>Powered by</span>
+                            <span className='text-xs text-secondary-foreground'>Randomness by</span>
                             <img
                                 src='/chainlink-logo.svg'
                                 alt='Chainlink'

@@ -48,7 +48,7 @@ export default function PrizePoolPreCommitBanner(props: PrizePoolPreCommitBanner
                 </Button>
             }
         >
-            A win in this draw could be worth {prizeEur}. ≈ {heldEur} of a win this size would be held until verification — verify now to claim it in full.
+            A win in this draw could be worth {prizeEur}. ≈ {heldEur} of a prize this size would be held until verification — verify now to claim it in full.
         </InfoBanner>
     )
 }

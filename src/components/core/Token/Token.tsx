@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 export type TokenLabelProps = {
     className?: string
     size?: TokenSize
-    token?: 'eth' | 'bpt'
+    token?: 'eth'
 }
 
 type TokenSize = 'xs' | 'sm' | 'md' | 'lg' | '1.5rem' | '2rem'

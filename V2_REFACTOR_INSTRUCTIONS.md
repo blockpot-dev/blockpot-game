@@ -10,7 +10,7 @@
 
 ## 0. Read Before You Start
 
-This document is the authoritative spec for refactoring the Blockpot frontend from v1.0.0 to v2.0.0. The v1.0.0 frontend was a community lottery dApp with BPT staking, governance voting, affiliate referrals, and start-draw bounties. The v2.0.0 frontend is the user-facing web application for **Blockpot’s own Licensed Gaming Operator (LGO)**, connecting to neutral, immutable protocol infrastructure. Roughly 40% of the v1 feature surface maps to on-chain features that no longer exist.
+This document is the authoritative spec for refactoring the Blockpot frontend from v1.0.0 to v2.0.0. The v1.0.0 frontend was a community draw dApp with BPT staking, governance voting, affiliate referrals, and start-draw bounties. The v2.0.0 frontend is the user-facing web application for **Blockpot’s own Licensed Gaming Operator (LGO)**, connecting to neutral, immutable protocol infrastructure. Roughly 40% of the v1 feature surface maps to on-chain features that no longer exist.
 
 Before you write any code:
 
@@ -29,7 +29,7 @@ If any step in this document conflicts with what you find in the code, **stop an
 
 The contracts have been refactored to neutral infrastructure: no token, no governance, no referrals, no staking, no on-chain rewards, no operator-collected fees. Entries are gated by an on-chain `ComplianceRegistry` that whitelists operator addresses.
 
-This frontend is **Blockpot’s own LGO frontend**, run by the Costa Rica gaming operator entity in Phase 1. It is not “the protocol.” It is a licensed lottery operator that happens to use the Blockpot protocol as its backend. It competes with (in principle) future third-party LGOs that will run their own frontends against the same protocol.
+This frontend is **Blockpot’s own LGO frontend**, run by the Costa Rica gaming operator entity in Phase 1. It is not “the protocol.” It is a licensed prize draw operator that happens to use Unipot Protocol as its backend. It competes with (in principle) future third-party LGOs that will run their own frontends against the same protocol.
 
 That framing has two practical consequences:
 
@@ -489,7 +489,7 @@ A full copy pass is required. The v1 frontend is saturated with community / gove
 
 **Replacement guidance:**
 
-- Overall framing: “licensed lottery powered by the Blockpot protocol,” “provably fair draws on-chain,” “instant automatic payouts.” These map to the user-visible value proposition without invoking community-ownership.
+- Overall framing: “licensed prize draw operator, powered by Unipot Protocol,” “provably fair draws on-chain,” “instant automatic payouts.” These map to the user-visible value proposition without invoking community-ownership.
 - The brand tagline “Powered by People, Driven by Blockchain” appears in the brand guidelines but is protocol-level positioning. For the LGO frontend, prefer operator-positioning taglines in marketing surface; keep any tagline usage restrained to footer/about-style placements.
 - Where the v1 copy says things like “As a BPT staker you earn a share of every ticket sold,” delete the claim entirely — do not replace with anything.
 - Where headings named deleted features (e.g. “Earn”, “Governance”, “Referrals” as nav items), remove the nav entries.
