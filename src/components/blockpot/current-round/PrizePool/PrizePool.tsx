@@ -20,7 +20,7 @@ export default function PrizePool(props: PrizePoolProps) {
             </div>
             <div className='absolute top-0 left-0 w-full h-full flex items-center justify-center bg-[radial-gradient(50%_50%_at_50%_50%,_#0E112888_28%,_rgba(14,17,40,0)_100%)]'>
                 <VStack className='gap-2 items-center'>
-                    <span className='heading-xl leading-[0.8] uppercase'>Jackpot</span>
+                    <span className='heading-xl leading-[0.8] uppercase'>Prize pool</span>
                     <HStack className='gap-2 items-center'>
                         <img src='/assets/svgs/tokens/eth.svg' alt='ETH' className="w-12 h-12" />
                         <AnimatingNumber value={formatEtherMaxDecimalsGreedy(nativeAmount, 2)} />

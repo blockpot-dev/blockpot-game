@@ -34,7 +34,7 @@ export default function DrawRoundInfo(props: DrawRoundInfoProps) {
     stats.push(
         <RoundInfoStat
             key='prizePool'
-            label='Jackpot'
+            label='Top prize'
             value={
                 <>
                     <div className='inline-block relative w-7 h-5 mr-2'>

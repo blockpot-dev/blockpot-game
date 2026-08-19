@@ -48,7 +48,7 @@ function HowToPlayPage() {
                         <div>
                             <h1 className='heading-4xl text-foreground'>How to play</h1>
                             <p className='text-sm text-secondary-foreground mt-2'>
-                                Blockpot is a licensed lottery built on neutral on-chain infrastructure — every entry is recorded on-chain, draws use verifiable Chainlink VRF randomness, and prizes settle to the wallet you played from.
+                                Blockpot is a licensed prize draw operator, powered by Unipot Protocol — every entry is recorded on-chain, draws use verifiable Chainlink VRF randomness, and prizes settle to the wallet you played from.
                             </p>
                         </div>
 

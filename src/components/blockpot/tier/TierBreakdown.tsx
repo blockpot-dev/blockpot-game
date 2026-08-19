@@ -22,7 +22,7 @@ export type TierBreakdownProps = {
     onChainGates: bigint
     tiers: readonly TierPolicy[]
     // Tab selection is controlled by the parent so the dialog can decide,
-    // e.g., whether to render the wager-allowance banner (which only makes
+    // e.g., whether to render the entry-allowance banner (which only makes
     // sense while viewing the player's current tier).
     selectedTierIdx: number
     onSelectedTierChange: (idx: number) => void
@@ -177,7 +177,7 @@ export default function TierBreakdown({
                     </HStack>
                     <VStack className='items-end gap-0.5'>
                         <span className='text-xs font-mono text-secondary-foreground'>
-                            <span className='uppercase mr-1'>Wager in</span>{inflowCapLabel}
+                            <span className='uppercase mr-1'>Entry in</span>{inflowCapLabel}
                         </span>
                         <span className='text-xs font-mono text-secondary-foreground'>
                             <span className='uppercase mr-1'>Claim out</span>{outflowCapLabel}

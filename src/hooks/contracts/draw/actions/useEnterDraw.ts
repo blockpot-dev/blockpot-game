@@ -140,7 +140,7 @@ export default function useEnterDraw() {
             if (message.includes('EntryBlocked')) {
                 toast.error('Entries are temporarily paused on your account. Please try again later.')
             } else if (message.includes('NotCompliant')) {
-                toast.error('This entry would exceed your wagering allowance. Verify your identity to raise it, or contact support for an MLRO override.')
+                toast.error('This entry would exceed your entry allowance. Verify your identity to raise it, or contact support for an MLRO override.')
             }
             return false
         }

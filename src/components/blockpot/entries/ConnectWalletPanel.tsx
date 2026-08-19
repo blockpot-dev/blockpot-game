@@ -15,7 +15,7 @@ export default function ConnectWalletPanel() {
                         Connect Your Wallet
                     </h2>
                     <p className='text-secondary-foreground text-sm'>
-                        Connect your wallet to participate in the Blockpot lottery.
+                        Connect your wallet to enter Blockpot prize draws.
                     </p>
                 </VStack>
 

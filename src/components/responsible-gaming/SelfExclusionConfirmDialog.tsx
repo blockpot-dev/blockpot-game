@@ -50,7 +50,7 @@ export default function SelfExclusionConfirmDialog({
                                 : 'Shorter exclusions cannot be cancelled or shortened once set.'}
                     </p>
                     <p className='text-sm text-secondary-foreground font-body'>
-                        While the exclusion is active, the platform will refuse new lottery
+                        While the exclusion is active, the platform will refuse new draw
                         entries and surface a banner on every page. You can still claim any
                         escrowed winnings during this period.
                     </p>

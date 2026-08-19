@@ -2,7 +2,7 @@ import { BASIS_POINTS_DIVISOR } from '@/constants/protocol'
 import { GameConfig } from '@/types/draw/config'
 
 export type FundRoutingEntry = {
-    label: string // e.g. "Jackpot", "2nd", "Next-pot reserve", "Parent game"
+    label: string // e.g. "Top prize", "2nd", "Next-pot reserve", "Parent game"
     bps: number // share of PEA in basis points (amount / pea)
     amount: bigint // wei routed to this bucket for the given PEA
     percent: number // amount / pea * 100
@@ -16,7 +16,7 @@ export type FundRouting = {
 
 function ordinalLabel(ordinal: number): string {
     switch (ordinal) {
-    case 1: return 'Jackpot'
+    case 1: return 'Top prize'
     case 2: return '2nd'
     case 3: return '3rd'
     default: return `${ordinal}th`
@@ -24,7 +24,7 @@ function ordinalLabel(ordinal: number): string {
 }
 
 // Express every bucket as a share of the whole PEA so the dialog can show a
-// single consistent percentage frame (Jackpot 81%, next-pot 10%, …) regardless
+// single consistent percentage frame (Top prize 81%, next-pot 10%, …) regardless
 // of whether the underlying config is relative to PEA (next-pot / parent) or to
 // the current pot (tiers).
 function makeEntry(label: string, amount: bigint, pea: bigint): FundRoutingEntry {

@@ -19,7 +19,7 @@ function extractBadgeData(round: DrawRound | null, accountAddress: Address) {
         return ['You Won', playerTierIndex + 1] as const
     }
     if (!isAddressEqual(round.draws[0].winner, ZERO_ADDRESS)) {
-        return ['Jackpot', 1] as const
+        return ['Top prize', 1] as const
     }
     const anyWinnerTierIndex = round.draws.findIndex((draw) => !isAddressEqual(draw.winner, ZERO_ADDRESS))
     if (anyWinnerTierIndex !== -1) {

@@ -56,8 +56,8 @@ function copyForDirection(p: DirectionProgress): string {
     const upgradeTo = p.nextTier ? ` to upgrade to ${p.nextTier}` : ''
     if (p.direction === 'inflow') {
         return p.zone === 'block'
-            ? `You're within 5% of your ${p.currentTier} wagering allowance. Entries beyond it are blocked — verify now${upgradeTo} to keep playing.`
-            : `You're approaching your ${p.currentTier} wagering allowance. Start verification now${upgradeTo} so you can keep playing without a pause.`
+            ? `You're within 5% of your ${p.currentTier} entry allowance. Entries beyond it are blocked — verify now${upgradeTo} to keep playing.`
+            : `You're approaching your ${p.currentTier} entry allowance. Start verification now${upgradeTo} so you can keep playing without a pause.`
     }
     return p.zone === 'block'
         ? `You're within 5% of your ${p.currentTier} claim allowance. Verify now${upgradeTo} to keep claiming past it without a pause on payouts.`
@@ -82,12 +82,12 @@ export default function TierUpgradePrompt({ state, onVerify, showBanner = true, 
         if (inflowZone !== last.inflow) {
             if (inflowZone === 'warn') {
                 toast('Verification recommended', {
-                    description: 'You\'re approaching your wagering allowance. Start verification now to keep playing without interruption.',
+                    description: 'You\'re approaching your entry allowance. Start verification now to keep playing without interruption.',
                     duration: 8000,
                 })
             } else if (inflowZone === 'block') {
                 toast.warning('Verification required soon', {
-                    description: 'You\'re within 5% of your wagering allowance. Entries beyond it are blocked — please verify now.',
+                    description: 'You\'re within 5% of your entry allowance. Entries beyond it are blocked — please verify now.',
                     duration: 10_000,
                 })
             }

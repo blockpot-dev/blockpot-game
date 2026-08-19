@@ -98,7 +98,7 @@ describe('<AccountDialogView> — Wallet / Verification tabs', () => {
     it('renders the Wallet tab by default with lifetime stats and no flow card', () => {
         render(<AccountDialogView {...makeProps()} />)
 
-        expect(screen.getByText(/wagered/i)).toBeInTheDocument()
+        expect(screen.getByText(/entered/i)).toBeInTheDocument()
         expect(screen.getByText(/won/i)).toBeInTheDocument()
         expect(screen.getByText(/profit/i)).toBeInTheDocument()
         expect(screen.queryByRole('group', { name: /net flow/i })).not.toBeInTheDocument()
@@ -139,7 +139,7 @@ describe('<AccountDialogView> — Wallet / Verification tabs', () => {
         expect(screen.getByText(/player status will appear once your wallet is connected/i)).toBeInTheDocument()
         expect(screen.queryByRole('tab', { name: /wallet/i })).not.toBeInTheDocument()
         expect(screen.queryByRole('tab', { name: /verification/i })).not.toBeInTheDocument()
-        expect(screen.queryByText(/wagered/i)).not.toBeInTheDocument()
-        expect(screen.queryByText(/net wager headroom/i)).not.toBeInTheDocument()
+        expect(screen.queryByText(/entered/i)).not.toBeInTheDocument()
+        expect(screen.queryByText(/net entry headroom/i)).not.toBeInTheDocument()
     })
 })

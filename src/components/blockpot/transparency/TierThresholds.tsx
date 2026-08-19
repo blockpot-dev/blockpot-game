@@ -66,7 +66,7 @@ export default function TierThresholds() {
                     <span className='text-sm font-medium text-foreground'>EUR flow caps (active policy)</span>
                     <div className='grid grid-cols-[auto_1fr_1fr] gap-x-6 gap-y-2 items-baseline'>
                         <span className='text-xs uppercase text-muted-foreground tracking-wide'>Tier</span>
-                        <span className='text-xs uppercase text-muted-foreground tracking-wide text-right'>In (wagered)</span>
+                        <span className='text-xs uppercase text-muted-foreground tracking-wide text-right'>In (entered)</span>
                         <span className='text-xs uppercase text-muted-foreground tracking-wide text-right'>Out (claimed)</span>
                         {tiers.length === 0
                             ? <span className='text-xs text-muted-foreground col-span-3'>No policy configured.</span>
@@ -95,11 +95,11 @@ export default function TierThresholds() {
 
                 <p className='text-xs text-muted-foreground'>
                     Each tier carries one shared set of verification gates and two directional
-                    caps. The inflow cap bounds gross lifetime EUR wagered — entries that would
-                    push cumulative wagers past it revert on-chain until the next tier&apos;s gates
+                    caps. The inflow cap bounds gross lifetime EUR entered — entries that would
+                    push cumulative entries past it revert on-chain until the next tier&apos;s gates
                     are passed. The outflow cap bounds gross lifetime EUR claimed — withdrawals
                     and direct payouts beyond it are held in escrow until verification. Both caps
-                    are gross per direction (wins never refund wagering headroom, wagers never
+                    are gross per direction (wins never refund entry headroom, entries never
                     consume claim headroom), and a player&apos;s tier is decided by gates alone.
                     The KYCRegistry pulls both lifetime figures from the LGO via the registered
                     IKYCActivityProvider; the Chainlink feeds above are used by the LGO to convert

@@ -4,7 +4,7 @@ import styles from './PrizeBadge.module.css'
 function ordinalToText(ordinal: number) {
     switch (ordinal) {
     case 1:
-        return 'Jackpot'
+        return 'Top prize'
     case 2:
         return '2nd'
     case 3:

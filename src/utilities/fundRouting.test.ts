@@ -32,7 +32,7 @@ describe('computeFundRouting — main game', () => {
 
         // currentPot = 90% of PEA = 9e14; tiers split that 9000/900/100.
         expect(routing.tiers).toHaveLength(3)
-        expect(routing.tiers[0]).toEqual({ label: 'Jackpot', bps: 8100, amount: 810_000_000_000_000n, percent: 81 })
+        expect(routing.tiers[0]).toEqual({ label: 'Top prize', bps: 8100, amount: 810_000_000_000_000n, percent: 81 })
         expect(routing.tiers[1]).toEqual({ label: '2nd', bps: 810, amount: 81_000_000_000_000n, percent: 8.1 })
         expect(routing.tiers[2]).toEqual({ label: '3rd', bps: 90, amount: 9_000_000_000_000n, percent: 0.9 })
 
@@ -59,8 +59,8 @@ describe('computeFundRouting — quick game', () => {
 
         // currentPot = 80% of PEA = 8e14; tiers split that 8000/1000/600/300/100.
         expect(routing.tiers).toHaveLength(5)
-        expect(routing.tiers.map(t => t.label)).toEqual(['Jackpot', '2nd', '3rd', '4th', '5th'])
-        expect(routing.tiers[0]).toEqual({ label: 'Jackpot', bps: 6400, amount: 640_000_000_000_000n, percent: 64 })
+        expect(routing.tiers.map(t => t.label)).toEqual(['Top prize', '2nd', '3rd', '4th', '5th'])
+        expect(routing.tiers[0]).toEqual({ label: 'Top prize', bps: 6400, amount: 640_000_000_000_000n, percent: 64 })
         expect(routing.tiers[4]).toEqual({ label: '5th', bps: 80, amount: 8_000_000_000_000n, percent: 0.8 })
 
         expect(routing.parentGame).toEqual({ label: 'Parent game', bps: 2000, amount: 200_000_000_000_000n, percent: 20 })

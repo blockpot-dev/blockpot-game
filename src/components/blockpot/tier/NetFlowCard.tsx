@@ -34,7 +34,7 @@ type NetPosition = {
     zone: Zone
 }
 
-// The gate model is netted: a single signed position (cumWagered − cumClaims)
+// The gate model is netted: a single signed position (cumEntered − cumClaims)
 // consumes the inflow cap while positive and the outflow cap while negative,
 // so exactly one cap is being eaten into at any moment. The hero always shows
 // the true |net| — only the zone ratio and the remaining amount clamp at the
@@ -80,14 +80,14 @@ const ZONE_TEXT_COLOR: Record<Zone, string> = {
 }
 
 const DIRECTION_LABEL: Record<Direction, string> = {
-    inflow: 'Wagered so far',
+    inflow: 'Entered so far',
     outflow: 'Claimed so far',
     balanced: 'All square',
 }
 
 function subcaption(position: NetPosition, tier: PlayerActivityState['currentTier']): string {
-    if (position.direction === 'balanced') return 'Wagers and claims are balanced'
-    const noun = position.direction === 'inflow' ? 'wagering' : 'claim'
+    if (position.direction === 'balanced') return 'Entries and claims are balanced'
+    const noun = position.direction === 'inflow' ? 'entry' : 'claim'
     if (position.activeCapEurMinor === null) return `No ${noun} limit at ${tier}`
     return `counts toward your ${formatEur(position.activeCapEurMinor)} ${noun} limit`
 }
@@ -140,11 +140,11 @@ export default function NetFlowCard({ state, className }: NetFlowCardProps) {
                 >
                     <TriangleAlert aria-hidden className='size-4 shrink-0' />
                     {formatEur(position.remainingEurMinor)} left before
-                    {position.direction === 'inflow' ? ' wagering pauses' : ' claims pause'}
+                    {position.direction === 'inflow' ? ' entries pause' : ' claims pause'}
                 </span>
             )}
             <span className='text-xs text-gray-400'>
-                {`Wager limit ${capLabel(state.inflow.capEurMinor)} · Claim limit ${capLabel(state.outflow.capEurMinor)}`}
+                {`Entry limit ${capLabel(state.inflow.capEurMinor)} · Claim limit ${capLabel(state.outflow.capEurMinor)}`}
             </span>
         </div>
     )

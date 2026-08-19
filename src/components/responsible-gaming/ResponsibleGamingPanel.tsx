@@ -23,7 +23,7 @@ export default function ResponsibleGamingPanel({ className }: ResponsibleGamingP
                             <h1 className='heading-4xl text-foreground'>Responsible gaming</h1>
                             <p className='text-sm text-secondary-foreground mt-2 max-w-2xl'>
                                 Tools and resources to help you stay in control. Self-exclusion and
-                                loss limits are enforced by our compliance gate before every wager.
+                                loss limits are enforced by our compliance gate before every entry.
                             </p>
                         </div>
 

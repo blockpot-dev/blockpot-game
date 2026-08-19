@@ -18,7 +18,7 @@ function formatEur(minor: number): string {
 
 // Post-draw banner for winnings held while the player verifies toward the
 // next tier. The held amount is the slice of escrow beyond the player's
-// outflow-cap headroom — wagering never lands the player here; only money
+// outflow-cap headroom — entering never lands the player here; only money
 // trying to leave the system does.
 //
 // Spec §2 mandates the "safe and waiting" framing — never use "locked".

@@ -24,7 +24,7 @@ describe('<PrizesOverviewDialog>', () => {
         const ethCells = await screen.findAllByText('0 ETH')
         expect(ethCells).toHaveLength(pots.length)
         expect(screen.getAllByText('0%')).toHaveLength(pots.length)
-        expect(screen.getByText('Jackpot')).toBeInTheDocument()
+        expect(screen.getByText('Top prize')).toBeInTheDocument()
     })
 
     it('renders rows with derived percentages when pots are funded', async () => {

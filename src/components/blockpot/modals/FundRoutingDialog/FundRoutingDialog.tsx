@@ -50,7 +50,7 @@ export function _FundRoutingDialog(props: _FundRoutingDialogProps) {
         extras.push({
             entry: routing.nextPot,
             label: routing.nextPot.label,
-            caption: 'Held back to seed the next jackpot once this one is won.',
+            caption: 'Held back to seed the next prize pool once this one is won.',
         })
     }
     if (routing.parentGame) {
@@ -74,7 +74,7 @@ export function _FundRoutingDialog(props: _FundRoutingDialogProps) {
             </DialogHeader>
             <VStack className='pt-6 gap-6'>
                 <p className='text-foreground/80'>
-                    Your entry funds the prize pool — but not all of it lands in the jackpot. Here&apos;s exactly where this
+                    Your entry funds the prize pool — but not all of it lands in the top prize. Here&apos;s exactly where this
                     entry&apos;s <strong>{formatEtherMaxDecimalsGreedy(pea, 6)} ETH</strong> is routed.
                 </p>
 

@@ -147,7 +147,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
         // PlayerCredited (escrowed) and PlayerPaidDirect (transferred) are
         // disjoint — both bump lifetimeWonEurMinor, so both must refresh
         // lifetime + the registry's compliance reads (the on-chain ladder
-        // pulls wagered + largestSingleWin via IKYCActivityProvider). Only
+        // pulls entered + claimed meters via IKYCActivityProvider). Only
         // the former affects the pullable escrow balance, but invalidating
         // balances on direct-pay is harmless.
         const unwatchPlayerPaidDirect = lgo.watchEvent.PlayerPaidDirect(
@@ -195,8 +195,8 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
                 },
             },
         )
-        // Task 49 depends on this listener: net wagered (max(0, wagered − won))
-        // governs the wager-track gate, so a win must invalidate ['lgo:lifetime']
+        // Task 49 depends on this listener: the directional flow meters
+        // govern the entry gate, so a win must invalidate ['lgo:lifetime']
         // for the headroom meter and the forward-looking entry guard to refresh.
         const unwatchLifetimeWonUpdated = lgo.watchEvent.LifetimeWonUpdated(
             {},
@@ -212,7 +212,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
         // After task 48 the on-chain gate consults a separate
         // largestSingleWinEurMinor scalar, so a win that advances the
         // running max can flip the player's win-track tier (and therefore
-        // tierOf / isCompliant) independently of the wager-track ladder.
+        // tierOf / isCompliant) independently of the tier ladder.
         const unwatchLargestSingleWinUpdated = lgo.watchEvent.LargestSingleWinUpdated(
             {},
             {

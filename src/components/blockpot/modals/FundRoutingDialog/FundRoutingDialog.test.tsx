@@ -40,7 +40,7 @@ describe('<FundRoutingDialog>', () => {
             />,
         )
 
-        expect(await screen.findByText('Jackpot')).toBeInTheDocument()
+        expect(await screen.findByText('Top prize')).toBeInTheDocument()
         expect(screen.getByText('2nd')).toBeInTheDocument()
         expect(screen.getByText('3rd')).toBeInTheDocument()
         expect(screen.getByText('Next-pot reserve')).toBeInTheDocument()

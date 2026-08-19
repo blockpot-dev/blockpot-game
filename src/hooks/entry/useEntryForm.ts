@@ -37,7 +37,7 @@ function pretxReasonCopy(action: PretxRequiredAction): string | undefined {
     case 'SYBIL_BLOCK': return 'We’re unable to process this transaction; our compliance team will review.'
     case 'GEO_BLOCK': return 'Entries are not available in your region.'
     case 'LIMIT_EXCEEDED': return 'Your loss limit would be exceeded.'
-    case 'HEADROOM_EXCEEDED': return 'This entry would exceed your wagering allowance. Verify to keep playing.'
+    case 'HEADROOM_EXCEEDED': return 'This entry would exceed your entry allowance. Verify to keep playing.'
     case 'ENTRY_BLOCKED': return 'Entries are temporarily paused on your account. Please try again later.'
     case 'SEQUENCER_DOWN': return 'Base sequencer is down — try again later.'
     case 'NONE': return undefined
@@ -119,7 +119,7 @@ export function useEntryForm() {
 
     // After task 94 the entry path is hard-gated on-chain again:
     // LGO.enter/enterWeth revert EntryBlocked while entryBlockedUntil is in
-    // the future and NotCompliant when wagered + bet would exceed the tier's
+    // the future and NotCompliant when entered + entry would exceed the tier's
     // inflow cap. Mirror both client-side so the button disables with an
     // explanation instead of letting the wallet surface a revert.
     const entryBlockedReason = address && entryBlocked
@@ -132,7 +132,7 @@ export function useEntryForm() {
         && activityState.inflow.capEurMinor !== null
         && betEurMinor !== null
         && betEurMinor > BigInt(activityState.inflow.headroomEurMinor)
-        ? 'This entry would exceed your wagering allowance. Verify to keep playing.'
+        ? 'This entry would exceed your entry allowance. Verify to keep playing.'
         : undefined
 
     // Single composite reason. Balance issues take precedence — they're cheap

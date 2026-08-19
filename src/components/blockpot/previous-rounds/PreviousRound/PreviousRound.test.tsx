@@ -53,7 +53,7 @@ describe('<_PreviousRound> badge', () => {
         expect(screen.queryByText('You Won')).not.toBeInTheDocument()
     })
 
-    it('disconnected viewer sees "Jackpot" when draws[0] has a real winner', () => {
+    it('disconnected viewer sees "Top prize" when draws[0] has a real winner', () => {
         const round = makeRound([
             makeDraw(WINNER_A, 1),
             makeDraw(ZERO_ADDRESS, 2),
@@ -67,7 +67,7 @@ describe('<_PreviousRound> badge', () => {
                 viewRoundSummary={vi.fn()}
             />,
         )
-        expect(screen.getByText('Jackpot')).toBeInTheDocument()
+        expect(screen.getByText('Top prize')).toBeInTheDocument()
         expect(screen.queryByText('You Won')).not.toBeInTheDocument()
     })
 

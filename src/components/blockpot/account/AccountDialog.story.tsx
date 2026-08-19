@@ -25,7 +25,7 @@ const UINT256_MAX = (1n << 256n) - 1n
 
 // Mirrors the seeded gaming-service KYCPolicy after task 94: gates are shared
 // per tier; only the cap amounts split by direction. Each tier carries a gross
-// cumulative inflow cap (wagers) and outflow cap (claims); the top tier sits
+// cumulative inflow cap (entries) and outflow cap (claims); the top tier sits
 // at the unlimited sentinel on both fields.
 const FOUR_TIER_POLICY: TierPolicy[] = [
     { requiredGates: 0n, inflowCapEurMinor: 900_00n, outflowCapEurMinor: 500_00n },
@@ -93,7 +93,7 @@ function flow(used: number, cap: number | null) {
 
 function state(opts: {
     currentTier: PlayerTier
-    wagered: number
+    entered: number
     won: number
     claimed?: number
     largestSingleWin?: number
@@ -103,11 +103,11 @@ function state(opts: {
     const claimed = opts.claimed ?? 0
     return {
         currentTier: opts.currentTier,
-        cumWageredEurMinor: opts.wagered,
+        cumWageredEurMinor: opts.entered,
         cumWonEurMinor: opts.won,
         cumClaimsEurMinor: claimed,
         largestSingleWinEurMinor: opts.largestSingleWin ?? opts.won,
-        inflow: flow(opts.wagered, ladder.inflowCap),
+        inflow: flow(opts.entered, ladder.inflowCap),
         outflow: flow(claimed, ladder.outflowCap),
         nextTier: ladder.next,
         pendingClaimEurMinor: opts.pendingClaim ?? 0,
@@ -151,7 +151,7 @@ export const CleanT2: Story = {
     args: baseArgs({
         state: state({
             currentTier: 'T2',
-            wagered: 1_200_00,
+            entered: 1_200_00,
             won: 7_500_00,
             largestSingleWin: 7_500_00,
         }),
@@ -173,7 +173,7 @@ export const NoWinnings_T0Idle: Story = {
     args: baseArgs({
         state: state({
             currentTier: 'T0',
-            wagered: 50_00,
+            entered: 50_00,
             won: 0,
             largestSingleWin: 0,
         }),
@@ -192,7 +192,7 @@ export const AllClaimable_T1: Story = {
     args: baseArgs({
         state: state({
             currentTier: 'T1',
-            wagered: 100_00,
+            entered: 100_00,
             won: 850_00,
             largestSingleWin: 700_00,
         }),
@@ -214,7 +214,7 @@ export const CapSplit_T0: Story = {
     args: baseArgs({
         state: state({
             currentTier: 'T0',
-            wagered: 200_00,
+            entered: 200_00,
             won: 1_500_00,
             largestSingleWin: 1_500_00,
             pendingClaim: 600_00,
@@ -235,7 +235,7 @@ export const PostT1Release: Story = {
     args: baseArgs({
         state: state({
             currentTier: 'T1',
-            wagered: 500_00,
+            entered: 500_00,
             won: 12_000_00,
             largestSingleWin: 12_000_00,
             pendingClaim: 3_000_00,
@@ -263,7 +263,7 @@ export const ClaimDecisionRejected: Story = {
     args: baseArgs({
         state: state({
             currentTier: 'T0',
-            wagered: 100_00,
+            entered: 100_00,
             won: 2_500_00,
             largestSingleWin: 2_500_00,
         }),
@@ -283,7 +283,7 @@ export const PendingClaimOnly: Story = {
     args: baseArgs({
         state: state({
             currentTier: 'T0',
-            wagered: 300_00,
+            entered: 300_00,
             won: 1_800_00,
             largestSingleWin: 1_800_00,
             pendingClaim: 900_00,
