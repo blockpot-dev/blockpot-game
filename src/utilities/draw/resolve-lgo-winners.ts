@@ -11,7 +11,7 @@ import useLGORead from '@/hooks/contracts/read/useLGORead'
 export async function resolveLgoWinners(
     draws: readonly DrawnNumber[],
     roundIndex: number,
-    lotteryAddress: `0x${string}`,
+    drawAddress: `0x${string}`,
     lgoAddress: `0x${string}`,
     game: ReturnType<typeof useDrawRead>['game'],
     lgo: ReturnType<typeof useLGORead>['read'],
@@ -24,7 +24,7 @@ export async function resolveLgoWinners(
 
     const [entries, owners] = await Promise.all([
         Promise.all(entryIndices.map((i) => game.getEntry([i, roundIndex]))),
-        Promise.all(entryIndices.map((i) => lgo.entryOwnerOf([lotteryAddress, roundIndex, i]))),
+        Promise.all(entryIndices.map((i) => lgo.entryOwnerOf([drawAddress, roundIndex, i]))),
     ])
 
     const ranges = entryIndices.map((entryIndex, idx) => ({

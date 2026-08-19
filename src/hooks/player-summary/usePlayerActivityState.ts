@@ -36,7 +36,7 @@ export type DirectionalFlow = {
 // position. Both flows read the caps of the player's current
 // (gate-qualified) tier:
 //
-//   - `inflow.usedEurMinor`  = LGO `lifetimeWageredEurMinor` — every euro
+//   - `inflow.usedEurMinor`  = LGO `lifetimeEnteredEurMinor` — every euro
 //                              entering the system.
 //   - `outflow.usedEurMinor` = LGO `lifetimeClaimedEurMinor` — every euro
 //                              leaving (withdrawals, full direct-pays, the

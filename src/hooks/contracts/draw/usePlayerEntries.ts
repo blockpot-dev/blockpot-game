@@ -20,12 +20,12 @@ export default function usePlayerEntries(roundIndex: number, gameType?: GameType
             if (roundIndex < 0) {
                 return { entries: [] }
             }
-            const lotteryAddress = getContractAddress(chainId, gameContractName)
+            const drawAddress = getContractAddress(chainId, gameContractName)
             const lgoAddress = getContractAddress(chainId, ContractName.LGO)
             const entries = await resolvePlayerEntries(
                 roundIndex,
                 address,
-                lotteryAddress,
+                drawAddress,
                 lgoAddress,
                 game,
                 lgo,

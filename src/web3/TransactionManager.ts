@@ -1,4 +1,4 @@
-import { lotteryAbi } from '@/abi/lotteryAbi'
+import { drawAbi } from '@/abi/drawAbi'
 import { TransactionStatus } from '@/types/web3/transactions'
 import { decodeErrorResult, Hash, PublicClient } from 'viem'
 
@@ -23,9 +23,9 @@ async function debugTransaction(publicClient: PublicClient, hash: Hash) {
             return null
         }
         try {
-            return decodeErrorResult({ abi: lotteryAbi, data })
+            return decodeErrorResult({ abi: drawAbi, data })
         } catch (decodeErr) {
-            console.warn('Could not decode revert data against lotteryAbi', { data, decodeErr })
+            console.warn('Could not decode revert data against drawAbi', { data, decodeErr })
             return null
         }
     }

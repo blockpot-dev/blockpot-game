@@ -12,7 +12,7 @@ import useLGORead from '@/hooks/contracts/read/useLGORead'
 export async function resolvePlayerEntries(
     roundIndex: number,
     connectedWallet: Address | undefined,
-    lotteryAddress: Address,
+    drawAddress: Address,
     lgoAddress: Address,
     game: ReturnType<typeof useDrawRead>['game'],
     lgo: ReturnType<typeof useLGORead>['read'],
@@ -24,7 +24,7 @@ export async function resolvePlayerEntries(
 
     const [entries, owners] = await Promise.all([
         Promise.all(entryIndices.map((i) => game.getEntry([i, roundIndex]))),
-        Promise.all(entryIndices.map((i) => lgo.entryOwnerOf([lotteryAddress, roundIndex, i]))),
+        Promise.all(entryIndices.map((i) => lgo.entryOwnerOf([drawAddress, roundIndex, i]))),
     ])
 
     return entryIndices.flatMap((entryIndex, idx) => {

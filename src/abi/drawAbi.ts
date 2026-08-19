@@ -1,4 +1,4 @@
-export const lotteryAbi = [
+export const drawAbi = [
     {
         'inputs': [
             {
@@ -324,7 +324,7 @@ export const lotteryAbi = [
                         'type': 'bool'
                     }
                 ],
-                'internalType': 'struct LotteryEntry',
+                'internalType': 'struct DrawEntry',
                 'name': '',
                 'type': 'tuple'
             }
@@ -397,7 +397,7 @@ export const lotteryAbi = [
                         'type': 'bool'
                     }
                 ],
-                'internalType': 'struct LotteryEntry',
+                'internalType': 'struct DrawEntry',
                 'name': '',
                 'type': 'tuple'
             }
@@ -453,7 +453,7 @@ export const lotteryAbi = [
                         'type': 'bool'
                     }
                 ],
-                'internalType': 'struct LotteryEntry',
+                'internalType': 'struct DrawEntry',
                 'name': '',
                 'type': 'tuple'
             }
@@ -526,7 +526,7 @@ export const lotteryAbi = [
                         'type': 'bool'
                     }
                 ],
-                'internalType': 'struct LotteryEntry',
+                'internalType': 'struct DrawEntry',
                 'name': '',
                 'type': 'tuple'
             }
@@ -689,7 +689,7 @@ export const lotteryAbi = [
                         'type': 'bool'
                     }
                 ],
-                'internalType': 'struct LotteryEntry',
+                'internalType': 'struct DrawEntry',
                 'name': '',
                 'type': 'tuple'
             }
@@ -818,7 +818,7 @@ export const lotteryAbi = [
                         'type': 'uint8'
                     }
                 ],
-                'internalType': 'struct LotteryRound',
+                'internalType': 'struct DrawRound',
                 'name': '',
                 'type': 'tuple'
             }
@@ -928,7 +928,7 @@ export const lotteryAbi = [
         'name': 'randomNumberProvider',
         'outputs': [
             {
-                'internalType': 'contract LotteryRandomNumberProvider',
+                'internalType': 'contract DrawRandomNumberProvider',
                 'name': '',
                 'type': 'address'
             }
@@ -1097,33 +1097,7 @@ export const lotteryAbi = [
                 'type': 'uint32'
             }
         ],
-        'name': 'LotteryDrawingNumbers',
-        'type': 'event'
-    },
-    {
-        'anonymous': false,
-        'inputs': [
-            {
-                'indexed': true,
-                'internalType': 'uint32',
-                'name': 'roundIndex',
-                'type': 'uint32'
-            }
-        ],
-        'name': 'LotteryDrawnNumbersReceived',
-        'type': 'event'
-    },
-    {
-        'anonymous': false,
-        'inputs': [
-            {
-                'indexed': false,
-                'internalType': 'uint32',
-                'name': 'roundNumber',
-                'type': 'uint32'
-            }
-        ],
-        'name': 'LotteryNoWinner',
+        'name': 'DrawNoWinner',
         'type': 'event'
     },
     {
@@ -1154,7 +1128,7 @@ export const lotteryAbi = [
                 'type': 'uint48'
             }
         ],
-        'name': 'LotteryOnEntry',
+        'name': 'DrawOnEntry',
         'type': 'event'
     },
     {
@@ -1185,7 +1159,33 @@ export const lotteryAbi = [
                 'type': 'uint8'
             }
         ],
-        'name': 'LotteryWinnerSelected',
+        'name': 'DrawWinnerSelected',
+        'type': 'event'
+    },
+    {
+        'anonymous': false,
+        'inputs': [
+            {
+                'indexed': false,
+                'internalType': 'uint32',
+                'name': 'roundNumber',
+                'type': 'uint32'
+            }
+        ],
+        'name': 'DrawingNumbers',
+        'type': 'event'
+    },
+    {
+        'anonymous': false,
+        'inputs': [
+            {
+                'indexed': true,
+                'internalType': 'uint32',
+                'name': 'roundIndex',
+                'type': 'uint32'
+            }
+        ],
+        'name': 'DrawnNumbersReceived',
         'type': 'event'
     },
     {

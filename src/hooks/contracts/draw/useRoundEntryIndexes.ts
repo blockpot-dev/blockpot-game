@@ -15,12 +15,12 @@ export default function useRoundEntryIndexes(roundIndex: number) {
     const { data } = useQuery({
         queryKey: ['currentRoundEntryIndexes', selectedGame, address ?? ZERO_ADDRESS, roundIndex.toString()],
         queryFn: async () => {
-            const lotteryAddress = getContractAddress(chainId, gameContractName)
+            const drawAddress = getContractAddress(chainId, gameContractName)
             const lgoAddress = getContractAddress(chainId, ContractName.LGO)
             const entries = await resolvePlayerEntries(
                 Number(roundIndex),
                 address,
-                lotteryAddress,
+                drawAddress,
                 lgoAddress,
                 game,
                 lgo,

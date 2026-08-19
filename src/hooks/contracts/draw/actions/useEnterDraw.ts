@@ -33,7 +33,7 @@ export default function useEnterDraw() {
     const navigate = useNavigate()
     const { gameContractName } = useSelectedGame()
     const lgoAddress = getContractAddress(chainId, ContractName.LGO)
-    const lotteryAddress = getContractAddress(chainId, gameContractName)
+    const drawAddress = getContractAddress(chainId, gameContractName)
     const lgo = useLGORead().read
     const { isWhitelisted } = useIsLGOWhitelisted()
     const { isActive } = useIsPlayerActive(account)
@@ -71,7 +71,7 @@ export default function useEnterDraw() {
         // ETH path needs `total` (PEA + CF + OF) quoted by the LGO. WETH path
         // transfers `total` via transferFrom, but the pretx check wants the
         // same figure either way — compute it up front.
-        const [total] = await lgo.entryQuote([lotteryAddress, amount])
+        const [total] = await lgo.entryQuote([drawAddress, amount])
 
         const decision = await evaluatePretxDeposit({
             chainId,
@@ -107,12 +107,12 @@ export default function useEnterDraw() {
                 // no msg.value. Allowance must be pre-approved against the LGO address.
                 if (attributed && referralCode) {
                     await enterWethWrite.writeAsync(
-                        [lotteryAddress, roundIndex, amount, payoutInWeth, referralCode],
+                        [drawAddress, roundIndex, amount, payoutInWeth, referralCode],
                         label,
                     )
                 } else {
                     await enterWethWrite.writeAsync(
-                        [lotteryAddress, roundIndex, amount, payoutInWeth],
+                        [drawAddress, roundIndex, amount, payoutInWeth],
                         label,
                     )
                 }
@@ -120,13 +120,13 @@ export default function useEnterDraw() {
                 // ETH path: msg.value must equal LGO.entryQuote(lottery, amount).total.
                 if (attributed && referralCode) {
                     await enterWrite.writeAsync(
-                        [lotteryAddress, roundIndex, amount, payoutInWeth, referralCode],
+                        [drawAddress, roundIndex, amount, payoutInWeth, referralCode],
                         label,
                         { value: total },
                     )
                 } else {
                     await enterWrite.writeAsync(
-                        [lotteryAddress, roundIndex, amount, payoutInWeth],
+                        [drawAddress, roundIndex, amount, payoutInWeth],
                         label,
                         { value: total },
                     )

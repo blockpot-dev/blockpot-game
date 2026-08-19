@@ -1,8 +1,8 @@
 import { Address } from 'viem'
 import type { ExtractAbiFunction, AbiParametersToPrimitiveTypes } from 'abitype'
-import { lotteryAbi } from '@/abi/lotteryAbi'
+import { drawAbi } from '@/abi/drawAbi'
 
-type GetEntryFn = ExtractAbiFunction<typeof lotteryAbi, 'getEntry'>
+type GetEntryFn = ExtractAbiFunction<typeof drawAbi, 'getEntry'>
 
 export type DrawRoundId = {
   potIndex: number

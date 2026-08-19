@@ -3,7 +3,7 @@
 // or pipe a Railway-style CHAINS_CONFIG JSON via `--chains-config-json` for hosted chains.
 const BLOCKPOT_TESTNET_ADDRESSES: { [key: string]: `0x${string}` } = {
     'fundsManager': '0x8dAF17A20c9DBA35f005b6324F493785D239719d',
-    'lottery': '0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e',
+    'draw': '0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e',
     'quickGame': '0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0',
     'weth': '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
     'aggregatorV3': '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',

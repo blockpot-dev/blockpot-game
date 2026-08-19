@@ -9,7 +9,7 @@ const REQUEST_ID = 987654321n
 function proof(overrides: Partial<DrawProof> = {}): DrawProof {
     return {
         roundIndex: 7,
-        lotteryAddress: '0x1000000000000000000000000000000000000001',
+        drawAddress: '0x1000000000000000000000000000000000000001',
         randomNumberProviderAddress: '0x2000000000000000000000000000000000000002',
         inputs: {
             requestId: REQUEST_ID,

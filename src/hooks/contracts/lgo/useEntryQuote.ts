@@ -15,19 +15,19 @@ export type EntryQuote = {
 export default function useEntryQuote(amount: bigint) {
     const chainId = useChainId()
     const { gameContractName } = useSelectedGame()
-    const lotteryAddress = getContractAddress(chainId, gameContractName)
+    const drawAddress = getContractAddress(chainId, gameContractName)
     const lgo = useLGORead().read
 
     // LGO.entryQuote takes uint16 — clamp to its valid range.
     const clamped = amount < 0n ? 0 : amount > 0xffffn ? 0xffff : Number(amount)
 
     const { data, isLoading, isPlaceholderData } = useQuery({
-        queryKey: ['lgo:entryQuote', chainId, lotteryAddress, clamped],
+        queryKey: ['lgo:entryQuote', chainId, drawAddress, clamped],
         queryFn: async () => {
-            const [total, pea, cf, opFee] = await lgo.entryQuote([lotteryAddress, clamped])
+            const [total, pea, cf, opFee] = await lgo.entryQuote([drawAddress, clamped])
             return { total, pea, cf, opFee }
         },
-        enabled: clamped > 0 && lotteryAddress !== ZERO_ADDRESS,
+        enabled: clamped > 0 && drawAddress !== ZERO_ADDRESS,
         placeholderData: keepPreviousData,
     })
 

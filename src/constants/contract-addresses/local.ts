@@ -2,16 +2,16 @@
 // after each local deploy to refresh it from the two contract repos' `addresses.json`,
 // or pipe a Railway-style CHAINS_CONFIG JSON via `--chains-config-json` for hosted chains.
 const LOCAL_ADDRESSES: { [key: string]: `0x${string}` } = {
-    'fundsManager': '0xcb984FEC79e025F03Baa01c5bA94099C84635E87',
-    'lottery': '0xC9a43158891282A2B1475592D5719c001986Aaec',
-    'quickGame': '0x1c85638e118b37167e9298c2268758e058DdfDA0',
-    'weth': '0xf4B146FbA71F41E0592668ffbF264F1D186b2Ca8',
-    'aggregatorV3': '0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B',
-    'aggregatorV3Eur': '0xBEc49fA140aCaA83533fB00A2BB19bDdd0290f25',
-    'complianceRegistry': '0xD84379CEae14AA33C123Af12424A37803F885889',
-    'lgo': '0x4b6aB5F819A515382B0dEB6935D793817bB4af28',
-    'playerRegistry': '0x720472c8ce72c2A2D711333e064ABD3E6BbEAdd3',
-    'kycRegistry': '0xAA292E8611aDF267e563f334Ee42320aC96D0463',
+    'fundsManager': '0x6c61a594DaFD426ae350202a71796885164d8eDE',
+    'draw': '0xb185E9f6531BA9877741022C92CE858cDCc5760E',
+    'quickGame': '0xAe120F0df055428E45b264E7794A18c54a2a3fAF',
+    'weth': '0x8e264821AFa98DD104eEcfcfa7FD9f8D8B320adA',
+    'aggregatorV3': '0x6A59CC73e334b018C9922793d96Df84B538E6fD5',
+    'aggregatorV3Eur': '0xC1e0A9DB9eA830c52603798481045688c8AE99C2',
+    'complianceRegistry': '0x683d9CDD3239E0e01E8dC6315fA50AD92aB71D2d',
+    'lgo': '0xd9fEc8238711935D6c8d79Bef2B9546ef23FC046',
+    'playerRegistry': '0x79E8AB29Ff79805025c9462a2f2F12e9A496f81d',
+    'kycRegistry': '0x0a17FabeA4633ce714F1Fa4a2dcA62C3bAc4758d',
 }
 
 export default LOCAL_ADDRESSES

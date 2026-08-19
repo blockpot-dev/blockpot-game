@@ -9,7 +9,7 @@ import { DrawProof } from '@/types/draw/drawProof'
 import useDrawRead from '../read/useDrawRead'
 
 // Builds the provable-fairness view model for a completed round: reads the VRF
-// inputs from the LotteryRandomNumberProvider (whose address is derived
+// inputs from the DrawRandomNumberProvider (whose address is derived
 // on-chain via lottery.randomNumberProvider(), never static config), reproduces
 // the draw client-side, and cross-checks it against the on-chain drawn numbers.
 // getRandomNumberGeneratorInputsForGameAndRound reverts RequestNotFound until
@@ -23,18 +23,18 @@ export default function useDrawProof(roundIndex: number) {
         queryKey: ['drawProof', selectedGame, chainId, roundIndex],
         enabled: roundIndex >= 0,
         queryFn: async (): Promise<DrawProof> => {
-            const lotteryAddress = getContractAddress(chainId, gameContractName)
+            const drawAddress = getContractAddress(chainId, gameContractName)
             const randomNumberProviderAddress = await game.randomNumberProvider() as Address
             const provider = getContract({
                 address: randomNumberProviderAddress,
                 abi: randomNumberProviderAbi,
                 client: publicClient,
             })
-            const base = { roundIndex, lotteryAddress, randomNumberProviderAddress }
+            const base = { roundIndex, drawAddress, randomNumberProviderAddress }
 
             try {
                 const [requestId, seed, maxNumber, totalNumbers] =
-                    await provider.read.getRandomNumberGeneratorInputsForGameAndRound([lotteryAddress, roundIndex])
+                    await provider.read.getRandomNumberGeneratorInputsForGameAndRound([drawAddress, roundIndex])
                 const inputs = {
                     requestId,
                     seed,

@@ -1,4 +1,4 @@
-import { lotteryAbi } from '@/abi/lotteryAbi'
+import { drawAbi } from '@/abi/drawAbi'
 import useReadContract from './useReadContract'
 import { GameType, useSelectedGame } from '@/providers/SelectedGameProvider'
 import { ContractName } from '@/constants/contract-addresses'
@@ -9,7 +9,7 @@ export default function useDrawRead(gameTypeOverride?: GameType) {
     const gameContractName = gameTypeOverride
         ? (gameTypeOverride === 'main' ? ContractName.DRAW_MAIN : ContractName.QUICK_GAME)
         : defaultContractName
-    const game = useReadContract(gameContractName, lotteryAbi).read
+    const game = useReadContract(gameContractName, drawAbi).read
     return {
         gameContractName,
         selectedGame,

@@ -5,7 +5,7 @@ const ARBITRUM_TESTNET_ADDRESSES: {[key: string]: `0x${string}`} = {
     // TODO: populate from EUR/USD mock deployment on Arbitrum testnet
     'aggregatorV3Eur': ZERO_ADDRESS,
     'fundsManager': '0x76e161eA9377341Fb331947dDB0B10FE44635F83',
-    'lottery': '0xcB6a94FA4A8FF21a909caD81D2FfF609279B5F0e',
+    'draw': '0xcB6a94FA4A8FF21a909caD81D2FfF609279B5F0e',
     'weth': '0xEe01c0CD76354C383B8c7B4e65EA88D00B06f36f',
     // TODO: populate from v2 deployment
     'quickGame': ZERO_ADDRESS,

@@ -49,7 +49,7 @@ const KEY_MAP_TWO_FILE = {
     aggregatorV3:         'aggregatorV3',
     aggregatorV3Eur:      'aggregatorV3Eur',
     complianceRegistry:   'complianceRegistry',
-    lottery:              'lottery',
+    draw:                 'draw',
     mainGameFundsManager: 'fundsManager',
     quickGame:            'quickGame',
     weth:                 'weth',
@@ -66,7 +66,7 @@ const KEY_MAP_TWO_FILE = {
  * keys are silently dropped.
  */
 const KEY_MAP_CHAINS_CONFIG = {
-    lottery:            'lottery',
+    draw:               'draw',
     quickGame:          'quickGame',
     complianceRegistry: 'complianceRegistry',
     weth:               'weth',
@@ -80,7 +80,7 @@ const KEY_MAP_CHAINS_CONFIG = {
 
 const ORDER = [
     'fundsManager',
-    'lottery',
+    'draw',
     'quickGame',
     'weth',
     'aggregatorV3',

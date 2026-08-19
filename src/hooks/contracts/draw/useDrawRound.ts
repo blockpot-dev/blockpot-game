@@ -19,12 +19,12 @@ export default function useDrawRound(roundIndex: number, gameType?: GameType) {
             const roundData = await game.getRoundData([roundIndex])
             const maxRoundsInPot = calculateMaxRoundsInPot(await game.currentGameConfig()) ?? 0
 
-            const lotteryAddress = getContractAddress(chainId, gameContractName)
+            const drawAddress = getContractAddress(chainId, gameContractName)
             const lgoAddress = getContractAddress(chainId, ContractName.LGO)
             const draws = await resolveLgoWinners(
                 roundData.draws,
                 roundIndex,
-                lotteryAddress,
+                drawAddress,
                 lgoAddress,
                 game,
                 lgo,

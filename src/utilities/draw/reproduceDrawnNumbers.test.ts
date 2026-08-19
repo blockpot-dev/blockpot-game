@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { reproduceDrawnNumbers } from './reproduceDrawnNumbers'
 
 // Ground-truth fixtures computed by the Solidity implementation itself:
-// a Foundry harness exposing LotteryRandomNumberProvider._drawNumbers
+// a Foundry harness exposing DrawRandomNumberProvider._drawNumbers
 // (unipot-contracts) was run over these inputs and its outputs captured here.
 // The util must reproduce them byte-exactly, including the rejection-sampling
 // loop's retry-counter behaviour (double increment on a used-number collision).

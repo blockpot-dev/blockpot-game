@@ -3,11 +3,11 @@ import { DrawProofInputs } from '@/types/draw/drawProof'
 
 const MAX_UINT256 = 2n ** 256n - 1n
 
-// Mirrors LotteryRandomNumberProvider._MAX_REJECTION_RETRIES.
+// Mirrors DrawRandomNumberProvider._MAX_REJECTION_RETRIES.
 const MAX_REJECTION_RETRIES = 100
 
 /**
- * Client-side reproduction of LotteryRandomNumberProvider._drawNumbers.
+ * Client-side reproduction of DrawRandomNumberProvider._drawNumbers.
  *
  * Mirrors the on-chain rejection-sampling loop byte-exactly: each candidate is
  * uint256(keccak256(abi.encode(seed, i, retryCounter))), candidates above the

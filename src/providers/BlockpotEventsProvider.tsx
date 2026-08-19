@@ -1,4 +1,4 @@
-import { lotteryAbi } from '@/abi/lotteryAbi'
+import { drawAbi } from '@/abi/drawAbi'
 import { wethAbi } from '@/abi/wethAbi'
 import { lgoAbi } from '@/abi/lgoAbi'
 import { kycRegistryAbi } from '@/abi/kycRegistryAbi'
@@ -31,7 +31,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
     const queryClient = useQueryClient()
     const { gameContractName } = useSelectedGame()
 
-    const draw = useReadContract(gameContractName, lotteryAbi)
+    const draw = useReadContract(gameContractName, drawAbi)
     const weth = useReadContract(ContractName.WETH, wethAbi)
     const lgo = useReadContract(ContractName.LGO, lgoAbi)
     const kyc = useReadContract(ContractName.KYC_REGISTRY, kycRegistryAbi)
@@ -62,7 +62,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
 
     // Draw-core event watchers — Lottery* event names track the deployed ABI, TODO(BLO-693)
     useEffect(() => {
-        const unwatchOnEntry = draw.watchEvent.LotteryOnEntry(
+        const unwatchOnEntry = draw.watchEvent.DrawOnEntry(
             {},
             {
                 onLogs: (logs) => {
@@ -76,7 +76,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
                 }
             }
         )
-        const unwatchOnDrawnNumbersReceived = draw.watchEvent.LotteryDrawnNumbersReceived(
+        const unwatchOnDrawnNumbersReceived = draw.watchEvent.DrawnNumbersReceived(
             {},
             {
                 onLogs: (logs) => {
@@ -85,19 +85,19 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
             }
         )
 
-        const unwatchOnDrawingNumbers = draw.watchEvent.LotteryDrawingNumbers({
+        const unwatchOnDrawingNumbers = draw.watchEvent.DrawingNumbers({
             onLogs: (logs) => {
                 setDrawRoundBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
             }
         })
 
-        const unwatchOnWinnerSelected = draw.watchEvent.LotteryWinnerSelected({
+        const unwatchOnWinnerSelected = draw.watchEvent.DrawWinnerSelected({
             onLogs: (logs) => {
                 setDrawRoundBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
             }
         })
 
-        const unwatchOnNoWinner = draw.watchEvent.LotteryNoWinner({
+        const unwatchOnNoWinner = draw.watchEvent.DrawNoWinner({
             onLogs: (logs) => {
                 setDrawRoundBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
             }
@@ -115,7 +115,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
 
     // LGO Event Watchers
     useEffect(() => {
-        // v2 routes every entry through LGO, so the Draw core’s LotteryOnEntry beneficiary
+        // v2 routes every entry through LGO, so the Draw core’s DrawOnEntry beneficiary
         // is the LGO contract — never the player. The real player lands here in
         // LGOEntry.args.player, so this watcher is the source of truth for
         // player-scoped entry-cache invalidation as well as lifetime/balance bumps.
@@ -184,7 +184,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
         // dedicated subscription means a contract whose entry-time emit shape
         // changes (e.g. a future variant that bumps the lifetime counters
         // without an LGOEntry log) still invalidates the chain-read snapshot.
-        const unwatchLifetimeWageredUpdated = lgo.watchEvent.LifetimeWageredUpdated(
+        const unwatchLifetimeEnteredUpdated = lgo.watchEvent.LifetimeEnteredUpdated(
             {},
             {
                 onLogs: (logs) => {
@@ -247,7 +247,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
             unwatchPlayerPaidDirect()
             unwatchWithdrawn()
             unwatchOperatorFeeBpsUpdated()
-            unwatchLifetimeWageredUpdated()
+            unwatchLifetimeEnteredUpdated()
             unwatchLifetimeWonUpdated()
             unwatchLargestSingleWinUpdated()
             unwatchLifetimeClaimedUpdated()

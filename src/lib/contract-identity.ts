@@ -13,7 +13,7 @@ export type ContractIdentityStatus =
     | { kind: 'ok', type: string, version: string }
     | { kind: 'no-code' } // address has no bytecode on this chain
     | { kind: 'not-identifiable' } // code present, typeAndVersion() reverted
-    | { kind: 'type-mismatch', found: string } // e.g. expected KYCRegistry, found Lottery
+    | { kind: 'type-mismatch', found: string } // e.g. expected KYCRegistry, found UnipotDraw
     | { kind: 'version-mismatch', found: string } // type ok, major version differs
 
 export interface ExpectedIdentity {
@@ -23,12 +23,12 @@ export interface ExpectedIdentity {
 
 // null = third-party contract (no typeAndVersion()) — skipped, never flagged.
 export const EXPECTED_IDENTITY: Record<ContractName, ExpectedIdentity | null> = {
-    [ContractName.DRAW_MAIN]: { type: 'Lottery', majorVersion: 1 },
+    [ContractName.DRAW_MAIN]: { type: 'UnipotDraw', majorVersion: 1 },
     [ContractName.CHAINLINK_AGGREGATOR_V3]: null,
     [ContractName.CHAINLINK_AGGREGATOR_EUR_USD]: null,
     [ContractName.FUNDS_MANAGER_MAIN]: { type: 'UnipotFundsManager', majorVersion: 1 },
     [ContractName.COMPLIANCE_REGISTRY]: { type: 'ComplianceRegistry', majorVersion: 1 },
-    [ContractName.QUICK_GAME]: { type: 'Lottery', majorVersion: 1 },
+    [ContractName.QUICK_GAME]: { type: 'UnipotDraw', majorVersion: 1 },
     [ContractName.WETH]: null,
     [ContractName.LGO]: { type: 'LGO', majorVersion: 1 },
     [ContractName.PLAYER_REGISTRY]: { type: 'PlayerRegistry', majorVersion: 1 },

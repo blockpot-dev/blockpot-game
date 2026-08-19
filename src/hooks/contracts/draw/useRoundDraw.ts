@@ -38,12 +38,12 @@ export default function useRoundDraw(chainChanged: boolean, drawnRoundIndexOverr
         const roundData = await game.getRoundData([idx])
         const maxRoundsInPot = calculateMaxRoundsInPot(await game.currentGameConfig()) ?? 0
 
-        const lotteryAddress = getContractAddress(chainId, gameContractName)
+        const drawAddress = getContractAddress(chainId, gameContractName)
         const lgoAddress = getContractAddress(chainId, ContractName.LGO)
         const draws = await resolveLgoWinners(
             roundData.draws,
             idx,
-            lotteryAddress,
+            drawAddress,
             lgoAddress,
             game,
             lgo,

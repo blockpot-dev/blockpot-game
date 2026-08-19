@@ -160,7 +160,7 @@ export default function DrawFairnessProof(props: DrawFairnessProofProps) {
             <_DrawFairnessProof
                 proof={{
                     roundIndex,
-                    lotteryAddress: '0x0000000000000000000000000000000000000000',
+                    drawAddress: '0x0000000000000000000000000000000000000000',
                     randomNumberProviderAddress: '0x0000000000000000000000000000000000000000',
                     inputs: { requestId: 0n, seed: 0n, maxNumber: 0, totalNumbers: 0 },
                     reproducedNumbers: [],

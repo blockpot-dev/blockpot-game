@@ -25,7 +25,7 @@ export default function useLifetimeSnapshot(address: Address) {
         queryKey: ['lgo:lifetime', 'snapshot', chainId, address],
         queryFn: async (): Promise<LifetimeSnapshot> => {
             const [wageredEurMinor, wonEurMinor, largestSingleWinEurMinor, claimedEurMinor] = await Promise.all([
-                lgo.lifetimeWageredEurMinor([address]),
+                lgo.lifetimeEnteredEurMinor([address]),
                 lgo.lifetimeWonEurMinor([address]),
                 lgo.largestSingleWinEurMinor([address]),
                 lgo.lifetimeClaimedEurMinor([address]),

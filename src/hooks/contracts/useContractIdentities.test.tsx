@@ -68,13 +68,13 @@ describe('useContractIdentities', () => {
     })
 
     it('surfaces a type mismatch as an error toast naming expected and found', async () => {
-        readContractMock.mockResolvedValue('Lottery 1.0.0')
+        readContractMock.mockResolvedValue('UnipotDraw 1.0.0')
         const { result } = renderHook(() => useContractIdentities())
         await waitFor(() => expect(result.current.statuses.length).toBe(FIRST_PARTY_COUNT))
 
         await waitFor(() => expect(toastErrorMock).toHaveBeenCalled())
         const messages = toastErrorMock.mock.calls.map((c) => String(c[0]))
-        expect(messages.some((m) => m.includes('KYCRegistry') && m.includes('Lottery 1.0.0'))).toBe(true)
+        expect(messages.some((m) => m.includes('KYCRegistry') && m.includes('UnipotDraw 1.0.0'))).toBe(true)
     })
 
     it('surfaces version drift as a warning toast, not an error', async () => {

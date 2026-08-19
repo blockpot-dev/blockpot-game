@@ -62,9 +62,9 @@ describe('verifyContractIdentity', () => {
     })
 
     it('returns type-mismatch with the found identity when another contract answers', async () => {
-        const client = clientWith({ identity: 'Lottery 1.0.0' })
+        const client = clientWith({ identity: 'UnipotDraw 1.0.0' })
         const status = await verifyContractIdentity(client as never, ADDR, EXPECTED)
-        expect(status).toEqual({ kind: 'type-mismatch', found: 'Lottery 1.0.0' })
+        expect(status).toEqual({ kind: 'type-mismatch', found: 'UnipotDraw 1.0.0' })
     })
 
     it('returns version-mismatch when the type matches but the major version differs', async () => {
@@ -92,8 +92,8 @@ describe('EXPECTED_IDENTITY', () => {
         expect(EXPECTED_IDENTITY[ContractName.KYC_REGISTRY]).toEqual({ type: 'KYCRegistry', majorVersion: 1 })
         expect(EXPECTED_IDENTITY[ContractName.LGO]).toEqual({ type: 'LGO', majorVersion: 1 })
         expect(EXPECTED_IDENTITY[ContractName.PLAYER_REGISTRY]).toEqual({ type: 'PlayerRegistry', majorVersion: 1 })
-        expect(EXPECTED_IDENTITY[ContractName.DRAW_MAIN]).toEqual({ type: 'Lottery', majorVersion: 1 })
-        expect(EXPECTED_IDENTITY[ContractName.QUICK_GAME]).toEqual({ type: 'Lottery', majorVersion: 1 })
+        expect(EXPECTED_IDENTITY[ContractName.DRAW_MAIN]).toEqual({ type: 'UnipotDraw', majorVersion: 1 })
+        expect(EXPECTED_IDENTITY[ContractName.QUICK_GAME]).toEqual({ type: 'UnipotDraw', majorVersion: 1 })
         expect(EXPECTED_IDENTITY[ContractName.FUNDS_MANAGER_MAIN]).toEqual({ type: 'UnipotFundsManager', majorVersion: 1 })
         expect(EXPECTED_IDENTITY[ContractName.COMPLIANCE_REGISTRY]).toEqual({ type: 'ComplianceRegistry', majorVersion: 1 })
     })

@@ -393,11 +393,11 @@ export const kycRegistryAbi = [
             },
             {
                 'internalType': 'uint128',
-                'name': 'betEurMinor',
+                'name': 'claimEurMinor',
                 'type': 'uint128'
             }
         ],
-        'name': 'isCompliantForBet',
+        'name': 'isCompliantForClaim',
         'outputs': [
             {
                 'internalType': 'bool',
@@ -417,11 +417,11 @@ export const kycRegistryAbi = [
             },
             {
                 'internalType': 'uint128',
-                'name': 'claimEurMinor',
+                'name': 'entryEurMinor',
                 'type': 'uint128'
             }
         ],
-        'name': 'isCompliantForClaim',
+        'name': 'isCompliantForEntry',
         'outputs': [
             {
                 'internalType': 'bool',

@@ -103,11 +103,11 @@ export const lgoAbi = [
         'inputs': [
             {
                 'internalType': 'address',
-                'name': 'lottery_',
+                'name': 'draw_',
                 'type': 'address'
             }
         ],
-        'name': 'addLottery',
+        'name': 'addDraw',
         'outputs': [],
         'stateMutability': 'nonpayable',
         'type': 'function'
@@ -173,7 +173,52 @@ export const lgoAbi = [
         'inputs': [
             {
                 'internalType': 'address',
-                'name': 'lottery_',
+                'name': '',
+                'type': 'address'
+            }
+        ],
+        'name': 'drawOfFundsManager',
+        'outputs': [
+            {
+                'internalType': 'address',
+                'name': '',
+                'type': 'address'
+            }
+        ],
+        'stateMutability': 'view',
+        'type': 'function'
+    },
+    {
+        'inputs': [],
+        'name': 'draws',
+        'outputs': [
+            {
+                'internalType': 'address[]',
+                'name': '',
+                'type': 'address[]'
+            }
+        ],
+        'stateMutability': 'view',
+        'type': 'function'
+    },
+    {
+        'inputs': [],
+        'name': 'drawsCount',
+        'outputs': [
+            {
+                'internalType': 'uint256',
+                'name': '',
+                'type': 'uint256'
+            }
+        ],
+        'stateMutability': 'view',
+        'type': 'function'
+    },
+    {
+        'inputs': [
+            {
+                'internalType': 'address',
+                'name': 'draw_',
                 'type': 'address'
             },
             {
@@ -212,7 +257,7 @@ export const lgoAbi = [
         'inputs': [
             {
                 'internalType': 'address',
-                'name': 'lottery_',
+                'name': 'draw_',
                 'type': 'address'
             },
             {
@@ -246,7 +291,7 @@ export const lgoAbi = [
         'inputs': [
             {
                 'internalType': 'address',
-                'name': 'lottery_',
+                'name': 'draw_',
                 'type': 'address'
             },
             {
@@ -280,7 +325,7 @@ export const lgoAbi = [
         'inputs': [
             {
                 'internalType': 'address',
-                'name': 'lottery_',
+                'name': 'draw_',
                 'type': 'address'
             },
             {
@@ -313,6 +358,25 @@ export const lgoAbi = [
             }
         ],
         'stateMutability': 'nonpayable',
+        'type': 'function'
+    },
+    {
+        'inputs': [
+            {
+                'internalType': 'address',
+                'name': 'player',
+                'type': 'address'
+            }
+        ],
+        'name': 'enteredEurMinorOf',
+        'outputs': [
+            {
+                'internalType': 'uint128',
+                'name': '',
+                'type': 'uint128'
+            }
+        ],
+        'stateMutability': 'view',
         'type': 'function'
     },
     {
@@ -358,7 +422,7 @@ export const lgoAbi = [
         'inputs': [
             {
                 'internalType': 'address',
-                'name': 'lottery_',
+                'name': 'draw_',
                 'type': 'address'
             },
             {
@@ -525,7 +589,7 @@ export const lgoAbi = [
                     },
                     {
                         'internalType': 'address[]',
-                        'name': 'initialLotteries',
+                        'name': 'initialDraws',
                         'type': 'address[]'
                     },
                     {
@@ -597,7 +661,7 @@ export const lgoAbi = [
                 'type': 'address'
             }
         ],
-        'name': 'isLottery',
+        'name': 'isDraw',
         'outputs': [
             {
                 'internalType': 'bool',
@@ -686,7 +750,7 @@ export const lgoAbi = [
                 'type': 'address'
             }
         ],
-        'name': 'lifetimeWageredEurMinor',
+        'name': 'lifetimeEnteredEurMinor',
         'outputs': [
             {
                 'internalType': 'uint128',
@@ -711,51 +775,6 @@ export const lgoAbi = [
                 'internalType': 'uint128',
                 'name': '',
                 'type': 'uint128'
-            }
-        ],
-        'stateMutability': 'view',
-        'type': 'function'
-    },
-    {
-        'inputs': [],
-        'name': 'lotteries',
-        'outputs': [
-            {
-                'internalType': 'address[]',
-                'name': '',
-                'type': 'address[]'
-            }
-        ],
-        'stateMutability': 'view',
-        'type': 'function'
-    },
-    {
-        'inputs': [],
-        'name': 'lotteriesCount',
-        'outputs': [
-            {
-                'internalType': 'uint256',
-                'name': '',
-                'type': 'uint256'
-            }
-        ],
-        'stateMutability': 'view',
-        'type': 'function'
-    },
-    {
-        'inputs': [
-            {
-                'internalType': 'address',
-                'name': '',
-                'type': 'address'
-            }
-        ],
-        'name': 'lotteryOfFundsManager',
-        'outputs': [
-            {
-                'internalType': 'address',
-                'name': '',
-                'type': 'address'
             }
         ],
         'stateMutability': 'view',
@@ -817,7 +836,7 @@ export const lgoAbi = [
         'inputs': [
             {
                 'internalType': 'address',
-                'name': 'lottery_',
+                'name': 'draw_',
                 'type': 'address'
             },
             {
@@ -848,11 +867,11 @@ export const lgoAbi = [
         'inputs': [
             {
                 'internalType': 'address',
-                'name': 'lottery_',
+                'name': 'draw_',
                 'type': 'address'
             }
         ],
-        'name': 'removeLottery',
+        'name': 'removeDraw',
         'outputs': [],
         'stateMutability': 'nonpayable',
         'type': 'function'
@@ -910,7 +929,7 @@ export const lgoAbi = [
         'inputs': [
             {
                 'internalType': 'address',
-                'name': 'lottery_',
+                'name': 'draw_',
                 'type': 'address'
             },
             {
@@ -1060,7 +1079,7 @@ export const lgoAbi = [
             },
             {
                 'internalType': 'int128',
-                'name': 'wageredDelta',
+                'name': 'enteredDelta',
                 'type': 'int128'
             },
             {
@@ -1236,25 +1255,6 @@ export const lgoAbi = [
         'type': 'function'
     },
     {
-        'inputs': [
-            {
-                'internalType': 'address',
-                'name': 'player',
-                'type': 'address'
-            }
-        ],
-        'name': 'wageredEurMinorOf',
-        'outputs': [
-            {
-                'internalType': 'uint128',
-                'name': '',
-                'type': 'uint128'
-            }
-        ],
-        'stateMutability': 'view',
-        'type': 'function'
-    },
-    {
         'inputs': [],
         'name': 'weth',
         'outputs': [
@@ -1326,6 +1326,44 @@ export const lgoAbi = [
         ],
         'stateMutability': 'view',
         'type': 'function'
+    },
+    {
+        'anonymous': false,
+        'inputs': [
+            {
+                'indexed': true,
+                'internalType': 'address',
+                'name': 'draw',
+                'type': 'address'
+            },
+            {
+                'indexed': true,
+                'internalType': 'address',
+                'name': 'fundsManager',
+                'type': 'address'
+            }
+        ],
+        'name': 'DrawAdded',
+        'type': 'event'
+    },
+    {
+        'anonymous': false,
+        'inputs': [
+            {
+                'indexed': true,
+                'internalType': 'address',
+                'name': 'draw',
+                'type': 'address'
+            },
+            {
+                'indexed': true,
+                'internalType': 'address',
+                'name': 'fundsManager',
+                'type': 'address'
+            }
+        ],
+        'name': 'DrawRemoved',
+        'type': 'event'
     },
     {
         'anonymous': false,
@@ -1409,7 +1447,7 @@ export const lgoAbi = [
             {
                 'indexed': true,
                 'internalType': 'address',
-                'name': 'lottery',
+                'name': 'draw',
                 'type': 'address'
             },
             {
@@ -1549,8 +1587,57 @@ export const lgoAbi = [
             },
             {
                 'indexed': false,
+                'internalType': 'uint256',
+                'name': 'deltaWei',
+                'type': 'uint256'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint128',
+                'name': 'deltaEurMinor',
+                'type': 'uint128'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint128',
+                'name': 'newLifetimeEnteredEurMinor',
+                'type': 'uint128'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint64',
+                'name': 'ethUsd8',
+                'type': 'uint64'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint64',
+                'name': 'eurUsd8',
+                'type': 'uint64'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint64',
+                'name': 'at',
+                'type': 'uint64'
+            }
+        ],
+        'name': 'LifetimeEnteredUpdated',
+        'type': 'event'
+    },
+    {
+        'anonymous': false,
+        'inputs': [
+            {
+                'indexed': true,
+                'internalType': 'address',
+                'name': 'player',
+                'type': 'address'
+            },
+            {
+                'indexed': false,
                 'internalType': 'int128',
-                'name': 'wageredDelta',
+                'name': 'enteredDelta',
                 'type': 'int128'
             },
             {
@@ -1562,7 +1649,7 @@ export const lgoAbi = [
             {
                 'indexed': false,
                 'internalType': 'uint128',
-                'name': 'newWageredTotal',
+                'name': 'newEnteredTotal',
                 'type': 'uint128'
             },
             {
@@ -1623,55 +1710,6 @@ export const lgoAbi = [
             {
                 'indexed': false,
                 'internalType': 'uint128',
-                'name': 'newLifetimeWageredEurMinor',
-                'type': 'uint128'
-            },
-            {
-                'indexed': false,
-                'internalType': 'uint64',
-                'name': 'ethUsd8',
-                'type': 'uint64'
-            },
-            {
-                'indexed': false,
-                'internalType': 'uint64',
-                'name': 'eurUsd8',
-                'type': 'uint64'
-            },
-            {
-                'indexed': false,
-                'internalType': 'uint64',
-                'name': 'at',
-                'type': 'uint64'
-            }
-        ],
-        'name': 'LifetimeWageredUpdated',
-        'type': 'event'
-    },
-    {
-        'anonymous': false,
-        'inputs': [
-            {
-                'indexed': true,
-                'internalType': 'address',
-                'name': 'player',
-                'type': 'address'
-            },
-            {
-                'indexed': false,
-                'internalType': 'uint256',
-                'name': 'deltaWei',
-                'type': 'uint256'
-            },
-            {
-                'indexed': false,
-                'internalType': 'uint128',
-                'name': 'deltaEurMinor',
-                'type': 'uint128'
-            },
-            {
-                'indexed': false,
-                'internalType': 'uint128',
                 'name': 'newLifetimeWonEurMinor',
                 'type': 'uint128'
             },
@@ -1695,44 +1733,6 @@ export const lgoAbi = [
             }
         ],
         'name': 'LifetimeWonUpdated',
-        'type': 'event'
-    },
-    {
-        'anonymous': false,
-        'inputs': [
-            {
-                'indexed': true,
-                'internalType': 'address',
-                'name': 'lottery',
-                'type': 'address'
-            },
-            {
-                'indexed': true,
-                'internalType': 'address',
-                'name': 'fundsManager',
-                'type': 'address'
-            }
-        ],
-        'name': 'LotteryAdded',
-        'type': 'event'
-    },
-    {
-        'anonymous': false,
-        'inputs': [
-            {
-                'indexed': true,
-                'internalType': 'address',
-                'name': 'lottery',
-                'type': 'address'
-            },
-            {
-                'indexed': true,
-                'internalType': 'address',
-                'name': 'fundsManager',
-                'type': 'address'
-            }
-        ],
-        'name': 'LotteryRemoved',
         'type': 'event'
     },
     {
@@ -1804,7 +1804,7 @@ export const lgoAbi = [
             {
                 'indexed': true,
                 'internalType': 'address',
-                'name': 'lottery',
+                'name': 'draw',
                 'type': 'address'
             },
             {
@@ -1847,7 +1847,7 @@ export const lgoAbi = [
             {
                 'indexed': true,
                 'internalType': 'address',
-                'name': 'lottery',
+                'name': 'draw',
                 'type': 'address'
             },
             {
@@ -1884,7 +1884,7 @@ export const lgoAbi = [
             {
                 'indexed': true,
                 'internalType': 'address',
-                'name': 'lottery',
+                'name': 'draw',
                 'type': 'address'
             },
             {
@@ -2047,7 +2047,7 @@ export const lgoAbi = [
             {
                 'indexed': true,
                 'internalType': 'address',
-                'name': 'lottery',
+                'name': 'draw',
                 'type': 'address'
             },
             {
@@ -2157,6 +2157,17 @@ export const lgoAbi = [
         'inputs': [
             {
                 'internalType': 'address',
+                'name': 'draw',
+                'type': 'address'
+            }
+        ],
+        'name': 'DrawAlreadyRegistered',
+        'type': 'error'
+    },
+    {
+        'inputs': [
+            {
+                'internalType': 'address',
                 'name': 'implementation',
                 'type': 'address'
             }
@@ -2245,19 +2256,8 @@ export const lgoAbi = [
         'type': 'error'
     },
     {
-        'inputs': [
-            {
-                'internalType': 'address',
-                'name': 'lottery',
-                'type': 'address'
-            }
-        ],
-        'name': 'LotteryAlreadyRegistered',
-        'type': 'error'
-    },
-    {
         'inputs': [],
-        'name': 'NoLotteries',
+        'name': 'NoDraws',
         'type': 'error'
     },
     {
@@ -2363,11 +2363,11 @@ export const lgoAbi = [
         'inputs': [
             {
                 'internalType': 'address',
-                'name': 'lottery',
+                'name': 'draw',
                 'type': 'address'
             }
         ],
-        'name': 'UnsupportedLottery',
+        'name': 'UnsupportedDraw',
         'type': 'error'
     },
     {
