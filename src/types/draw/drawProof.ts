@@ -1,7 +1,7 @@
 import { Address } from 'viem'
 
 export type DrawProofInputs = {
-    /** Chainlink VRF requestId for (lottery, roundIndex); 0n => unavailable */
+    /** Chainlink VRF requestId for (draw, roundIndex); 0n => unavailable */
     requestId: bigint
     /** VRF random word (uint256) used to derive the draw */
     seed: bigint
@@ -17,7 +17,7 @@ export type DrawProof = {
     roundIndex: number
     /** The Unipot Draw core == Blockpot round host. Field name tracks the verification payload — TODO(BLO-693). */
     lotteryAddress: Address
-    /** Derived on-chain via lottery.randomNumberProvider() */
+    /** Derived on-chain via the draw contract’s randomNumberProvider() */
     randomNumberProviderAddress: Address
     inputs: DrawProofInputs
     /** Output of reproduceDrawnNumbers(inputs) */

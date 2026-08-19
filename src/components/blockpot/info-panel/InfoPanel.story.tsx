@@ -224,9 +224,9 @@ const regressionGame = {
 } as unknown as Parameters<typeof resolvePlayerEntries>[4]
 
 const regressionLgo = {
-    entryOwnerOf: async ([lottery, round, entryIndex]: readonly [Address, number, number]) => {
+    entryOwnerOf: async ([draw, round, entryIndex]: readonly [Address, number, number]) => {
         if (
-            isAddressEqual(lottery, REGRESSION_DRAW)
+            isAddressEqual(draw, REGRESSION_DRAW)
             && round === REGRESSION_ROUND
             && entryIndex === REGRESSION_ENTRY_INDEX
         ) {

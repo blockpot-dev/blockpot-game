@@ -53,8 +53,8 @@ export default function MissedDrawProvider({ children }: Props): React.ReactElem
     const { address } = useAccount()
     const chainId = useChainId()
     const { selectedGame } = useSelectedGame()
-    const lottery = useDraw()
-    const currentRound = lottery?.currentRound
+    const draw = useDraw()
+    const currentRound = draw?.currentRound
     const playerEntries = usePlayerEntries(currentRound?.roundIndex ?? -1)
     const missedDrawDialogOpen = useMissedDrawDialogOpen()
     const drawSummaryDialogOpen = useDrawSummaryDialogOpen()

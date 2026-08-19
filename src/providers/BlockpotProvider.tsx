@@ -13,7 +13,7 @@ type BlockpotContextType = {
     setViewRoundIndex?: (roundIndex: bigint | undefined) => void,
     viewRoundOpened: boolean,
     setViewRoundOpened: (opened: boolean) => void,
-    lottery: DrawState
+    draw: DrawState
     drawnRound?: DrawRound,
     drawnRoundOpened: boolean,
     setDrawnRoundOpened: (opened: boolean) => void,
@@ -29,14 +29,14 @@ type Props = {
 export default function BlockpotProvider({ children }: Props): React.ReactElement {
     const [viewRoundIndex, setViewRoundIndex] = useState<bigint | undefined>()
     const [viewRoundOpened, setViewRoundOpened] = useState(false)
-    const lottery = useDrawState()
+    const draw = useDrawState()
     const chainChanged = useChainChanged()
     const { drawnRound, clearDrawnRound, drawnRoundOpened, setDrawnRoundOpened } = useRoundDraw(chainChanged)
     const { selectedGame } = useSelectedGame()
     const previousSelectedGame = usePrevious(selectedGame)
 
     const blockpotContextValue = {
-        lottery: lottery ?? DEFAULT_DRAW,
+        draw: draw ?? DEFAULT_DRAW,
         drawnRound,
         clearDrawnRound,
         drawnRoundOpened,
@@ -69,15 +69,15 @@ const useBlockpot = () => {
 }
 
 export const useDraw = () => {
-    return useBlockpot().lottery
+    return useBlockpot().draw
 }
 
 export const useIsDrawingNumbers = () => {
-    return useBlockpot().lottery.isDrawingNumbers
+    return useBlockpot().draw.isDrawingNumbers
 }
 
 export const useDrawHash = () => {
-    return useBlockpot().lottery.drawHash
+    return useBlockpot().draw.drawHash
 }
 
 export const useViewRoundIndex = () => {

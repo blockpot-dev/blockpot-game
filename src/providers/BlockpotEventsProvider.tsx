@@ -31,7 +31,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
     const queryClient = useQueryClient()
     const { gameContractName } = useSelectedGame()
 
-    const lottery = useReadContract(gameContractName, lotteryAbi)
+    const draw = useReadContract(gameContractName, lotteryAbi)
     const weth = useReadContract(ContractName.WETH, wethAbi)
     const lgo = useReadContract(ContractName.LGO, lgoAbi)
     const kyc = useReadContract(ContractName.KYC_REGISTRY, kycRegistryAbi)
@@ -62,7 +62,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
 
     // Draw-core event watchers — Lottery* event names track the deployed ABI, TODO(BLO-693)
     useEffect(() => {
-        const unwatchOnEntry = lottery.watchEvent.LotteryOnEntry(
+        const unwatchOnEntry = draw.watchEvent.LotteryOnEntry(
             {},
             {
                 onLogs: (logs) => {
@@ -76,7 +76,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
                 }
             }
         )
-        const unwatchOnDrawnNumbersReceived = lottery.watchEvent.LotteryDrawnNumbersReceived(
+        const unwatchOnDrawnNumbersReceived = draw.watchEvent.LotteryDrawnNumbersReceived(
             {},
             {
                 onLogs: (logs) => {
@@ -85,33 +85,33 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
             }
         )
 
-        const unwatchOnDrawingNumbers = lottery.watchEvent.LotteryDrawingNumbers({
+        const unwatchOnDrawingNumbers = draw.watchEvent.LotteryDrawingNumbers({
             onLogs: (logs) => {
                 setDrawRoundBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
             }
         })
 
-        const unwatchOnWinnerSelected = lottery.watchEvent.LotteryWinnerSelected({
+        const unwatchOnWinnerSelected = draw.watchEvent.LotteryWinnerSelected({
             onLogs: (logs) => {
                 setDrawRoundBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
             }
         })
 
-        const unwatchOnNoWinner = lottery.watchEvent.LotteryNoWinner({
+        const unwatchOnNoWinner = draw.watchEvent.LotteryNoWinner({
             onLogs: (logs) => {
                 setDrawRoundBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
             }
         })
 
         return () => {
-            console.log(`Unwatching lottery events for ${lottery.address}`)
+            console.log(`Unwatching draw events for ${draw.address}`)
             unwatchOnEntry()
             unwatchOnDrawingNumbers()
             unwatchOnNoWinner()
             unwatchOnDrawnNumbersReceived()
             unwatchOnWinnerSelected()
         }
-    }, [lottery.address, address]) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [draw.address, address]) // eslint-disable-line react-hooks/exhaustive-deps
 
     // LGO Event Watchers
     useEffect(() => {
