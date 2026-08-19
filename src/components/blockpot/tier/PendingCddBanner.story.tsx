@@ -19,7 +19,7 @@ function state(pendingEurMinor: number): PlayerActivityState {
     const won = T0_OUTFLOW_CAP + pendingEurMinor
     return {
         currentTier: 'T0',
-        cumWageredEurMinor: 0,
+        cumEnteredEurMinor: 0,
         cumWonEurMinor: won,
         cumClaimsEurMinor: 0,
         largestSingleWinEurMinor: won,

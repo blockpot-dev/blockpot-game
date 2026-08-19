@@ -40,7 +40,7 @@ const TIERS: TierPolicy[] = [
 
 const T1_STATE: PlayerActivityState = {
     currentTier: 'T1',
-    cumWageredEurMinor: 100_00,
+    cumEnteredEurMinor: 100_00,
     cumWonEurMinor: 0,
     cumClaimsEurMinor: 0,
     largestSingleWinEurMinor: 0,
@@ -77,7 +77,7 @@ function makeProps(over: Partial<React.ComponentProps<typeof AccountDialogView>>
         tiers: TIERS,
         eth: 0n,
         weth: 0n,
-        wageredEurMinor: 100_00n,
+        enteredEurMinor: 100_00n,
         wonEurMinor: 0n,
         profitEurMinor: 0n,
         isCompliant: true,

@@ -40,7 +40,7 @@ type NetPosition = {
 // the true |net| — only the zone ratio and the remaining amount clamp at the
 // cap.
 function deriveNetPosition(state: PlayerActivityState): NetPosition {
-    const net = state.cumWageredEurMinor - state.cumClaimsEurMinor
+    const net = state.cumEnteredEurMinor - state.cumClaimsEurMinor
     if (net === 0) {
         return {
             absNetEurMinor: 0,

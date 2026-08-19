@@ -18,7 +18,7 @@ function state(headroomEurMinor: number | null): PlayerActivityState {
     const unlimited = headroomEurMinor === null
     return {
         currentTier: unlimited ? 'T4' : 'T0',
-        cumWageredEurMinor: 0,
+        cumEnteredEurMinor: 0,
         cumWonEurMinor: 0,
         cumClaimsEurMinor: 0,
         largestSingleWinEurMinor: 0,

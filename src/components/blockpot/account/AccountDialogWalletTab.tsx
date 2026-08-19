@@ -19,7 +19,7 @@ export type AccountDialogWalletTabProps = {
 
     eth: bigint
     weth: bigint
-    wageredEurMinor: bigint
+    enteredEurMinor: bigint
     wonEurMinor: bigint
     profitEurMinor: bigint
     isCompliant: boolean
@@ -50,7 +50,7 @@ function formatEur(minor: number): string {
 export default function AccountDialogWalletTab(props: AccountDialogWalletTabProps) {
     const {
         state, draw, prizePoolContext,
-        eth, weth, wageredEurMinor, wonEurMinor, profitEurMinor, isCompliant,
+        eth, weth, enteredEurMinor, wonEurMinor, profitEurMinor, isCompliant,
         blockedUntil,
         decision, isClaiming, claimRequestPending, opStatus, opError,
         onClaim, onReleasePending, onVerify, onClearDecision, onAfterDisconnect,
@@ -73,7 +73,7 @@ export default function AccountDialogWalletTab(props: AccountDialogWalletTabProp
             <ReferralEarningsSection />
             <CoolOffStatusBanner blockedUntil={blockedUntil ?? 0n} />
             <LifetimeStatsRow
-                wageredEurMinor={wageredEurMinor}
+                enteredEurMinor={enteredEurMinor}
                 wonEurMinor={wonEurMinor}
                 profitEurMinor={profitEurMinor}
             />

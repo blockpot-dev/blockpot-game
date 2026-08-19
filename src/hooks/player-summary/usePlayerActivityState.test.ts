@@ -59,13 +59,13 @@ const PHASE1_LADDER: Tier[] = [
 const ALL_GATES = BIT_PHOTO_ID | BIT_ADDRESS | BIT_SOF | BIT_TAX_RES
 
 function withDefaults(over: { tierOrdinal?: number, gates?: bigint, snapshot?: Partial<{
-    wageredEurMinor: bigint, wonEurMinor: bigint, largestSingleWinEurMinor: bigint, claimedEurMinor: bigint,
+    enteredEurMinor: bigint, wonEurMinor: bigint, largestSingleWinEurMinor: bigint, claimedEurMinor: bigint,
 }>, tiers?: Tier[] } = {}) {
     tierMock.mockReturnValue({ tier: over.tierOrdinal ?? 0, isLoading: false })
     gatesMock.mockReturnValue({ gates: over.gates ?? 0n, isLoading: false })
     snapshotMock.mockReturnValue({
         snapshot: {
-            wageredEurMinor: 0n,
+            enteredEurMinor: 0n,
             wonEurMinor: 0n,
             largestSingleWinEurMinor: 0n,
             claimedEurMinor: 0n,
@@ -90,7 +90,7 @@ describe('usePlayerActivityState — directional flow derivation', () => {
     it('surfaces the lifetime counters from the snapshot', () => {
         withDefaults({
             snapshot: {
-                wageredEurMinor: 300_00n,
+                enteredEurMinor: 300_00n,
                 wonEurMinor: 120_00n,
                 largestSingleWinEurMinor: 80_00n,
                 claimedEurMinor: 50_00n,
@@ -98,7 +98,7 @@ describe('usePlayerActivityState — directional flow derivation', () => {
         })
 
         const { result } = renderHook(() => usePlayerActivityState())
-        expect(result.current.state?.cumWageredEurMinor).toBe(300_00)
+        expect(result.current.state?.cumEnteredEurMinor).toBe(300_00)
         expect(result.current.state?.cumWonEurMinor).toBe(120_00)
         expect(result.current.state?.largestSingleWinEurMinor).toBe(80_00)
         expect(result.current.state?.cumClaimsEurMinor).toBe(50_00)
@@ -107,7 +107,7 @@ describe('usePlayerActivityState — directional flow derivation', () => {
     it('derives the asymmetric T0 inflow and outflow flows independently', () => {
         // T0 caps: €900 in / €500 out. With €300 wagered and €100 claimed the
         // two sides scale against their own caps, not a shared one.
-        withDefaults({ snapshot: { wageredEurMinor: 300_00n, claimedEurMinor: 100_00n } })
+        withDefaults({ snapshot: { enteredEurMinor: 300_00n, claimedEurMinor: 100_00n } })
 
         const { result } = renderHook(() => usePlayerActivityState())
         expect(result.current.state?.inflow).toEqual({
@@ -136,7 +136,7 @@ describe('usePlayerActivityState — directional flow derivation', () => {
         withDefaults({
             tierOrdinal: 4,
             gates: ALL_GATES,
-            snapshot: { wageredEurMinor: 120_000_00n, claimedEurMinor: 80_000_00n },
+            snapshot: { enteredEurMinor: 120_000_00n, claimedEurMinor: 80_000_00n },
         })
 
         const { result } = renderHook(() => usePlayerActivityState())
@@ -151,7 +151,7 @@ describe('usePlayerActivityState — directional flow derivation', () => {
         withDefaults({
             tierOrdinal: 3,
             gates: BIT_PHOTO_ID | BIT_ADDRESS | BIT_SOF,
-            snapshot: { wageredEurMinor: 1_500_00n, claimedEurMinor: 600_00n },
+            snapshot: { enteredEurMinor: 1_500_00n, claimedEurMinor: 600_00n },
         })
 
         const { result } = renderHook(() => usePlayerActivityState())
@@ -224,7 +224,7 @@ describe('usePlayerActivityState — directional flow derivation', () => {
         const { result } = renderHook(() => usePlayerActivityState())
         expect(Object.keys(result.current.state ?? {}).sort()).toEqual([
             'cumClaimsEurMinor',
-            'cumWageredEurMinor',
+            'cumEnteredEurMinor',
             'cumWonEurMinor',
             'currentTier',
             'inflow',

@@ -51,7 +51,7 @@ function setActivityState(over: { cumClaimsEurMinor: number, capEurMinor: number
     activityMock.mockReturnValue({
         state: {
             currentTier: 'T1',
-            cumWageredEurMinor: 0,
+            cumEnteredEurMinor: 0,
             cumWonEurMinor: over.cumWonEurMinor ?? 0,
             cumClaimsEurMinor: over.cumClaimsEurMinor,
             largestSingleWinEurMinor: 0,

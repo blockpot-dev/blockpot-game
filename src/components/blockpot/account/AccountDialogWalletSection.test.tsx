@@ -35,7 +35,7 @@ function makeProps(): React.ComponentProps<typeof AccountDialogView> {
         tiers: [],
         eth: 0n,
         weth: 0n,
-        wageredEurMinor: 0n,
+        enteredEurMinor: 0n,
         wonEurMinor: 0n,
         profitEurMinor: 0n,
         isCompliant: false,

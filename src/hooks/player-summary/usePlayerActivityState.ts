@@ -16,7 +16,7 @@ export type PlayerTier = 'T0' | 'T1' | 'T2' | 'T3' | 'T4'
 // `outflowCapEurMinor` (the on-chain withdraw / direct-pay gate).
 //
 // The gate model itself is netted: a single signed net position
-// (cumWagered − cumClaims) consumes the inflow cap while positive and the
+// (cumEntered − cumClaims) consumes the inflow cap while positive and the
 // outflow cap while negative, so only one cap is being eaten into at any
 // moment. These fields stay gross totals for the existing consumers
 // (TierUpgradePrompt, PrizePoolPreCommitBanner, entry/claim guards);
@@ -58,7 +58,7 @@ export type DirectionalFlow = {
 // without a policy, so there is nothing meaningful to meter).
 export type PlayerActivityState = {
     currentTier: PlayerTier
-    cumWageredEurMinor: number
+    cumEnteredEurMinor: number
     cumWonEurMinor: number
     cumClaimsEurMinor: number
     largestSingleWinEurMinor: number
@@ -128,12 +128,12 @@ export default function usePlayerActivityState() {
         if (!currentTierPolicy) return undefined
 
         const currentTier = tierFromOrdinal(chainTierOrdinal)
-        const cumWageredEurMinor = eurMinorBigintToNumber(snapshot.wageredEurMinor)
+        const cumEnteredEurMinor = eurMinorBigintToNumber(snapshot.enteredEurMinor)
         const cumWonEurMinor = eurMinorBigintToNumber(snapshot.wonEurMinor)
         const largestSingleWinEurMinor = eurMinorBigintToNumber(snapshot.largestSingleWinEurMinor)
         const cumClaimsEurMinor = eurMinorBigintToNumber(snapshot.claimedEurMinor)
 
-        const inflow = deriveFlow(currentTierPolicy.inflowCapEurMinor, cumWageredEurMinor)
+        const inflow = deriveFlow(currentTierPolicy.inflowCapEurMinor, cumEnteredEurMinor)
         const outflow = deriveFlow(currentTierPolicy.outflowCapEurMinor, cumClaimsEurMinor)
 
         const nextOrdinal = chainTierOrdinal + 1
@@ -156,7 +156,7 @@ export default function usePlayerActivityState() {
 
         return {
             currentTier,
-            cumWageredEurMinor,
+            cumEnteredEurMinor,
             cumWonEurMinor,
             cumClaimsEurMinor,
             largestSingleWinEurMinor,

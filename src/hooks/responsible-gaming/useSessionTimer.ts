@@ -41,7 +41,7 @@ function writeSnapshot(address: string, snapshot: SessionSnapshot) {
 // the reads the app already performs.
 export default function useSessionTimer(address: string) {
     const { state } = usePlayerActivityState()
-    const netNowEurMinor = state ? state.cumWageredEurMinor - state.cumWonEurMinor : null
+    const netNowEurMinor = state ? state.cumEnteredEurMinor - state.cumWonEurMinor : null
 
     const [snapshot, setSnapshot] = useState<SessionSnapshot | null>(() => readSnapshot(address))
     const [nowMs, setNowMs] = useState(() => Date.now())

@@ -49,7 +49,7 @@ function state(options: NetStateOptions = {}): PlayerActivityState {
     } = options
     return {
         currentTier: tier,
-        cumWageredEurMinor: entered,
+        cumEnteredEurMinor: entered,
         cumWonEurMinor: claimed,
         cumClaimsEurMinor: claimed,
         largestSingleWinEurMinor: 0,

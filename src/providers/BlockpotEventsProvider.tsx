@@ -60,7 +60,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
         }
     }, [gameContractName, previousSelectedGame])
 
-    // Draw-core event watchers — Lottery* event names track the deployed ABI, TODO(BLO-693)
+    // Draw-core event watchers (UnipotDraw ABI)
     useEffect(() => {
         const unwatchOnEntry = draw.watchEvent.DrawOnEntry(
             {},

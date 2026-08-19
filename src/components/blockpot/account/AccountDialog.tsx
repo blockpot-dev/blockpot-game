@@ -43,9 +43,9 @@ export default function AccountDialog({ open, onOpenChange }: AccountDialogProps
     const { isCompliant } = useIsCompliant(address)
     const { gates: onChainGates } = usePlayerGates(address as Address)
 
-    const wageredEurMinor = snapshot?.wageredEurMinor ?? 0n
+    const enteredEurMinor = snapshot?.enteredEurMinor ?? 0n
     const wonEurMinor = snapshot?.wonEurMinor ?? 0n
-    const profitEurMinor = wonEurMinor > wageredEurMinor ? wonEurMinor - wageredEurMinor : 0n
+    const profitEurMinor = wonEurMinor > enteredEurMinor ? wonEurMinor - enteredEurMinor : 0n
 
     const claimRequest = useClaimRequest()
     const [decision, setDecision] = useState<ClaimDecision | null>(null)
@@ -148,7 +148,7 @@ export default function AccountDialog({ open, onOpenChange }: AccountDialogProps
             tiers={policy?.tiers ?? []}
             eth={eth}
             weth={weth}
-            wageredEurMinor={wageredEurMinor}
+            enteredEurMinor={enteredEurMinor}
             wonEurMinor={wonEurMinor}
             profitEurMinor={profitEurMinor}
             isCompliant={isCompliant}

@@ -26,7 +26,7 @@ export type AccountDialogViewProps = {
 
     eth: bigint
     weth: bigint
-    wageredEurMinor: bigint
+    enteredEurMinor: bigint
     wonEurMinor: bigint
     profitEurMinor: bigint
     isCompliant: boolean
@@ -49,7 +49,7 @@ export default function AccountDialogView(props: AccountDialogViewProps) {
     const {
         open, onOpenChange,
         state, draw, prizePoolContext, kycGates, onChainGates, tiers,
-        eth, weth, wageredEurMinor, wonEurMinor, profitEurMinor, isCompliant,
+        eth, weth, enteredEurMinor, wonEurMinor, profitEurMinor, isCompliant,
         blockedUntil,
         decision, isClaiming, claimRequestPending, opStatus, opError,
         onClaim, onReleasePending, onVerify, onClearDecision,
@@ -104,7 +104,7 @@ export default function AccountDialogView(props: AccountDialogViewProps) {
                                         prizePoolContext={prizePoolContext}
                                         eth={eth}
                                         weth={weth}
-                                        wageredEurMinor={wageredEurMinor}
+                                        enteredEurMinor={enteredEurMinor}
                                         wonEurMinor={wonEurMinor}
                                         profitEurMinor={profitEurMinor}
                                         isCompliant={isCompliant}

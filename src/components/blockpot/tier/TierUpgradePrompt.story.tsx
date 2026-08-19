@@ -28,7 +28,7 @@ function state(opts: { wagered?: number, claimed?: number }): PlayerActivityStat
     const claimed = opts.claimed ?? 0
     return {
         currentTier: 'T0',
-        cumWageredEurMinor: wagered,
+        cumEnteredEurMinor: wagered,
         cumWonEurMinor: 0,
         cumClaimsEurMinor: claimed,
         largestSingleWinEurMinor: 0,

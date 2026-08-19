@@ -16,7 +16,7 @@ function makeFlow(over: Partial<DirectionalFlow> = {}): DirectionalFlow {
 function makeState(outflow: Partial<DirectionalFlow> = {}): PlayerActivityState {
     return {
         currentTier: 'T0',
-        cumWageredEurMinor: 0,
+        cumEnteredEurMinor: 0,
         cumWonEurMinor: 0,
         cumClaimsEurMinor: 0,
         largestSingleWinEurMinor: 0,

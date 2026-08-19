@@ -5,7 +5,7 @@ import { ZERO_ADDRESS } from '@/web3/constants'
 import useLGORead from '../read/useLGORead'
 
 export type LifetimeSnapshot = {
-    wageredEurMinor: bigint
+    enteredEurMinor: bigint
     wonEurMinor: bigint
     largestSingleWinEurMinor: bigint
     claimedEurMinor: bigint
@@ -24,14 +24,14 @@ export default function useLifetimeSnapshot(address: Address) {
     const { data, isLoading, error } = useQuery({
         queryKey: ['lgo:lifetime', 'snapshot', chainId, address],
         queryFn: async (): Promise<LifetimeSnapshot> => {
-            const [wageredEurMinor, wonEurMinor, largestSingleWinEurMinor, claimedEurMinor] = await Promise.all([
+            const [enteredEurMinor, wonEurMinor, largestSingleWinEurMinor, claimedEurMinor] = await Promise.all([
                 lgo.lifetimeEnteredEurMinor([address]),
                 lgo.lifetimeWonEurMinor([address]),
                 lgo.largestSingleWinEurMinor([address]),
                 lgo.lifetimeClaimedEurMinor([address]),
             ])
             return {
-                wageredEurMinor: BigInt(wageredEurMinor),
+                enteredEurMinor: BigInt(enteredEurMinor),
                 wonEurMinor: BigInt(wonEurMinor),
                 largestSingleWinEurMinor: BigInt(largestSingleWinEurMinor),
                 claimedEurMinor: BigInt(claimedEurMinor),
