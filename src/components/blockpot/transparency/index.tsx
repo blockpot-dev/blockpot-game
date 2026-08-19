@@ -7,7 +7,7 @@ import HStack from '@/components/core/HStack/HStack'
 import BlockpotBalances from './BlockpotBalances'
 import TierThresholds from './TierThresholds'
 import DrawFairnessProof from './DrawFairnessProof/DrawFairnessProof'
-import useGameLatestRoundIndex from '@/hooks/contracts/lottery/useGameLatestRoundIndex'
+import useGameLatestRoundIndex from '@/hooks/contracts/draw/useGameLatestRoundIndex'
 import { useSelectedGame } from '@/providers/SelectedGameProvider'
 
 // Per-completed-round fairness proof with a round stepper. Defaults to the

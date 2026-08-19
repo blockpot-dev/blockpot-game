@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react'
 import { useAccount, useChainId } from 'wagmi'
 import { useSelectedGame } from './SelectedGameProvider'
-import { useLottery } from './BlockpotProvider'
-import usePlayerEntries from '@/hooks/contracts/lottery/usePlayerEntries'
-import useLotteryRound from '@/hooks/contracts/lottery/useLotteryRound'
+import { useDraw } from './BlockpotProvider'
+import usePlayerEntries from '@/hooks/contracts/draw/usePlayerEntries'
+import useDrawRound from '@/hooks/contracts/draw/useDrawRound'
 import { useMissedDrawDialogOpen, useDrawSummaryDialogOpen } from './ModalOpenStateProvider'
 import { usePrevious } from '@/hooks/utilities/usePrevious'
 
@@ -53,7 +53,7 @@ export default function MissedDrawProvider({ children }: Props): React.ReactElem
     const { address } = useAccount()
     const chainId = useChainId()
     const { selectedGame } = useSelectedGame()
-    const lottery = useLottery()
+    const lottery = useDraw()
     const currentRound = lottery?.currentRound
     const playerEntries = usePlayerEntries(currentRound?.roundIndex ?? -1)
     const missedDrawDialogOpen = useMissedDrawDialogOpen()
@@ -65,7 +65,7 @@ export default function MissedDrawProvider({ children }: Props): React.ReactElem
     const delayedCheckTimeout = useRef<NodeJS.Timeout | null>(null)
     const currentRoundRef = useRef(currentRound)
     const [missedRoundIndex, setMissedRoundIndex] = useState<number | null>(null)
-    const missedRound = useLotteryRound(missedRoundIndex ?? -1)
+    const missedRound = useDrawRound(missedRoundIndex ?? -1)
     const previousMissedDrawDialogOpen = usePrevious(missedDrawDialogOpen.value)
 
     // Keep currentRound ref up to date

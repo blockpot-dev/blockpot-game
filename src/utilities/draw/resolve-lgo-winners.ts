@@ -1,7 +1,7 @@
 import { isAddressEqual } from 'viem'
-import { DrawnNumber } from '@/types/lottery'
+import { DrawnNumber } from '@/types/draw'
 import { ZERO_ADDRESS } from '@/web3/constants'
-import useLotteryRead from '@/hooks/contracts/read/useLotteryRead'
+import useDrawRead from '@/hooks/contracts/read/useDrawRead'
 import useLGORead from '@/hooks/contracts/read/useLGORead'
 
 // v2 entries route through the LGO contract, so the on-chain `winner` is the
@@ -13,7 +13,7 @@ export async function resolveLgoWinners(
     roundIndex: number,
     lotteryAddress: `0x${string}`,
     lgoAddress: `0x${string}`,
-    game: ReturnType<typeof useLotteryRead>['game'],
+    game: ReturnType<typeof useDrawRead>['game'],
     lgo: ReturnType<typeof useLGORead>['read'],
 ): Promise<readonly DrawnNumber[]> {
     const hasLgoWins = draws.some((d) => isAddressEqual(d.winner, lgoAddress))

@@ -5,7 +5,7 @@ import { ContainerHeading } from '@/components/core/ContainerHeading'
 import DrawnNumberTicket from '../common/DrawnNumberTicket/DrawnNumberTicket'
 import { StagedDraw } from '@/providers/BlockpotDrawProvider'
 import { memo, useEffect, useRef } from 'react'
-import { DisplayDrawnNumberData } from '@/types/lottery/display-drawn-number-data'
+import { DisplayDrawnNumberData } from '@/types/draw/display-drawn-number-data'
 
 export type DrawnNumbersPanelProps = {
     stagedDraw: StagedDraw

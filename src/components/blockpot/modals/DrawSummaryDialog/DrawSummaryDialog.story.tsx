@@ -2,8 +2,8 @@ import { Meta, StoryObj } from '@storybook/react'
 import { useEffect, useState } from 'react'
 import { Address, isAddressEqual } from 'viem'
 import { _DrawSummaryDialog, type _DrawSummaryDialogProps } from './DrawSummaryDialog'
-import { LotteryEntry } from '@/types/lottery'
-import { resolvePlayerEntries } from '@/utilities/lottery/resolve-player-entries'
+import { DrawEntry } from '@/types/draw'
+import { resolvePlayerEntries } from '@/utilities/draw/resolve-player-entries'
 
 const Template = (props: _DrawSummaryDialogProps) => {
     return (
@@ -35,7 +35,7 @@ type Story = StoryObj<typeof _DrawSummaryDialog>
 // connected wallet. Pre-fix this story renders Total Tickets: 0; post-fix it renders one
 // row with from=100, to=104 and Total Tickets: 5.
 const REGRESSION_ROUND = 7
-const REGRESSION_LOTTERY = '0x0000000000000000000000000000000000000A11' as Address
+const REGRESSION_DRAW = '0x0000000000000000000000000000000000000A11' as Address
 const REGRESSION_LGO = '0x0000000000000000000000000000000000000B22' as Address
 const REGRESSION_PLAYER = '0x0000000000000000000000000000000000000C33' as Address
 const REGRESSION_ENTRY_INDEX = 42
@@ -63,7 +63,7 @@ const regressionGame = {
 const regressionLgo = {
     entryOwnerOf: async ([lottery, round, entryIndex]: readonly [Address, number, number]) => {
         if (
-            isAddressEqual(lottery, REGRESSION_LOTTERY)
+            isAddressEqual(lottery, REGRESSION_DRAW)
             && round === REGRESSION_ROUND
             && entryIndex === REGRESSION_ENTRY_INDEX
         ) {
@@ -74,13 +74,13 @@ const regressionLgo = {
 } as unknown as Parameters<typeof resolvePlayerEntries>[5]
 
 function PlayerEntriesResolvedFromLgoOwnershipRender(props: _DrawSummaryDialogProps) {
-    const [purchases, setPurchases] = useState<LotteryEntry[]>([])
+    const [purchases, setPurchases] = useState<DrawEntry[]>([])
     useEffect(() => {
         let cancelled = false
         resolvePlayerEntries(
             REGRESSION_ROUND,
             REGRESSION_PLAYER,
-            REGRESSION_LOTTERY,
+            REGRESSION_DRAW,
             REGRESSION_LGO,
             regressionGame,
             regressionLgo,

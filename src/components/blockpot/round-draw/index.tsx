@@ -1,4 +1,4 @@
-import { LotteryDrawContext } from '@/providers/BlockpotDrawProvider'
+import { BlockpotDraw } from '@/providers/BlockpotDrawProvider'
 import DrawRoundInfo, { DrawRoundInfoProps } from './DrawRoundInfo/DrawRoundInfo'
 import Waiting from './DrawStages/Waiting/Waiting'
 import Drawing from './DrawStages/Drawing/Drawing'
@@ -6,7 +6,7 @@ import { Address } from 'viem'
 import { memo } from 'react'
 import { Container, Vortex } from '@blockpot-dev/blockpot-design-system'
 
-function RenderDrawStage(props: { draw: LotteryDrawContext, accountAddress: Address }) {
+function RenderDrawStage(props: { draw: BlockpotDraw, accountAddress: Address }) {
     const { draw, accountAddress } = props
     switch (draw.drawStage.type) {
     case 'waiting':
@@ -23,7 +23,7 @@ function RenderDrawStage(props: { draw: LotteryDrawContext, accountAddress: Addr
 
 export type RoundDrawProps = {
     accountAddress: Address
-    draw: LotteryDrawContext
+    draw: BlockpotDraw
     roundInfo: DrawRoundInfoProps
 }
 

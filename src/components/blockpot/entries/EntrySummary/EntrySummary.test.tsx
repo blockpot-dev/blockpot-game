@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import EntrySummary from './EntrySummary'
-import { Amounts } from '@/types/lottery/tokens'
-import { DEFAULT_GAME_CONFIG, GameConfig } from '@/types/lottery/config'
+import { Amounts } from '@/types/draw/tokens'
+import { DEFAULT_GAME_CONFIG, GameConfig } from '@/types/draw/config'
 
 // The "Prize pool" row must open the fund-routing dialog. We mock the open
 // binding at the boundary (repo convention) and stub the dialog itself — its

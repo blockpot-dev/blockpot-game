@@ -4,7 +4,7 @@ import { renderWithProviders } from '@/test/renderWithProviders'
 import { _FundRoutingDialog } from './FundRoutingDialog'
 import type { FiatConverter } from '@/hooks/utilities/useFiatConverter'
 import { PEA_PER_ENTRY_WEI } from '@/constants/protocol'
-import { DEFAULT_GAME_CONFIG, GameConfig } from '@/types/lottery/config'
+import { DEFAULT_GAME_CONFIG, GameConfig } from '@/types/draw/config'
 
 // _FundRoutingDialog takes plain props, so it renders without the wagmi / Web3
 // stack. Fiat conversion is stubbed to a deterministic formatter.

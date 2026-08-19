@@ -11,12 +11,12 @@ export type DrawRoundInfoProps = {
     currentRound: number
     maximumRounds: number
     winnerChance: number
-    jackpot: bigint
+    prizePool: bigint
 }
 
 export default function DrawRoundInfo(props: DrawRoundInfoProps) {
-    const { potIndex, currentRound, maximumRounds, winnerChance, jackpot } = props
-    const jackpotFormatted = formatEtherMaxDecimalsGreedy(jackpot, 2)
+    const { potIndex, currentRound, maximumRounds, winnerChance, prizePool } = props
+    const prizePoolFormatted = formatEtherMaxDecimalsGreedy(prizePool, 2)
     const { selectedGame } = useSelectedGame()
     const isQuickGame = selectedGame === 'quick'
 
@@ -33,14 +33,14 @@ export default function DrawRoundInfo(props: DrawRoundInfoProps) {
 
     stats.push(
         <RoundInfoStat
-            key='jackpot'
+            key='prizePool'
             label='Jackpot'
             value={
                 <>
                     <div className='inline-block relative w-7 h-5 mr-2'>
                         <img className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-7 h-7' src='/icons/eth.svg' alt='ETH' />
                     </div>
-                    <span className='leading-[0.8]'>{jackpotFormatted}</span>
+                    <span className='leading-[0.8]'>{prizePoolFormatted}</span>
                 </>
             }/>
     )

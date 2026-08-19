@@ -1,22 +1,22 @@
 import { useQuery } from '@tanstack/react-query'
 import { useBalance, useChainId } from 'wagmi'
-import useLotteryRead from '../read/useLotteryRead'
-import { useLotteryHash } from '@/providers/BlockpotProvider'
+import useDrawRead from '../read/useDrawRead'
+import { useDrawHash } from '@/providers/BlockpotProvider'
 import useFundsManagerAddress from './useFundsManagerAddress'
 
 export default function useBalanceAllocations() {
     const chainId = useChainId()
-    const { game, selectedGame } = useLotteryRead()
-    const lotteryHash = useLotteryHash()
+    const { game, selectedGame } = useDrawRead()
+    const drawHash = useDrawHash()
     const { fundsManagerAddress } = useFundsManagerAddress()
     const { data: contractBalance } = useBalance({
         chainId,
         address: fundsManagerAddress,
-        scopeKey: lotteryHash,
+        scopeKey: drawHash,
     })
 
     const { data } = useQuery({
-        queryKey: ['balanceAllocations', selectedGame, lotteryHash],
+        queryKey: ['balanceAllocations', selectedGame, drawHash],
         queryFn: async () => {
             return await game.balances()
         }

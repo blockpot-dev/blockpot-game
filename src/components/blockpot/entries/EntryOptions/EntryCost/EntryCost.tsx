@@ -3,7 +3,7 @@ import HStack from '@/components/core/HStack/HStack'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import useDisplayCurrency from '@/hooks/utilities/useDisplayCurrency'
 import useDisplayPrices, { availableCurrenciesFor } from '@/hooks/utilities/useDisplayPrices'
-import { Amounts } from '@/types/lottery/tokens'
+import { Amounts } from '@/types/draw/tokens'
 import { TooltipArrow } from '@radix-ui/react-tooltip'
 
 export type EntryCostProps = {

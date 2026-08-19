@@ -5,22 +5,22 @@ import { PlayIcon, ShareIcon, ShieldCheckIcon } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import HStack from '@/components/core/HStack/HStack'
 import { Table, TableRow, TableHeader, TableHead, TableBody, TableCell } from '@/components/ui/table'
-import { DisplayDrawnNumberData } from '@/types/lottery/display-drawn-number-data'
-import { LotteryEntry, LotteryRoundId } from '@/types/lottery'
+import { DisplayDrawnNumberData } from '@/types/draw/display-drawn-number-data'
+import { DrawEntry, DrawRoundId } from '@/types/draw'
 import RoundInfoStat from '../../common/RoundInfoStat/RoundInfoStat'
 import HighlightDivider from '../../common/HighlightDivider/HighlightDivider'
-import useLotteryRound from '@/hooks/contracts/lottery/useLotteryRound'
+import useDrawRound from '@/hooks/contracts/draw/useDrawRound'
 import { formatNumberMaxDecimalsGreedy } from '@/utilities/formatters'
 import { useAccount } from 'wagmi'
 import { ZERO_ADDRESS } from '@/web3/constants'
-import { createDisplayDrawnNumberData } from '@/utilities/lottery/display-drawn-number-data'
+import { createDisplayDrawnNumberData } from '@/utilities/draw/display-drawn-number-data'
 import useFiatConverter from '@/hooks/utilities/useFiatConverter'
 import useNativeCurrency from '@/hooks/web3/useNativeCurrency'
-import usePlayerEntries from '@/hooks/contracts/lottery/usePlayerEntries'
+import usePlayerEntries from '@/hooks/contracts/draw/usePlayerEntries'
 import { formatDateWithTime } from '@/utilities/time/format-date'
 import { GameType } from '@/providers/SelectedGameProvider'
 
-function LotteryEntryRow(props: { entry: LotteryEntry }) {
+function DrawEntryRow(props: { entry: DrawEntry }) {
     const { entry } = props
     const entryEnd = entry.entryStart + entry.amount - 1
     return <TableRow>
@@ -37,9 +37,9 @@ export type _DrawSummaryDialogProps = {
 
     formattedChance: string
     formattedDate: string
-    roundId: LotteryRoundId
+    roundId: DrawRoundId
     displayDrawnNumberData: DisplayDrawnNumberData[]
-    purchases: LotteryEntry[]
+    purchases: DrawEntry[]
     gameType: GameType
     onReplayDraw: (roundIndex: number) => void
     // Contract-level round index (not the in-pot display index) — target of the
@@ -120,7 +120,7 @@ export function _DrawSummaryDialog(props: _DrawSummaryDialogProps) {
                         <TableBody>
                             {
                                 purchases.map((purchase) => (
-                                    <LotteryEntryRow key={purchase.index} entry={purchase} />
+                                    <DrawEntryRow key={purchase.index} entry={purchase} />
                                 ))
                             }
                         </TableBody>
@@ -141,7 +141,7 @@ export type DrawSummaryDialogProps = {
 
 export default function DrawSummaryDialog(props: DrawSummaryDialogProps) {
     const { open, onClose, roundIndex, gameType, onReplayDraw } = props
-    const round = useLotteryRound(roundIndex, gameType)
+    const round = useDrawRound(roundIndex, gameType)
     const { address } = useAccount()
     const nativeToken = useNativeCurrency()
     const fiatConverter = useFiatConverter()

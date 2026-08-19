@@ -1,4 +1,4 @@
-import { GameConfig } from '@/types/lottery/config'
+import { GameConfig } from '@/types/draw/config'
 import { useMemo } from 'react'
 
 export function calculateMaxRoundsInPot(gameConfig: GameConfig) {

@@ -1,11 +1,11 @@
 import { Address, isAddressEqual } from 'viem'
-import { LotteryEntry } from '@/types/lottery'
+import { DrawEntry } from '@/types/draw'
 import { ZERO_ADDRESS } from '@/web3/constants'
-import useLotteryRead from '@/hooks/contracts/read/useLotteryRead'
+import useDrawRead from '@/hooks/contracts/read/useDrawRead'
 import useLGORead from '@/hooks/contracts/read/useLGORead'
 
 // v2 entries route through the LGO contract, so the on-chain beneficiary recorded
-// by Lottery.entries is the LGO contract — entriesForBeneficiary(round, player) is
+// by the Draw core’s `entries` is the LGO contract — entriesForBeneficiary(round, player) is
 // always empty. The real player is in lgo.entryOwnerOf. Mirror resolveLgoWinners:
 // list every LGO-attributed entry, resolve each entry's owner, and keep the ones
 // owned by the connected wallet.
@@ -14,9 +14,9 @@ export async function resolvePlayerEntries(
     connectedWallet: Address | undefined,
     lotteryAddress: Address,
     lgoAddress: Address,
-    game: ReturnType<typeof useLotteryRead>['game'],
+    game: ReturnType<typeof useDrawRead>['game'],
     lgo: ReturnType<typeof useLGORead>['read'],
-): Promise<LotteryEntry[]> {
+): Promise<DrawEntry[]> {
     if (!connectedWallet || isAddressEqual(connectedWallet, ZERO_ADDRESS)) return []
 
     const entryIndices = await game.entriesForBeneficiary([roundIndex, lgoAddress])

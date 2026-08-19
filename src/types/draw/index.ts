@@ -4,13 +4,13 @@ import { lotteryAbi } from '@/abi/lotteryAbi'
 
 type GetEntryFn = ExtractAbiFunction<typeof lotteryAbi, 'getEntry'>
 
-export type LotteryRoundId = {
+export type DrawRoundId = {
   potIndex: number
   roundIndex: number
   maxRoundsPerPot: number
 }
 
-export type LotteryEntry = AbiParametersToPrimitiveTypes<GetEntryFn['outputs']>[0] & {
+export type DrawEntry = AbiParametersToPrimitiveTypes<GetEntryFn['outputs']>[0] & {
   index: number;
 };
 
@@ -20,7 +20,7 @@ export type DrawnNumber = {
   prize: bigint
 }
 
-export type LotteryRound = {
+export type DrawRound = {
   roundIndex: number,
   draws: readonly DrawnNumber[];
   prizePool: bigint;
@@ -33,7 +33,7 @@ export type LotteryRound = {
   maxRoundsInPot: number
 }
 
-export type LotteryConfig = {
+export type DrawConfig = {
   entryFee: bigint
   timeBetweenRounds: bigint
   chanceIncrementAmount: bigint
@@ -44,7 +44,7 @@ export type LotteryConfig = {
   potAllocations: bigint[]
 }
 
-export const LotteryRoundDefault: LotteryRound = {
+export const DrawRoundDefault: DrawRound = {
     roundIndex: -1,
     draws: [] as readonly DrawnNumber[],
     prizePool: 0n,

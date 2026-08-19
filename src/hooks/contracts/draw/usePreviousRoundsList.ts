@@ -2,7 +2,7 @@ import { useQueries } from '@tanstack/react-query'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useChainId } from 'wagmi'
 import { GameType } from '@/providers/SelectedGameProvider'
-import { LotteryRound } from '@/types/lottery'
+import { DrawRound } from '@/types/draw'
 import useGameLatestRoundIndex from './useGameLatestRoundIndex'
 
 export const BATCH_SIZE = 10
@@ -61,7 +61,7 @@ export default function usePreviousRoundsList({ filter }: { filter: PreviousRoun
 
     const items = useMemo<PreviousRoundItem[]>(() => {
         const result = candidateIndexes.map(({ gameType, roundIndex }, idx) => {
-            const data = cachedRounds[idx]?.data as LotteryRound | undefined
+            const data = cachedRounds[idx]?.data as DrawRound | undefined
             return {
                 key: `${gameType}:${roundIndex}`,
                 gameType,

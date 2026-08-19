@@ -1,9 +1,9 @@
 import { Dialog, DialogContent, DialogTopSection, Button } from '@blockpot-dev/blockpot-design-system'
 import { ElevatedIcon } from '@blockpot-dev/blockpot-design-system'
 import { XIcon } from 'lucide-react'
-import useLotteryRound from '@/hooks/contracts/lottery/useLotteryRound'
+import useDrawRound from '@/hooks/contracts/draw/useDrawRound'
 import { useMissedDraw } from '@/providers/MissedDrawProvider'
-import { useLotteryDraw } from '@/providers/BlockpotDrawProvider'
+import { useBlockpotDraw } from '@/providers/BlockpotDrawProvider'
 import { useMissedDrawDialogOpen } from '@/providers/ModalOpenStateProvider'
 import { GameType } from '@/providers/SelectedGameProvider'
 
@@ -14,9 +14,9 @@ export type MissedDrawDialogProps = {
 
 export default function MissedDrawDialog(props: MissedDrawDialogProps) {
     const { roundIndex, gameType } = props
-    const round = useLotteryRound(roundIndex)
+    const round = useDrawRound(roundIndex)
     const { markRoundAsSeen } = useMissedDraw()
-    const { replayDraw } = useLotteryDraw()
+    const { replayDraw } = useBlockpotDraw()
     const missedDrawDialogOpen = useMissedDrawDialogOpen()
 
     if (!round) return null

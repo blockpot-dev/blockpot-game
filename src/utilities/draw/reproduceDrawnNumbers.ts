@@ -1,5 +1,5 @@
 import { encodeAbiParameters, keccak256 } from 'viem'
-import { DrawProofInputs } from '@/types/lottery/drawProof'
+import { DrawProofInputs } from '@/types/draw/drawProof'
 
 const MAX_UINT256 = 2n ** 256n - 1n
 

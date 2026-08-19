@@ -3,13 +3,13 @@ import RoundDraw, { RoundDrawProps } from '.'
 import { ZERO_ADDRESS } from '@/web3/constants'
 import { useEffect, useState } from 'react'
 import { Address } from 'viem'
-import { LotteryRound } from '@/types/lottery'
+import { DrawRound } from '@/types/draw'
 import { Container } from '@blockpot-dev/blockpot-design-system'
-import { LotteryDrawContext } from '@/providers/BlockpotDrawProvider'
-import { DisplayDrawnNumberData } from '@/types/lottery/display-drawn-number-data'
+import { BlockpotDraw } from '@/providers/BlockpotDrawProvider'
+import { DisplayDrawnNumberData } from '@/types/draw/display-drawn-number-data'
 import { useInterval } from '@/hooks/utilities/useInterval'
 
-const DRAWN_ROUND: LotteryRound = {
+const DRAWN_ROUND: DrawRound = {
     roundIndex: 1,
     roundIndexInPot: 1,
     maxRoundsInPot: 10,
@@ -55,7 +55,7 @@ const DRAWN_ROUND: LotteryRound = {
 
 function Template(props: RoundDrawProps) {
     const accountAddress: Address = '0x0000000000000000000000000000000000000420'
-    const [draw, setDraw] = useState<LotteryDrawContext>({
+    const [draw, setDraw] = useState<BlockpotDraw>({
         drawStage: {
             type: 'waiting',
             roundIndex: 0
@@ -140,7 +140,7 @@ function Template(props: RoundDrawProps) {
                     currentRound: 3,
                     maximumRounds: 10,
                     winnerChance: 3200,
-                    jackpot: 1234n
+                    prizePool: 1234n
                 }}
             />
         </Container>

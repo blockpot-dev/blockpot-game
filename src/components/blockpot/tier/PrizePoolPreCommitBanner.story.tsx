@@ -1,19 +1,19 @@
 import { Meta, StoryObj } from '@storybook/react'
-import JackpotPreCommitBanner from './JackpotPreCommitBanner'
+import PrizePoolPreCommitBanner from './PrizePoolPreCommitBanner'
 import { PlayerActivityState } from '@/hooks/player-summary/usePlayerActivityState'
 
-const meta: Meta<typeof JackpotPreCommitBanner> = {
-    component: JackpotPreCommitBanner,
+const meta: Meta<typeof PrizePoolPreCommitBanner> = {
+    component: PrizePoolPreCommitBanner,
 }
 
 export default meta
 
-type Story = StoryObj<typeof JackpotPreCommitBanner>
+type Story = StoryObj<typeof PrizePoolPreCommitBanner>
 
 const noop = () => { /* storybook */ }
 
 // A player whose remaining outflow headroom is `headroomEurMinor` — the
-// banner appears once the jackpot exceeds it.
+// banner appears once the prize pool exceeds it.
 function state(headroomEurMinor: number | null): PlayerActivityState {
     const unlimited = headroomEurMinor === null
     return {
@@ -55,8 +55,8 @@ export const HeldSliceAtT0: Story = {
     },
 }
 
-// Larger jackpot, same headroom — nearly the whole win would wait in escrow.
-export const LargeJackpot: Story = {
+// Larger prize pool, same headroom — nearly the whole win would wait in escrow.
+export const LargePrizePool: Story = {
     args: {
         state: state(500_00),
         context: { currentJackpotEurMinor: 125_000_00, tierRequiredToFullyClaim: 'T2' },

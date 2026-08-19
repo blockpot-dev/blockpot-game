@@ -2,17 +2,17 @@ import { useAccount, useBalance, useChainId } from 'wagmi'
 import { Address } from 'viem'
 import useFormattedCurrencyValues from '../utilities/useFormattedCurrencyValues'
 import { Dispatch, SetStateAction, useState } from 'react'
-import { useLottery } from '@/providers/BlockpotProvider'
+import { useDraw } from '@/providers/BlockpotProvider'
 import { useSelectedGame } from '@/providers/SelectedGameProvider'
-import useEnterLottery from '../contracts/lottery/actions/useEnterLottery'
+import useEnterDraw from '../contracts/draw/actions/useEnterDraw'
 import useReferralBinding from '../referral/useReferralBinding'
 import usePendingReferralCode from '../referral/usePendingReferralCode'
 import useErc20WithAllowance from '../contracts/erc20/useErc20WithAllowance'
 import { ContractName, getContractAddress } from '@/constants/contract-addresses'
 import { formatEtherMaxDecimals } from '@/utilities/formatters'
-import { EntryAmount } from '@/types/lottery/entry'
+import { EntryAmount } from '@/types/draw/entry'
 import useNativeCurrency from '../web3/useNativeCurrency'
-import { Amounts } from '@/types/lottery/tokens'
+import { Amounts } from '@/types/draw/tokens'
 import { transactionStatusToInterfaceStatus } from '@/types/ui/interface-status'
 import { CF_BASIS_POINTS, BASIS_POINTS_DIVISOR, PEA_PER_ENTRY_WEI } from '@/constants/protocol'
 import useEntryQuote from '../contracts/lgo/useEntryQuote'
@@ -69,14 +69,14 @@ export type PayoutInWETHConfig = {
 export function useEntryForm() {
     const chainId = useChainId()
     const [entries, setEntries] = useState<EntryAmount>({ type: 'fixed', amount: 1 })
-    const lottery = useLottery()
+    const lottery = useDraw()
     const { selectedGame } = useSelectedGame()
     const nativeToken = useNativeCurrency()
 
     const { address } = useAccount()
     const { data: balance } = useBalance({ address })
 
-    const enterLotteryAction = useEnterLottery()
+    const enterDrawAction = useEnterDraw()
     const referralBinding = useReferralBinding()
     const pendingReferral = usePendingReferralCode()
     const [useWETH, setUseWETH] = useState(false)
@@ -147,7 +147,7 @@ export function useEntryForm() {
     }
     if (!error) error = entryBlockedReason ?? inflowHeadroomReason ?? pretxReason ?? complianceReason
 
-    const enterLottery = async () => {
+    const enterDraw = async () => {
         if (entriesRawValue < 1) return
         if (useWETH && needsAllowanceApproval) {
             weth.approve(quote.total)
@@ -158,7 +158,7 @@ export function useEntryForm() {
         const referralCode = !referralBinding.referrer && pendingReferral.isWellFormed
             ? pendingReferral.code
             : undefined
-        const ok = await enterLotteryAction.enter({
+        const ok = await enterDrawAction.enter({
             roundIndex: Number(lottery.roundIndex),
             amount: Number(entriesRawValue),
             payoutInWeth: payoutInWETH,
@@ -169,10 +169,10 @@ export function useEntryForm() {
     }
 
     const enterResult = {
-        isSuccess: enterLotteryAction.isSuccess,
-        isLoading: enterLotteryAction.isLoading,
-        isError: enterLotteryAction.isError,
-        status: enterLotteryAction.status,
+        isSuccess: enterDrawAction.isSuccess,
+        isLoading: enterDrawAction.isLoading,
+        isError: enterDrawAction.isError,
+        status: enterDrawAction.status,
     }
 
     const wethProps: EnterWETHConfig = {
@@ -188,8 +188,8 @@ export function useEntryForm() {
 
     const canEnter = entriesRawValue > 0n
         && !error
-        && enterLotteryAction.isLGOWhitelisted
-        && enterLotteryAction.isPlayerActive
+        && enterDrawAction.isLGOWhitelisted
+        && enterDrawAction.isPlayerActive
 
     return {
         entriesRawValue,
@@ -208,16 +208,16 @@ export function useEntryForm() {
         selectedGame,
 
         error,
-        purchasingStatus: transactionStatusToInterfaceStatus(enterLotteryAction.status),
-        enter: enterLottery,
+        purchasingStatus: transactionStatusToInterfaceStatus(enterDrawAction.status),
+        enter: enterDraw,
         enterResult,
         nativeBalance,
         weth: wethProps,
         payoutInWETH: payoutInWETHProps,
         canEnter,
         baseBalance: `${formatEtherMaxDecimals(useWETH ? weth.balance : nativeBalance, 2)}`,
-        isLGOWhitelisted: enterLotteryAction.isLGOWhitelisted,
-        isPlayerActive: enterLotteryAction.isPlayerActive,
+        isLGOWhitelisted: enterDrawAction.isLGOWhitelisted,
+        isPlayerActive: enterDrawAction.isPlayerActive,
         lossLimitBreached,
     }
 }

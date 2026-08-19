@@ -1,6 +1,6 @@
 import HStack from '@/components/core/HStack/HStack'
 import VStack from '@/components/core/VStack/VStack'
-import usePreviousRoundsList, { PreviousRoundsFilter } from '@/hooks/contracts/lottery/usePreviousRoundsList'
+import usePreviousRoundsList, { PreviousRoundsFilter } from '@/hooks/contracts/draw/usePreviousRoundsList'
 import { Button, SegmentedControl } from '@blockpot-dev/blockpot-design-system'
 import { IconHistory } from '@tabler/icons-react'
 import { XIcon } from 'lucide-react'
@@ -10,7 +10,7 @@ import PreviousRound from './PreviousRound/PreviousRound'
 import { Address } from 'viem'
 import Binding from '@/utilities/binding'
 import { cn } from '@/lib/utils'
-import { useLotteryDraw } from '@/providers/BlockpotDrawProvider'
+import { useBlockpotDraw } from '@/providers/BlockpotDrawProvider'
 
 const FILTER_OPTIONS = [
     { label: 'All', value: 'all' },
@@ -25,7 +25,7 @@ export type PreviousRoundsProps = {
 
 export default function PreviousRounds(props: PreviousRoundsProps) {
     const { accountAddress, isOpen } = props
-    const { viewRoundSummary } = useLotteryDraw()
+    const { viewRoundSummary } = useBlockpotDraw()
     const overlayRef = useRef<HTMLDivElement>(null)
     const panelRef = useRef<HTMLDivElement>(null)
     const scrollRef = useRef<HTMLDivElement>(null)

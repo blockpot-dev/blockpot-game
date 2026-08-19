@@ -1,6 +1,6 @@
 import { Address, isAddressEqual } from 'viem'
 import { ZERO_ADDRESS } from '@/web3/constants'
-import { DisplayDrawnNumberData } from '@/types/lottery/display-drawn-number-data'
+import { DisplayDrawnNumberData } from '@/types/draw/display-drawn-number-data'
 import { cva } from 'class-variance-authority'
 
 export type TicketMatchResult = {
@@ -11,7 +11,7 @@ export type TicketMatchResult = {
 
 export type TicketImageAndVariant = {
     image: string
-    variant: 'neutral' | 'playerJackpot' | 'player2nd' | 'player3rd' | 'playerWinner'
+    variant: 'neutral' | 'playerTopPrize' | 'player2nd' | 'player3rd' | 'playerWinner'
 }
 
 /**
@@ -54,13 +54,13 @@ export function getDrawnNumberImage(drawnNumber: DisplayDrawnNumberData): string
 /**
  * Determines the variant (for styling) based on ordinal and winner status
  */
-export function getTicketVariant(ordinal: number, hasWinner: boolean, isPlayerWinner: boolean): 'neutral' | 'playerJackpot' | 'player2nd' | 'player3rd' | 'playerWinner' {
+export function getTicketVariant(ordinal: number, hasWinner: boolean, isPlayerWinner: boolean): 'neutral' | 'playerTopPrize' | 'player2nd' | 'player3rd' | 'playerWinner' {
     if (!hasWinner) {
         return 'neutral'
     }
     switch (ordinal) {
     case 1:
-        return isPlayerWinner ? 'playerJackpot' : 'neutral'
+        return isPlayerWinner ? 'playerTopPrize' : 'neutral'
     case 2:
         return isPlayerWinner ? 'player2nd' : 'neutral'
     case 3:
@@ -99,7 +99,7 @@ export const ticketContentVariants = cva('gap-4 px-5 pt-6 grow', {
     variants: {
         variant: {
             neutral: 'text-foreground',
-            playerJackpot: 'text-[#8D431E]',
+            playerTopPrize: 'text-[#8D431E]',
             player2nd: 'text-[#4B4B4B]',
             player3rd: 'text-[#65382F]',
             playerWinner: 'text-[#181D3F]'

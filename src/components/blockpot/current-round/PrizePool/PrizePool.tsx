@@ -4,12 +4,12 @@ import VStack from '@/components/core/VStack/VStack'
 import { formatEtherMaxDecimalsGreedy } from '@/utilities/formatters'
 import { Container, Vortex } from '@blockpot-dev/blockpot-design-system'
 
-export type JackpotProps = {
+export type PrizePoolProps = {
     nativeAmount: bigint
     fiatAmountFormatted: string
 }
 
-export default function Jackpot(props: JackpotProps) {
+export default function PrizePool(props: PrizePoolProps) {
     const { nativeAmount, fiatAmountFormatted } = props
 
     return (

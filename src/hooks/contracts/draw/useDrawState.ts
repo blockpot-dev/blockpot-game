@@ -1,54 +1,54 @@
 import { Address, formatEther, parseEther } from 'viem'
 import { useAccount, useChainId } from 'wagmi'
 import { ZERO_ADDRESS } from '@/web3/constants'
-import { LotteryRound, LotteryRoundDefault } from '@/types/lottery'
+import { DrawRound, DrawRoundDefault } from '@/types/draw'
 import { useQuery } from '@tanstack/react-query'
-import useLotteryRead from '../read/useLotteryRead'
+import useDrawRead from '../read/useDrawRead'
 import useAvailablePublicClient from '@/hooks/web3/useAvailablePublicClient'
 import useFiatConverter from '@/hooks/utilities/useFiatConverter'
-import { Amounts, DEFAULT_AMOUNTS } from '@/types/lottery/tokens'
-import { DEFAULT_GAME_CONFIG, GameConfig } from '@/types/lottery/config'
+import { Amounts, DEFAULT_AMOUNTS } from '@/types/draw/tokens'
+import { DEFAULT_GAME_CONFIG, GameConfig } from '@/types/draw/config'
 import useNativeCurrency from '@/hooks/web3/useNativeCurrency'
 import { calculateMaxRoundsInPot } from './useMaxRoundsInPot'
 
-export const DEFAULT_LOTTERY: LotteryState = {
+export const DEFAULT_DRAW: DrawState = {
     roundIndex: -1,
     pots: [0n],
     amountPerEntry: parseEther('1'),
     isDrawingNumbers: false,
-    lotteryHash: '0',
+    drawHash: '0',
     randomNumberProviderAddress: ZERO_ADDRESS,
     currentChanceOfWinner: 1n,
-    currentRound: LotteryRoundDefault,
+    currentRound: DrawRoundDefault,
     timeBetweenRounds: 1,
-    jackpot: DEFAULT_AMOUNTS,
+    prizePool: DEFAULT_AMOUNTS,
     gameConfig: DEFAULT_GAME_CONFIG
 }
 
-export type LotteryState = {
-    lotteryHash: string,
+export type DrawState = {
+    drawHash: string,
     roundIndex: number,
     pots: readonly bigint[],
     amountPerEntry: bigint,
     isDrawingNumbers: boolean,
     randomNumberProviderAddress: Address
     currentChanceOfWinner: bigint
-    currentRound: LotteryRound
+    currentRound: DrawRound
     gameConfig: GameConfig
     timeBetweenRounds: number
-    jackpot: Amounts
+    prizePool: Amounts
 }
 
-export default function useLotteryState() {
+export default function useDrawState() {
     const chainId = useChainId()
     const { address } = useAccount()
-    const { game, selectedGame } = useLotteryRead()
+    const { game, selectedGame } = useDrawRead()
     const nativeToken = useNativeCurrency()
     const publicClient = useAvailablePublicClient()
     const converter = useFiatConverter()
 
     const { data } = useQuery({
-        queryKey: ['lotteryState', selectedGame, chainId, address ?? ZERO_ADDRESS],
+        queryKey: ['drawState', selectedGame, chainId, address ?? ZERO_ADDRESS],
         queryFn: async () => {
             const pots = await game.currentPots()
             const amountPerEntry = await game.entryAmount()
@@ -63,16 +63,16 @@ export default function useLotteryState() {
 
             const roundData = await game.getRoundData([roundIndex])
 
-            const jackpotAmount = pots[0]
-            const jackpotFiat = converter(jackpotAmount)
-            const jackpot = {
-                amount: jackpotAmount,
-                amountFormatted: formatEther(jackpotAmount),
-                fiat: jackpotFiat.value,
-                fiatFormatted: jackpotFiat.formattedValue,
+            const prizePoolAmount = pots[0]
+            const prizePoolFiat = converter(prizePoolAmount)
+            const prizePool = {
+                amount: prizePoolAmount,
+                amountFormatted: formatEther(prizePoolAmount),
+                fiat: prizePoolFiat.value,
+                fiatFormatted: prizePoolFiat.formattedValue,
                 nativeToken
             }
-            const currentRound: LotteryRound = {
+            const currentRound: DrawRound = {
                 roundIndex: roundIndex,
                 draws: roundData.draws,
                 entryCount: roundData.entryCount,
@@ -86,7 +86,7 @@ export default function useLotteryState() {
             }
 
             return {
-                lotteryHash: blockNumber.toString(),
+                drawHash: blockNumber.toString(),
                 roundIndex: roundIndex,
                 pots,
                 amountPerEntry,
@@ -95,7 +95,7 @@ export default function useLotteryState() {
                 currentChanceOfWinner,
                 currentRound,
                 timeBetweenRounds,
-                jackpot,
+                prizePool,
                 gameConfig
             }
         }

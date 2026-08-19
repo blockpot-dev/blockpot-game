@@ -1,12 +1,12 @@
 import VStack from '@/components/core/VStack/VStack'
 import { cn } from '@/lib/utils'
-import { PurchaseData } from '@/types/lottery/purchase'
+import { PurchaseData } from '@/types/draw/purchase'
 import { formatNumber } from '@/utilities/formatters'
 import { memo } from 'react'
-import { LotteryDrawContext } from '@/providers/BlockpotDrawProvider'
+import { BlockpotDraw } from '@/providers/BlockpotDrawProvider'
 import { Address } from 'viem'
-import { getTicketImageAndVariantFromMatch, ticketContentVariants, TicketMatchResult } from '@/utilities/lottery/ticket-image'
-import { isPlayerWinner } from '@/utilities/lottery/is-player-winner'
+import { getTicketImageAndVariantFromMatch, ticketContentVariants, TicketMatchResult } from '@/utilities/draw/ticket-image'
+import { isPlayerWinner } from '@/utilities/draw/is-player-winner'
 
 type PurchaseContentProps = {
     purchase: PurchaseData
@@ -51,15 +51,15 @@ export type PurchaseProps = {
     isFirst: boolean
     isConnected: boolean
     animationsEnabled: boolean
-    draw?: LotteryDrawContext
+    draw?: BlockpotDraw
     accountAddress?: Address
 };
 
 function getPurchaseTicketMatch(
     purchase: PurchaseData,
-    draw: LotteryDrawContext | undefined,
+    draw: BlockpotDraw | undefined,
     accountAddress: Address | undefined
-): { match: TicketMatchResult | null; image: string; variant: 'neutral' | 'playerJackpot' | 'player2nd' | 'player3rd' | 'playerWinner' } {
+): { match: TicketMatchResult | null; image: string; variant: 'neutral' | 'playerTopPrize' | 'player2nd' | 'player3rd' | 'playerWinner' } {
     // Default values if no draw is active or no account address
     const defaultResult = {
         match: null,

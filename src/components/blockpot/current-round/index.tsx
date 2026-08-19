@@ -1,10 +1,10 @@
 import Countdown from './Countdown/Countdown'
-import { useLottery } from '@/providers/BlockpotProvider'
+import { useDraw } from '@/providers/BlockpotProvider'
 import HStack from '@/components/core/HStack/HStack'
 import VStack from '@/components/core/VStack/VStack'
 import RoundInfo, { RoundInfoProps } from './RoundInfo/RoundInfo'
 import Prizes from './Prizes/Prizes'
-import Jackpot, { JackpotProps } from './Jackpot/Jackpot'
+import PrizePool, { PrizePoolProps } from './PrizePool/PrizePool'
 import { Prize } from './Prizes/PrizeRow'
 
 export type EntryInfoProps = {
@@ -15,18 +15,18 @@ export type EntryInfoProps = {
 export type CurrentRoundProps = {
     entryInfo: EntryInfoProps
     roundInfo: RoundInfoProps
-    jackpot: JackpotProps
+    prizePool: PrizePoolProps
     prizes: Prize[]
 };
 
 export default function CurrentRound(props: CurrentRoundProps) {
-    const lottery = useLottery()
+    const lottery = useDraw()
     const { currentRound, timeBetweenRounds } = lottery
     const nextDrawTime = currentRound.drawTime
 
     return <VStack className='p-6 gap-12 min-h-[720px]'>
         <HStack className='gap-4'>
-            <Jackpot {...props.jackpot} />
+            <PrizePool {...props.prizePool} />
             <Prizes className='w-[252px]' prizes={props.prizes} />
         </HStack>
         <VStack className='gap-8'>

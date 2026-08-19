@@ -2,11 +2,11 @@ import styles from './InfoPanel.module.css'
 import { Container } from '@blockpot-dev/blockpot-design-system'
 import VStack from '@/components/core/VStack/VStack'
 import Purchase from './purchases/Purchase'
-import { PurchaseData } from '@/types/lottery/purchase'
+import { PurchaseData } from '@/types/draw/purchase'
 import { ContainerHeading } from '@/components/core/ContainerHeading'
 import { memo, useEffect, useRef, useState } from 'react'
 import { usePrevious } from '@/hooks/utilities/usePrevious'
-import { LotteryDrawContext, useLotteryDraw } from '@/providers/BlockpotDrawProvider'
+import { BlockpotDraw, useBlockpotDraw } from '@/providers/BlockpotDrawProvider'
 import useAccountAddress from '@/hooks/utilities/useAccountAddress'
 import { Address } from 'viem'
 
@@ -17,7 +17,7 @@ export type _InfoPanelProps = {
     animationsEnabled: boolean
     setLastPurchaseId: (lastPurchaseId: number) => void
     lastPurchaseId: number | null
-    draw?: LotteryDrawContext
+    draw?: BlockpotDraw
     accountAddress: Address
 }
 
@@ -90,7 +90,7 @@ export type InfoPanelProps = {
 
 function InfoPanel(props: InfoPanelProps) {
     const { purchases, isConnected } = props
-    const { draw } = useLotteryDraw()
+    const { draw } = useBlockpotDraw()
     const accountAddress = useAccountAddress()
     const [animationsEnabled, setAnimationsEnabled] = useState(false)
     const [lastPurchaseId, setLastPurchaseId] = useState<number | null>(null)

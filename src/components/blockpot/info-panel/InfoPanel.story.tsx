@@ -4,8 +4,8 @@ import { Meta, StoryObj } from '@storybook/react'
 import { _InfoPanel, _InfoPanelProps } from '.'
 import { useEffect, useState } from 'react'
 import { Address, isAddressEqual } from 'viem'
-import { resolvePlayerEntries } from '@/utilities/lottery/resolve-player-entries'
-import { PurchaseData } from '@/types/lottery/purchase'
+import { resolvePlayerEntries } from '@/utilities/draw/resolve-player-entries'
+import { PurchaseData } from '@/types/draw/purchase'
 
 const Template = (props: _InfoPanelProps) => {
     return (
@@ -198,7 +198,7 @@ export const ConnectedNoPurchases: Story = {
 // wallet. Pre-fix this story renders zero rows; post-fix it renders one Purchase row
 // covering ticket numbers 100..104.
 const REGRESSION_ROUND = 7
-const REGRESSION_LOTTERY = '0x0000000000000000000000000000000000000A11' as Address
+const REGRESSION_DRAW = '0x0000000000000000000000000000000000000A11' as Address
 const REGRESSION_LGO = '0x0000000000000000000000000000000000000B22' as Address
 const REGRESSION_PLAYER = '0x0000000000000000000000000000000000000C33' as Address
 const REGRESSION_ENTRY_INDEX = 42
@@ -226,7 +226,7 @@ const regressionGame = {
 const regressionLgo = {
     entryOwnerOf: async ([lottery, round, entryIndex]: readonly [Address, number, number]) => {
         if (
-            isAddressEqual(lottery, REGRESSION_LOTTERY)
+            isAddressEqual(lottery, REGRESSION_DRAW)
             && round === REGRESSION_ROUND
             && entryIndex === REGRESSION_ENTRY_INDEX
         ) {
@@ -253,7 +253,7 @@ function PlayerEntriesResolvedFromLgoOwnershipRender(props: _InfoPanelProps) {
         resolvePlayerEntries(
             REGRESSION_ROUND,
             REGRESSION_PLAYER,
-            REGRESSION_LOTTERY,
+            REGRESSION_DRAW,
             REGRESSION_LGO,
             regressionGame,
             regressionLgo,

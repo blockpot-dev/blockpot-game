@@ -19,7 +19,7 @@ type Props = {
 
 export function SelectedGameProvider({ children }: Props): React.ReactElement {
     const [selectedGame, setSelectedGame] = useState<GameType>('main')
-    const gameContractName = selectedGame == 'main' ? ContractName.LOTTERY_MAIN : ContractName.QUICK_GAME
+    const gameContractName = selectedGame == 'main' ? ContractName.DRAW_MAIN : ContractName.QUICK_GAME
 
     const selectedGameContextValue = {
         setSelectedGame,

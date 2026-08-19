@@ -117,7 +117,7 @@ const RICH_TOS: CurrentTos = {
         '## 2. Entries',
         '',
         'Entries are final. The protocol contract is at',
-        '[etherscan.io/address/0xLottery](https://etherscan.io/address/0xLottery)',
+        '[etherscan.io/address/0xDraw](https://etherscan.io/address/0xDraw)',
         'and accepts the `enter(roundIndex, amount, payoutInWeth, operator)`',
         'function only while a round is open.',
         '',

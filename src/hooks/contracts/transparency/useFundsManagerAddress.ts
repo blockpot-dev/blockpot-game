@@ -2,7 +2,7 @@ import { Address } from 'viem'
 import { useChainId } from 'wagmi'
 import { useQuery } from '@tanstack/react-query'
 import { ZERO_ADDRESS } from '@/web3/constants'
-import useLotteryRead from '../read/useLotteryRead'
+import useDrawRead from '../read/useDrawRead'
 
 // Derives the funds-manager address for the selected game directly from the
 // lottery contract (`lottery.fundsManager()`) rather than the static
@@ -10,7 +10,7 @@ import useLotteryRead from '../read/useLotteryRead'
 // when the synced `fundsManager` key is missing (see task 102).
 export default function useFundsManagerAddress() {
     const chainId = useChainId()
-    const { game, selectedGame } = useLotteryRead()
+    const { game, selectedGame } = useDrawRead()
 
     const { data, isLoading } = useQuery({
         queryKey: ['fundsManagerAddress', selectedGame, chainId],

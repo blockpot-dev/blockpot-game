@@ -14,7 +14,7 @@ import { evaluatePretxDeposit } from '@/hooks/player/usePretxDeposit'
 import { recordEntryCadence } from '@/providers/SessionSignalProvider'
 import { ZERO_ADDRESS } from '@/web3/constants'
 
-export type EnterLotteryParams = {
+export type EnterDrawParams = {
     roundIndex: number
     amount: number
     payoutInWeth: boolean
@@ -27,7 +27,7 @@ export type EnterLotteryParams = {
     referralCode?: string
 }
 
-export default function useEnterLottery() {
+export default function useEnterDraw() {
     const chainId = useChainId()
     const account = useAccountAddress()
     const navigate = useNavigate()
@@ -53,18 +53,18 @@ export default function useEnterLottery() {
 
     const referralManagerAddress = getContractAddress(chainId, ContractName.REFERRAL_MANAGER)
 
-    const enter = async (params: EnterLotteryParams) => {
+    const enter = async (params: EnterDrawParams) => {
         const { roundIndex, amount, payoutInWeth, useWeth, referralCode } = params
         // The 5-arg attributed overload is used only when a manager exists to receive the fee
         // routing; viem resolves the LGO `enter`/`enterWeth` overloads by argument arity.
         const attributed = Boolean(referralCode) && referralManagerAddress !== ZERO_ADDRESS
 
         if (!isWhitelisted) {
-            console.error('[useEnterLottery] LGO not whitelisted in ComplianceRegistry; refusing to enter.')
+            console.error('[useEnterDraw] LGO not whitelisted in ComplianceRegistry; refusing to enter.')
             return false
         }
         if (!isActive) {
-            console.error('[useEnterLottery] Player not registered in PlayerRegistry; refusing to enter.')
+            console.error('[useEnterDraw] Player not registered in PlayerRegistry; refusing to enter.')
             return false
         }
 
@@ -90,7 +90,7 @@ export default function useEnterLottery() {
         }
 
         if (decision && !decision.allow) {
-            console.error(`[useEnterLottery] pre-tx gate rejected entry: ${decision.requiredAction} (${decision.reason})`)
+            console.error(`[useEnterDraw] pre-tx gate rejected entry: ${decision.requiredAction} (${decision.reason})`)
             return false
         }
 

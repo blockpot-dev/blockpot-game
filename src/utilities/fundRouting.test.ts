@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { computeFundRouting } from './fundRouting'
 import { PEA_PER_ENTRY_WEI } from '@/constants/protocol'
-import { DEFAULT_GAME_CONFIG, GameConfig } from '@/types/lottery/config'
+import { DEFAULT_GAME_CONFIG, GameConfig } from '@/types/draw/config'
 
 // Main game: 3 tiers (9000/900/100 bps of the current pot), 10% of PEA to the
 // next-pot reserve, nothing to a parent game.

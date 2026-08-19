@@ -1,10 +1,10 @@
-import { useLottery } from '@/providers/BlockpotProvider'
+import { useDraw } from '@/providers/BlockpotProvider'
 import { useInterval } from '@/hooks/utilities/useInterval'
 import { useEffect, useState } from 'react'
 
 export default function useTimeRemaining() {
     const [currentDate, setCurrentDate] = useState(Date.now())
-    const { currentRound } = useLottery()
+    const { currentRound } = useDraw()
     const { start, stop } = useInterval(() => setCurrentDate(Date.now()), 1000)
     useEffect(() => {
         start()

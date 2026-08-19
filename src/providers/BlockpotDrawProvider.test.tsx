@@ -1,8 +1,8 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import BlockpotDrawProvider, { useLotteryDraw } from './BlockpotDrawProvider'
+import BlockpotDrawProvider, { useBlockpotDraw } from './BlockpotDrawProvider'
 import { ContractName } from '@/constants/contract-addresses'
-import type { LotteryRound } from '@/types/lottery'
+import type { DrawRound } from '@/types/draw'
 import { ZERO_ADDRESS } from '@/web3/constants'
 
 const mocks = vi.hoisted(() => ({
@@ -27,11 +27,11 @@ vi.mock('./BlockpotProvider', () => ({
     useIsDrawingNumbers: () => mocks.useIsDrawingNumbersMock(),
 }))
 
-vi.mock('@/hooks/contracts/lottery/useRoundDraw', () => ({
+vi.mock('@/hooks/contracts/draw/useRoundDraw', () => ({
     default: () => mocks.useRoundDrawMock(),
 }))
 
-vi.mock('@/hooks/contracts/lottery/usePlayerEntries', () => ({
+vi.mock('@/hooks/contracts/draw/usePlayerEntries', () => ({
     default: () => ({ entries: [] }),
 }))
 
@@ -63,7 +63,7 @@ vi.mock('@/components/blockpot/modals/DrawSummaryDialog/DrawSummaryDialog', () =
     },
 }))
 
-const mainRound: LotteryRound = {
+const mainRound: DrawRound = {
     roundIndex: 5,
     draws: [],
     prizePool: 0n,
@@ -86,7 +86,7 @@ describe('<BlockpotDrawProvider> draw state on game switch', () => {
         mocks.drawSummaryDialogOpenBinding.update.mockClear()
         mocks.useSelectedGameMock.mockReturnValue({
             selectedGame: 'main',
-            gameContractName: ContractName.LOTTERY_MAIN,
+            gameContractName: ContractName.DRAW_MAIN,
             setSelectedGame: vi.fn(),
         })
         mocks.useIsDrawingNumbersMock.mockReturnValue(true)
@@ -100,7 +100,7 @@ describe('<BlockpotDrawProvider> draw state on game switch', () => {
     })
 
     it('switching selectedGame resets draw to undefined', () => {
-        const { result, rerender } = renderHook(() => useLotteryDraw(), { wrapper })
+        const { result, rerender } = renderHook(() => useBlockpotDraw(), { wrapper })
         expect(result.current.draw).toBeDefined()
 
         mocks.useSelectedGameMock.mockReturnValue({
@@ -123,7 +123,7 @@ describe('<BlockpotDrawProvider> draw state on game switch', () => {
     })
 
     it('rerender with unchanged selectedGame preserves draw', () => {
-        const { result, rerender } = renderHook(() => useLotteryDraw(), { wrapper })
+        const { result, rerender } = renderHook(() => useBlockpotDraw(), { wrapper })
         expect(result.current.draw).toBeDefined()
         const drawAfterMount = result.current.draw
 
@@ -135,7 +135,7 @@ describe('<BlockpotDrawProvider> draw state on game switch', () => {
 })
 
 describe('<BlockpotDrawProvider> DrawSummaryDialog round binding under live-draw race', () => {
-    const roundN: LotteryRound = {
+    const roundN: DrawRound = {
         roundIndex: 5,
         draws: [{ winner: ZERO_ADDRESS, number: 42, prize: 0n }],
         prizePool: 0n,
@@ -148,7 +148,7 @@ describe('<BlockpotDrawProvider> DrawSummaryDialog round binding under live-draw
         maxRoundsInPot: 10,
     }
 
-    const roundNPlusOne: LotteryRound = {
+    const roundNPlusOne: DrawRound = {
         ...roundN,
         roundIndex: 6,
         draws: [{ winner: ZERO_ADDRESS, number: 99, prize: 0n }],
@@ -180,7 +180,7 @@ describe('<BlockpotDrawProvider> DrawSummaryDialog round binding under live-draw
     })
 
     it('binds DrawSummaryDialog to the animated round when a newer round completes mid-animation', () => {
-        const { result, rerender } = renderHook(() => useLotteryDraw(), { wrapper })
+        const { result, rerender } = renderHook(() => useBlockpotDraw(), { wrapper })
 
         // Initial mount sets the waiting stage; advance past the 3s timeout to enter drawing.
         act(() => {
@@ -214,7 +214,7 @@ describe('<BlockpotDrawProvider> DrawSummaryDialog round binding under live-draw
 })
 
 describe('<BlockpotDrawProvider> visibility-aware draw recovery', () => {
-    const multiDrawRound: LotteryRound = {
+    const multiDrawRound: DrawRound = {
         roundIndex: 7,
         draws: [
             { winner: ZERO_ADDRESS, number: 11, prize: 0n },
@@ -271,7 +271,7 @@ describe('<BlockpotDrawProvider> visibility-aware draw recovery', () => {
     })
 
     it('fast-forwards a stuck drawing-stage draw to complete when the tab returns to visible', () => {
-        const { result } = renderHook(() => useLotteryDraw(), { wrapper })
+        const { result } = renderHook(() => useBlockpotDraw(), { wrapper })
 
         // Enter the drawing stage by letting the waiting->drawing 3s timer fire.
         act(() => {

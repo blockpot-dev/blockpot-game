@@ -1,4 +1,4 @@
-import { LotteryRound } from '@/types/lottery'
+import { DrawRound } from '@/types/draw'
 import { Address, isAddressEqual } from 'viem'
 
 export type DrawnNumberResult = {
@@ -19,7 +19,7 @@ export type DrawnNumberWithResult = {
     result: DrawnNumberResult
 }
 
-export function getDrawnNumbersWithResults(round: LotteryRound, account: Address): DrawnNumberWithResult[] {
+export function getDrawnNumbersWithResults(round: DrawRound, account: Address): DrawnNumberWithResult[] {
     return round.draws.map((d, index) => {
         const hasWinner = d.prize > 0n
         let result: DrawnNumberResult

@@ -3,8 +3,8 @@ import { Container } from '@blockpot-dev/blockpot-design-system'
 import { CheckIcon, CopyIcon, ExternalLinkIcon } from 'lucide-react'
 import VStack from '@/components/core/VStack/VStack'
 import HStack from '@/components/core/HStack/HStack'
-import useDrawProof from '@/hooks/contracts/lottery/useDrawProof'
-import { DrawProof, DrawProofStatus } from '@/types/lottery/drawProof'
+import useDrawProof from '@/hooks/contracts/draw/useDrawProof'
+import { DrawProof, DrawProofStatus } from '@/types/draw/drawProof'
 
 const CHAINLINK_VRF_DOCS_URL = 'https://docs.chain.link/vrf'
 

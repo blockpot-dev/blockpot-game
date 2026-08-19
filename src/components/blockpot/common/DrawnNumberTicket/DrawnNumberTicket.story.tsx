@@ -1,8 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { Address } from 'viem'
 import DrawnNumberTicket from './DrawnNumberTicket'
-import { createDisplayDrawnNumberData } from '@/utilities/lottery/display-drawn-number-data'
-import { DrawnNumber } from '@/types/lottery'
+import { createDisplayDrawnNumberData } from '@/utilities/draw/display-drawn-number-data'
+import { DrawnNumber } from '@/types/draw'
 import { FiatConverter } from '@/hooks/utilities/useFiatConverter'
 
 // Same wallet — viem returns EIP-55 checksummed; wallet connectors may return lowercase.

@@ -7,12 +7,12 @@ import InfoPanel from '@/components/blockpot/info-panel'
 import RoundDraw from '@/components/blockpot/round-draw'
 import Container_Deprecated from '@/components/core/Container/Container'
 import HStack from '@/components/core/HStack/HStack'
-import useRoundPurchases from '@/hooks/contracts/lottery/useRoundPurchases'
+import useRoundPurchases from '@/hooks/contracts/draw/useRoundPurchases'
 import { useEntryForm } from '@/hooks/entry/useEntryForm'
 import useAccountAddress from '@/hooks/utilities/useAccountAddress'
 import useFiatConverter, { FiatConverter } from '@/hooks/utilities/useFiatConverter'
-import { useLottery } from '@/providers/BlockpotProvider'
-import { useLotteryDraw } from '@/providers/BlockpotDrawProvider'
+import { useDraw } from '@/providers/BlockpotProvider'
+import { useBlockpotDraw } from '@/providers/BlockpotDrawProvider'
 import { usePreviousRoundsPanelOpen } from '@/providers/ModalOpenStateProvider'
 import { formatEtherMaxDecimalsGreedy } from '@/utilities/formatters'
 import { Container } from '@blockpot-dev/blockpot-design-system'
@@ -107,8 +107,8 @@ function Play() {
 
     const { isConnected } = useAccount()
     const accountAddress = useAccountAddress()
-    const { currentRound, pots } = useLottery()
-    const { draw, advanceDraw } = useLotteryDraw()
+    const { currentRound, pots } = useDraw()
+    const { draw, advanceDraw } = useBlockpotDraw()
     let roundIndexForTickets: number
     if (draw) {
         if (draw.drawStage.type === 'waiting') {
@@ -127,13 +127,13 @@ function Play() {
     }
     const isPreviousRoundsOpen = usePreviousRoundsPanelOpen()
 
-    let jackpotAmount = 0n
+    let prizePoolAmount = 0n
     if (pots && pots.length > 0) {
-        jackpotAmount = pots[0]
+        prizePoolAmount = pots[0]
     }
-    const jackpot = {
-        nativeAmount: jackpotAmount,
-        fiatAmountFormatted: fiatConverter(jackpotAmount).formattedValue
+    const prizePool = {
+        nativeAmount: prizePoolAmount,
+        fiatAmountFormatted: fiatConverter(prizePoolAmount).formattedValue
     }
 
     const drawRoundInfoSource = (draw && draw.drawStage.type !== 'waiting') ? draw.drawStage.drawnRound : currentRound
@@ -145,7 +145,7 @@ function Play() {
         winnerChance: drawRoundInfoSource.chance,
         totalTickets: Number(drawRoundInfoSource.entryCount),
         yourTickets: roundPurchaseData.totalTickets,
-        jackpot: jackpotAmount
+        prizePool: prizePoolAmount
     }
     const prizes = createPrizes(pots, fiatConverter)
 
@@ -207,7 +207,7 @@ function Play() {
                                 <CurrentRound
                                     entryInfo={entryInfo}
                                     roundInfo={roundInfo}
-                                    jackpot={jackpot}
+                                    prizePool={prizePool}
                                     prizes={prizes}
                                 />
                         }

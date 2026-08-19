@@ -4,7 +4,7 @@ import HStack from '@/components/core/HStack/HStack'
 import VStack from '@/components/core/VStack/VStack'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { TooltipArrow } from '@radix-ui/react-tooltip'
-import { Amounts, DEFAULT_AMOUNTS } from '@/types/lottery/tokens'
+import { Amounts, DEFAULT_AMOUNTS } from '@/types/draw/tokens'
 import type { DisplayCurrency } from '@/hooks/utilities/useDisplayCurrency'
 import type { DisplayPrices } from '@/hooks/utilities/useDisplayPrices'
 

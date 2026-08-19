@@ -23,7 +23,7 @@ export interface ExpectedIdentity {
 
 // null = third-party contract (no typeAndVersion()) — skipped, never flagged.
 export const EXPECTED_IDENTITY: Record<ContractName, ExpectedIdentity | null> = {
-    [ContractName.LOTTERY_MAIN]: { type: 'Lottery', majorVersion: 1 },
+    [ContractName.DRAW_MAIN]: { type: 'Lottery', majorVersion: 1 },
     [ContractName.CHAINLINK_AGGREGATOR_V3]: null,
     [ContractName.CHAINLINK_AGGREGATOR_EUR_USD]: null,
     [ContractName.FUNDS_MANAGER_MAIN]: { type: 'UnipotFundsManager', majorVersion: 1 },

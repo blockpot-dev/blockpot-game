@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 import useAccountAddress from '@/hooks/utilities/useAccountAddress'
 import usePlayerActivityState from '@/hooks/player-summary/usePlayerActivityState'
 import useJackpotContext from '@/hooks/player-summary/useJackpotContext'
-import { useLotteryDraw } from '@/providers/BlockpotDrawProvider'
+import { useBlockpotDraw } from '@/providers/BlockpotDrawProvider'
 import usePlayerKyc from '@/hooks/player/usePlayerKyc'
 import useActivePolicy from '@/hooks/contracts/kyc/useActivePolicy'
 import usePlayerBalances from '@/hooks/contracts/lgo/usePlayerBalances'
@@ -34,7 +34,7 @@ export default function AccountDialog({ open, onOpenChange }: AccountDialogProps
     const { blockedUntil } = useEntryBlockedUntil(address as `0x${string}`)
 
     const { state } = usePlayerActivityState()
-    const { draw } = useLotteryDraw()
+    const { draw } = useBlockpotDraw()
     const { context: jackpotContext } = useJackpotContext({ enabled: open && !draw })
     const { status: kycStatus } = usePlayerKyc()
     const { policy } = useActivePolicy()

@@ -16,11 +16,11 @@ import { useSelectedGame } from './SelectedGameProvider'
 import { usePrevious } from '@/hooks/utilities/usePrevious'
 
 type BlockpotEventsContextType = {
-    lotteryRoundBlockNumber: bigint
+    drawRoundBlockNumber: bigint
 }
 
 const BlockpotEventsContext = createContext<BlockpotEventsContextType>({
-    lotteryRoundBlockNumber: 0n
+    drawRoundBlockNumber: 0n
 })
 
 type Props = {
@@ -42,7 +42,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
     const [playerEntriesBlockNumber, setPlayerEntriesBlockNumber] = useState(0n)
     const [entriesBlockNumber, setEntriesBlockNumber] = useState(0n)
     const [wethBlockNumber, setWETHBlockNumber] = useState(0n)
-    const [lotteryRoundBlockNumber, setLotteryRoundBlockNumber] = useState(0n)
+    const [drawRoundBlockNumber, setDrawRoundBlockNumber] = useState(0n)
     const [lgoPlayerBlockNumber, setLgoPlayerBlockNumber] = useState(0n)
     const [lgoConfigBlockNumber, setLgoConfigBlockNumber] = useState(0n)
     const [kycPlayerBlockNumber, setKycPlayerBlockNumber] = useState(0n)
@@ -56,11 +56,11 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
         if (previousSelectedGame && previousSelectedGame !== gameContractName) {
             setPlayerEntriesBlockNumber(0n)
             setEntriesBlockNumber(0n)
-            setLotteryRoundBlockNumber(0n)
+            setDrawRoundBlockNumber(0n)
         }
     }, [gameContractName, previousSelectedGame])
 
-    // Lottery Event Watchers
+    // Draw-core event watchers — Lottery* event names track the deployed ABI, TODO(BLO-693)
     useEffect(() => {
         const unwatchOnEntry = lottery.watchEvent.LotteryOnEntry(
             {},
@@ -80,26 +80,26 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
             {},
             {
                 onLogs: (logs) => {
-                    setLotteryRoundBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
+                    setDrawRoundBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
                 }
             }
         )
 
         const unwatchOnDrawingNumbers = lottery.watchEvent.LotteryDrawingNumbers({
             onLogs: (logs) => {
-                setLotteryRoundBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
+                setDrawRoundBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
             }
         })
 
         const unwatchOnWinnerSelected = lottery.watchEvent.LotteryWinnerSelected({
             onLogs: (logs) => {
-                setLotteryRoundBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
+                setDrawRoundBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
             }
         })
 
         const unwatchOnNoWinner = lottery.watchEvent.LotteryNoWinner({
             onLogs: (logs) => {
-                setLotteryRoundBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
+                setDrawRoundBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
             }
         })
 
@@ -115,7 +115,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
 
     // LGO Event Watchers
     useEffect(() => {
-        // v2 routes every entry through LGO, so Lottery.LotteryOnEntry's beneficiary
+        // v2 routes every entry through LGO, so the Draw core’s LotteryOnEntry beneficiary
         // is the LGO contract — never the player. The real player lands here in
         // LGOEntry.args.player, so this watcher is the source of truth for
         // player-scoped entry-cache invalidation as well as lifetime/balance bumps.
@@ -380,12 +380,12 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
     })
 
     useTriggerOnChanged(entriesBlockNumber, () => {
-        queryClient.invalidateQueries({ queryKey: ['lotteryState'] })
+        queryClient.invalidateQueries({ queryKey: ['drawState'] })
         queryClient.invalidateQueries({ queryKey: ['balanceAllocations'] })
     })
 
-    useTriggerOnChanged(lotteryRoundBlockNumber, () => {
-        queryClient.invalidateQueries({ queryKey: ['lotteryState'] })
+    useTriggerOnChanged(drawRoundBlockNumber, () => {
+        queryClient.invalidateQueries({ queryKey: ['drawState'] })
         queryClient.invalidateQueries({ queryKey: ['gameLatestRoundIndex'] })
         queryClient.invalidateQueries({ queryKey: ['specificRound'] })
     })
@@ -435,7 +435,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
 
     return (
         <BlockpotEventsContext.Provider value={{
-            lotteryRoundBlockNumber
+            drawRoundBlockNumber
         }}>
             <div className='w-full h-full relative'>
                 {
@@ -446,7 +446,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
                                 showDebug && (
                                     [
                                         `blockNumber: ${blockNumber}`,
-                                        `lotteryRoundBlockNumber: ${lotteryRoundBlockNumber}`,
+                                        `drawRoundBlockNumber: ${drawRoundBlockNumber}`,
                                         `wethBlockNumber: ${wethBlockNumber}`,
                                         `playerEntriesBlockNumber: ${playerEntriesBlockNumber}`,
                                         `entriesBlockNumber: ${entriesBlockNumber}`,

@@ -1,10 +1,10 @@
 import { useChainId } from 'wagmi'
-import { LotteryRound } from '@/types/lottery'
+import { DrawRound } from '@/types/draw'
 import { useCallback, useEffect, useState } from 'react'
 import { useBlockpotEvents } from '@/providers/BlockpotEventsProvider'
 import { ContractName, getContractAddress } from '@/constants/contract-addresses'
-import { resolveLgoWinners } from '@/utilities/lottery/resolve-lgo-winners'
-import useLotteryRead from '../read/useLotteryRead'
+import { resolveLgoWinners } from '@/utilities/draw/resolve-lgo-winners'
+import useDrawRead from '../read/useDrawRead'
 import useLGORead from '../read/useLGORead'
 import { calculateMaxRoundsInPot } from './useMaxRoundsInPot'
 
@@ -20,7 +20,7 @@ const ROUND_STATUS_DONE = 2
 export default function useRoundDraw(chainChanged: boolean, drawnRoundIndexOverride?: number) {
     const [drawnRoundOpened, setDrawnRoundOpened] = useState(false)
     const chainId = useChainId()
-    const [drawnRound, setDrawnRound] = useState<LotteryRound | undefined>()
+    const [drawnRound, setDrawnRound] = useState<DrawRound | undefined>()
     const [roundIndex, setRoundIndex] = useState<number>(-1)
     // Tracks the most recent round we've already surfaced as a freshly
     // completed draw. `undefined` = not yet observed; -1 = observed live with
@@ -29,10 +29,10 @@ export default function useRoundDraw(chainChanged: boolean, drawnRoundIndexOverr
     // On cold load into an already-DONE round we set this to that round so the
     // user doesn't get a draw animation for something they weren't watching live.
     const [lastSeenDoneRound, setLastSeenDoneRound] = useState<number | undefined>()
-    const { game, selectedGame, gameContractName } = useLotteryRead()
+    const { game, selectedGame, gameContractName } = useDrawRead()
     const lgo = useLGORead().read
 
-    const { lotteryRoundBlockNumber } = useBlockpotEvents()
+    const { drawRoundBlockNumber } = useBlockpotEvents()
 
     const loadDrawnRound = useCallback(async (idx: number) => {
         const roundData = await game.getRoundData([idx])
@@ -83,7 +83,7 @@ export default function useRoundDraw(chainChanged: boolean, drawnRoundIndexOverr
         }
         loadCurrentRoundId()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [lotteryRoundBlockNumber, chainId])
+    }, [drawRoundBlockNumber, chainId])
 
     useEffect(() => {
         const loadCurrentRoundId = async () => {
@@ -122,7 +122,7 @@ export default function useRoundDraw(chainChanged: boolean, drawnRoundIndexOverr
         checkAndLoad()
         return () => { cancelled = true }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedGame, roundIndex, lastSeenDoneRound, drawnRoundIndexOverride, lotteryRoundBlockNumber])
+    }, [selectedGame, roundIndex, lastSeenDoneRound, drawnRoundIndexOverride, drawRoundBlockNumber])
 
     return {
         roundIndex,

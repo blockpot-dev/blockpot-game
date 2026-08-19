@@ -15,7 +15,7 @@ export type DrawProofStatus = 'unavailable' | 'pending' | 'verified' | 'mismatch
 
 export type DrawProof = {
     roundIndex: number
-    /** The unipot Lottery == Blockpot round host */
+    /** The Unipot Draw core == Blockpot round host. Field name tracks the verification payload — TODO(BLO-693). */
     lotteryAddress: Address
     /** Derived on-chain via lottery.randomNumberProvider() */
     randomNumberProviderAddress: Address

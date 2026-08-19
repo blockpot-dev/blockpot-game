@@ -2,42 +2,42 @@ import React, {
     createContext, memo, useContext, useEffect, useRef, useState, useMemo, useCallback,
 } from 'react'
 import { useIsDrawingNumbers } from './BlockpotProvider'
-import useRoundDraw from '@/hooks/contracts/lottery/useRoundDraw'
+import useRoundDraw from '@/hooks/contracts/draw/useRoundDraw'
 import useChainChanged from '@/hooks/web3/useChainChanged'
-import { LotteryEntry, LotteryRound } from '@/types/lottery'
+import { DrawEntry, DrawRound } from '@/types/draw'
 import useFiatConverter from '@/hooks/utilities/useFiatConverter'
 import { useAccount } from 'wagmi'
 import useNativeCurrency from '@/hooks/web3/useNativeCurrency'
 import { ZERO_ADDRESS } from '@/web3/constants'
-import { DisplayDrawnNumberData } from '@/types/lottery/display-drawn-number-data'
-import { createDisplayDrawnNumberData } from '@/utilities/lottery/display-drawn-number-data'
+import { DisplayDrawnNumberData } from '@/types/draw/display-drawn-number-data'
+import { createDisplayDrawnNumberData } from '@/utilities/draw/display-drawn-number-data'
 import DrawSummaryDialog from '@/components/blockpot/modals/DrawSummaryDialog/DrawSummaryDialog'
-import usePlayerEntries from '@/hooks/contracts/lottery/usePlayerEntries'
+import usePlayerEntries from '@/hooks/contracts/draw/usePlayerEntries'
 import { useDrawSummaryDialogOpen, usePreviousRoundsPanelOpen } from './ModalOpenStateProvider'
 import { useMissedDraw } from './MissedDrawProvider'
 import { GameType, useSelectedGame } from './SelectedGameProvider'
 import { usePrevious } from '@/hooks/utilities/usePrevious'
 
-export type LotteryDrawContext = {
+export type BlockpotDraw = {
     roundIndex: number
-    drawStage: LotteryDrawStage
+    drawStage: DrawStage
 }
 
 export type StagedDraw = {
     drawnNumbers: DisplayDrawnNumberData[]
 }
 
-type LotteryDrawWaitingStage = { type: 'waiting', roundIndex: number }
-type LotteryDrawDrawingStage = { type: 'drawing', drawnRound: LotteryRound, stagedDraw: StagedDraw, playerEntries: LotteryEntry[] }
-type LotteryDrawCompleteStage = { type: 'complete', drawnRound: LotteryRound, stagedDraw: StagedDraw, playerEntries: LotteryEntry[] }
-export type LotteryDrawStage = LotteryDrawWaitingStage | LotteryDrawDrawingStage | LotteryDrawCompleteStage
+type DrawWaitingStage = { type: 'waiting', roundIndex: number }
+type DrawDrawingStage = { type: 'drawing', drawnRound: DrawRound, stagedDraw: StagedDraw, playerEntries: DrawEntry[] }
+type DrawCompleteStage = { type: 'complete', drawnRound: DrawRound, stagedDraw: StagedDraw, playerEntries: DrawEntry[] }
+export type DrawStage = DrawWaitingStage | DrawDrawingStage | DrawCompleteStage
 
 type BlockpotDrawContextType = {
-    draw: LotteryDrawContext | undefined
+    draw: BlockpotDraw | undefined
     clearDraw: () => void
-    setDraw: (draw: LotteryDrawContext | undefined) => void
-    drawnRound: LotteryRound | undefined
-    viewRoundSummary: (round: LotteryRound, gameType?: GameType) => void
+    setDraw: (draw: BlockpotDraw | undefined) => void
+    drawnRound: DrawRound | undefined
+    viewRoundSummary: (round: DrawRound, gameType?: GameType) => void
     replayDraw: (roundIndex: number) => void
     advanceDraw: () => void
 }
@@ -56,12 +56,12 @@ function BlockpotDrawProvider({ children }: Props): React.ReactElement {
     const isDrawingNumbers = useIsDrawingNumbers()
     const [drawnRoundIndexOverride, setDrawnRoundIndexOverride] = useState<number | undefined>()
     const { roundIndex: roundDrawRoundIndex, drawnRound, clearDrawnRound } = useRoundDraw(chainChanged, drawnRoundIndexOverride)
-    const [drawnRoundSummary, setDrawnRoundSummary] = useState<LotteryRound | undefined>()
+    const [drawnRoundSummary, setDrawnRoundSummary] = useState<DrawRound | undefined>()
     const [drawnRoundSummaryGameType, setDrawnRoundSummaryGameType] = useState<GameType | undefined>()
     const { selectedGame } = useSelectedGame()
     const previousSelectedGame = usePrevious(selectedGame)
     const playerEntries = usePlayerEntries(drawnRound?.roundIndex ?? -1)
-    const [draw, setDraw] = useState<LotteryDrawContext | undefined>()
+    const [draw, setDraw] = useState<BlockpotDraw | undefined>()
     const drawSummaryDialogOpen = useDrawSummaryDialogOpen()
     const previousRoundsPanelOpen = usePreviousRoundsPanelOpen()
     const { markRoundAsSeen } = useMissedDraw()
@@ -84,7 +84,7 @@ function BlockpotDrawProvider({ children }: Props): React.ReactElement {
 
         const currentDrawnNumbersLength = draw.drawStage.stagedDraw.drawnNumbers.length
         if (currentDrawnNumbersLength >= draws.length) {
-            setDraw((draw: LotteryDrawContext | undefined) => {
+            setDraw((draw: BlockpotDraw | undefined) => {
                 if (!draw || draw.drawStage.type !== 'drawing') { return draw }
                 const drawCopy = { ...draw }
                 drawCopy.drawStage.type = 'complete'
@@ -92,7 +92,7 @@ function BlockpotDrawProvider({ children }: Props): React.ReactElement {
             })
             drawSummaryDialogOpen.update(true)
         } else {
-            setDraw((draw: LotteryDrawContext | undefined) => {
+            setDraw((draw: BlockpotDraw | undefined) => {
                 if (!draw || draw.drawStage.type !== 'drawing') { return draw }
                 return {
                     roundIndex,
@@ -194,7 +194,7 @@ function BlockpotDrawProvider({ children }: Props): React.ReactElement {
         }
     }, [isDrawingNumbers, draw, roundIndex, drawnRound, displayDrawnNumberData, playerEntries?.entries, markRoundAsSeen])
 
-    const viewRoundSummary = (round: LotteryRound, gameType?: GameType) => {
+    const viewRoundSummary = (round: DrawRound, gameType?: GameType) => {
         setDrawnRoundSummary(round)
         setDrawnRoundSummaryGameType(gameType ?? selectedGame)
         drawSummaryDialogOpen.update(true)
@@ -248,10 +248,10 @@ function BlockpotDrawProvider({ children }: Props): React.ReactElement {
     )
 }
 
-export const useLotteryDraw = () => {
+export const useBlockpotDraw = () => {
     const context = useContext(BlockpotDrawContext)
     if (context === undefined) {
-        throw new Error('useLotteryDraw must be used within a BlockpotDrawProvider')
+        throw new Error('useBlockpotDraw must be used within a BlockpotDrawProvider')
     }
     return context
 }

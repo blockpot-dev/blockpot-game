@@ -7,7 +7,7 @@ import LOCAL_ADDRESSES from './contract-addresses/local'
 import BLOCKPOT_TESTNET_ADDRESSES from './contract-addresses/blockpot-testnet'
 
 export enum ContractName {
-    LOTTERY_MAIN,
+    DRAW_MAIN,
     CHAINLINK_AGGREGATOR_V3,
     CHAINLINK_AGGREGATOR_EUR_USD,
     FUNDS_MANAGER_MAIN,
@@ -28,7 +28,7 @@ const ADDRESSES_BY_CHAIN: { [chainId: number]: { [key: string]: `0x${string}` } 
 }
 
 const KEY_BY_CONTRACT: Record<ContractName, string> = {
-    [ContractName.LOTTERY_MAIN]: 'lottery',
+    [ContractName.DRAW_MAIN]: 'lottery', // TODO(BLO-693): addresses.json key renames to 'draw'
     [ContractName.CHAINLINK_AGGREGATOR_V3]: 'aggregatorV3',
     [ContractName.CHAINLINK_AGGREGATOR_EUR_USD]: 'aggregatorV3Eur',
     [ContractName.FUNDS_MANAGER_MAIN]: 'fundsManager',

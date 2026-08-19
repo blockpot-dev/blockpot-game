@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { _DrawFairnessProof } from './DrawFairnessProof'
-import { DrawProof } from '@/types/lottery/drawProof'
+import { DrawProof } from '@/types/draw/drawProof'
 
 const meta: Meta<typeof _DrawFairnessProof> = {
     component: _DrawFairnessProof,

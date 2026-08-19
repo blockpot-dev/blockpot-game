@@ -1,7 +1,7 @@
-import useLotteryState, { DEFAULT_LOTTERY, LotteryState } from '@/hooks/contracts/lottery/useLotteryState'
-import useRoundDraw from '@/hooks/contracts/lottery/useRoundDraw'
+import useDrawState, { DEFAULT_DRAW, DrawState } from '@/hooks/contracts/draw/useDrawState'
+import useRoundDraw from '@/hooks/contracts/draw/useRoundDraw'
 import useChainChanged from '@/hooks/web3/useChainChanged'
-import { LotteryRound } from '@/types/lottery'
+import { DrawRound } from '@/types/draw'
 import React, {
     createContext, useContext, useEffect, useState,
 } from 'react'
@@ -13,8 +13,8 @@ type BlockpotContextType = {
     setViewRoundIndex?: (roundIndex: bigint | undefined) => void,
     viewRoundOpened: boolean,
     setViewRoundOpened: (opened: boolean) => void,
-    lottery: LotteryState
-    drawnRound?: LotteryRound,
+    lottery: DrawState
+    drawnRound?: DrawRound,
     drawnRoundOpened: boolean,
     setDrawnRoundOpened: (opened: boolean) => void,
     clearDrawnRound?: () => void,
@@ -29,14 +29,14 @@ type Props = {
 export default function BlockpotProvider({ children }: Props): React.ReactElement {
     const [viewRoundIndex, setViewRoundIndex] = useState<bigint | undefined>()
     const [viewRoundOpened, setViewRoundOpened] = useState(false)
-    const lottery = useLotteryState()
+    const lottery = useDrawState()
     const chainChanged = useChainChanged()
     const { drawnRound, clearDrawnRound, drawnRoundOpened, setDrawnRoundOpened } = useRoundDraw(chainChanged)
     const { selectedGame } = useSelectedGame()
     const previousSelectedGame = usePrevious(selectedGame)
 
     const blockpotContextValue = {
-        lottery: lottery ?? DEFAULT_LOTTERY,
+        lottery: lottery ?? DEFAULT_DRAW,
         drawnRound,
         clearDrawnRound,
         drawnRoundOpened,
@@ -68,7 +68,7 @@ const useBlockpot = () => {
     return context
 }
 
-export const useLottery = () => {
+export const useDraw = () => {
     return useBlockpot().lottery
 }
 
@@ -76,8 +76,8 @@ export const useIsDrawingNumbers = () => {
     return useBlockpot().lottery.isDrawingNumbers
 }
 
-export const useLotteryHash = () => {
-    return useBlockpot().lottery.lotteryHash
+export const useDrawHash = () => {
+    return useBlockpot().lottery.drawHash
 }
 
 export const useViewRoundIndex = () => {

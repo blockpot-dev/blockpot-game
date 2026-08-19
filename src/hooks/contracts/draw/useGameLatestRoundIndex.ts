@@ -1,11 +1,11 @@
 import { useChainId } from 'wagmi'
 import { useQuery } from '@tanstack/react-query'
 import { GameType } from '@/providers/SelectedGameProvider'
-import useLotteryRead from '../read/useLotteryRead'
+import useDrawRead from '../read/useDrawRead'
 
 export default function useGameLatestRoundIndex(gameType: GameType): number | undefined {
     const chainId = useChainId()
-    const { game } = useLotteryRead(gameType)
+    const { game } = useDrawRead(gameType)
 
     const { data } = useQuery({
         queryKey: ['gameLatestRoundIndex', gameType, chainId],

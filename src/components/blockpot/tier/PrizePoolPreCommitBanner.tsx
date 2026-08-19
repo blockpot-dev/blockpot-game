@@ -2,7 +2,7 @@ import { Button, InfoBanner } from '@blockpot-dev/blockpot-design-system'
 import { JackpotContext } from '@/hooks/player-summary/useJackpotContext'
 import { PlayerActivityState } from '@/hooks/player-summary/usePlayerActivityState'
 
-export type JackpotPreCommitBannerProps = {
+export type PrizePoolPreCommitBannerProps = {
     state: PlayerActivityState | undefined
     context: JackpotContext | undefined
     onVerify: () => void
@@ -19,15 +19,15 @@ function formatEur(minor: number): string {
 }
 
 // Spec-named component (see `kyc-implementation-requirements.md` §7.7).
-// Renders above the entry form on /play whenever a win of the jackpot's size
+// Renders above the entry form on /play whenever a win of the prize pool's size
 // would not fit inside the player's remaining outflow-cap headroom: the
 // overflow slice would be paid into escrow and held until the next tier's
 // gates pass. The held figure is approximate — it is priced at today's
 // EUR rate and headroom may move before the draw settles.
 //
-// Hidden while the whole jackpot fits in headroom (including the unlimited
+// Hidden while the whole prize pool fits in headroom (including the unlimited
 // top tier, whose headroom is effectively infinite).
-export default function JackpotPreCommitBanner(props: JackpotPreCommitBannerProps) {
+export default function PrizePoolPreCommitBanner(props: PrizePoolPreCommitBannerProps) {
     const { state, context, onVerify, className } = props
 
     if (!state || !context) return null

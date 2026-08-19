@@ -6,7 +6,7 @@ import { formatAccountAddress } from '@/utilities/formatters'
 import { useWalletOptionsDialogOpen } from '@/providers/ModalOpenStateProvider'
 import usePlayerActivityState, { PlayerActivityState, PlayerTier } from '@/hooks/player-summary/usePlayerActivityState'
 import useJackpotContext, { JackpotContext } from '@/hooks/player-summary/useJackpotContext'
-import { useLotteryDraw } from '@/providers/BlockpotDrawProvider'
+import { useBlockpotDraw } from '@/providers/BlockpotDrawProvider'
 import useAccountAddress from '@/hooks/utilities/useAccountAddress'
 import usePlayerBalances from '@/hooks/contracts/lgo/usePlayerBalances'
 import AccountDialog from '@/components/blockpot/account/AccountDialog'
@@ -21,7 +21,7 @@ function tierIndex(tier: PlayerTier): number {
 
 function needsAttention(
     state: PlayerActivityState | undefined,
-    jackpot: JackpotContext | undefined,
+    jackpot: JackpotContext | undefined, // TODO(BLO-696): wire naming until prize-pool-context lands
     drawActive: boolean,
     eth: bigint | undefined,
     weth: bigint | undefined,
@@ -46,7 +46,7 @@ export default function WalletButton() {
     const { data: ensAvatar } = useEnsAvatar({ name: ensName!, chainId: 1, query: ensQueryOptions })
 
     const { state } = usePlayerActivityState()
-    const { draw } = useLotteryDraw()
+    const { draw } = useBlockpotDraw()
     const { context: jackpotContext } = useJackpotContext({ enabled: isConnected && !draw })
     const playerAddress = useAccountAddress()
     const { eth, weth } = usePlayerBalances(playerAddress)

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
-import JackpotPreCommitBanner from './JackpotPreCommitBanner'
+import PrizePoolPreCommitBanner from './PrizePoolPreCommitBanner'
 import { DirectionalFlow, PlayerActivityState } from '@/hooks/player-summary/usePlayerActivityState'
 
 function makeFlow(over: Partial<DirectionalFlow> = {}): DirectionalFlow {
@@ -34,11 +34,11 @@ function makeState(outflow: Partial<DirectionalFlow> = {}): PlayerActivityState 
 
 const noop = () => { /* test */ }
 
-describe('<JackpotPreCommitBanner>', () => {
-    it('surfaces the slice of the jackpot beyond outflow headroom', () => {
-        // €5,000 jackpot against €500 of outflow headroom → ≈ €4,500 held.
+describe('<PrizePoolPreCommitBanner>', () => {
+    it('surfaces the slice of the prize pool beyond outflow headroom', () => {
+        // €5,000 prize pool against €500 of outflow headroom → ≈ €4,500 held.
         render(
-            <JackpotPreCommitBanner
+            <PrizePoolPreCommitBanner
                 state={makeState()}
                 context={{ currentJackpotEurMinor: 5_000_00, tierRequiredToFullyClaim: 'T2' }}
                 onVerify={noop}
@@ -49,9 +49,9 @@ describe('<JackpotPreCommitBanner>', () => {
         expect(screen.getByText(/≈ €4,500 of a win this size would be held/)).toBeInTheDocument()
     })
 
-    it('renders nothing when the jackpot fits inside outflow headroom', () => {
+    it('renders nothing when the prize pool fits inside outflow headroom', () => {
         const { container } = render(
-            <JackpotPreCommitBanner
+            <PrizePoolPreCommitBanner
                 state={makeState({ capEurMinor: 10_000_00, headroomEurMinor: 10_000_00 })}
                 context={{ currentJackpotEurMinor: 5_000_00, tierRequiredToFullyClaim: 'T2' }}
                 onVerify={noop}
@@ -62,7 +62,7 @@ describe('<JackpotPreCommitBanner>', () => {
 
     it('renders nothing on the unlimited top tier', () => {
         const { container } = render(
-            <JackpotPreCommitBanner
+            <PrizePoolPreCommitBanner
                 state={makeState({ capEurMinor: null, headroomEurMinor: Number.MAX_SAFE_INTEGER })}
                 context={{ currentJackpotEurMinor: 125_000_00, tierRequiredToFullyClaim: 'T2' }}
                 onVerify={noop}
@@ -73,7 +73,7 @@ describe('<JackpotPreCommitBanner>', () => {
 
     it('renders nothing without state or context', () => {
         const { container: noState } = render(
-            <JackpotPreCommitBanner
+            <PrizePoolPreCommitBanner
                 state={undefined}
                 context={{ currentJackpotEurMinor: 5_000_00, tierRequiredToFullyClaim: 'T2' }}
                 onVerify={noop}
@@ -82,7 +82,7 @@ describe('<JackpotPreCommitBanner>', () => {
         expect(noState).toBeEmptyDOMElement()
 
         const { container: noContext } = render(
-            <JackpotPreCommitBanner state={makeState()} context={undefined} onVerify={noop} />,
+            <PrizePoolPreCommitBanner state={makeState()} context={undefined} onVerify={noop} />,
         )
         expect(noContext).toBeEmptyDOMElement()
     })
@@ -90,7 +90,7 @@ describe('<JackpotPreCommitBanner>', () => {
     it('fires onVerify from the CTA', () => {
         const onVerify = vi.fn()
         render(
-            <JackpotPreCommitBanner
+            <PrizePoolPreCommitBanner
                 state={makeState()}
                 context={{ currentJackpotEurMinor: 5_000_00, tierRequiredToFullyClaim: 'T2' }}
                 onVerify={onVerify}

@@ -3,7 +3,7 @@ import { Button, Dialog, DialogContent, DialogHeader, DialogTitle } from '@block
 import { XIcon } from 'lucide-react'
 import HStack from '@/components/core/HStack/HStack'
 import { Table, TableRow, TableHeader, TableHead, TableBody, TableCell } from '@/components/ui/table'
-import { useLottery } from '@/providers/BlockpotProvider'
+import { useDraw } from '@/providers/BlockpotProvider'
 import useFiatConverter, { FiatConverter } from '@/hooks/utilities/useFiatConverter'
 import { formatEtherMaxDecimalsGreedy } from '@/utilities/formatters'
 import { formatNumberMaxDecimalsGreedy } from '@/utilities/formatters'
@@ -145,7 +145,7 @@ export type PrizesOverviewDialogProps = {
 
 export default function PrizesOverviewDialog(props: PrizesOverviewDialogProps) {
     const { open, onClose } = props
-    const { currentRound, pots } = useLottery()
+    const { currentRound, pots } = useDraw()
     const fiatConverter = useFiatConverter({ maxDecimals: 0 })
 
     if (!currentRound || !pots) return null

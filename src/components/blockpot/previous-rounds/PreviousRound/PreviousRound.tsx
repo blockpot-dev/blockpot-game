@@ -1,8 +1,8 @@
 import HStack from '@/components/core/HStack/HStack'
 import VStack from '@/components/core/VStack/VStack'
-import useLotteryRound from '@/hooks/contracts/lottery/useLotteryRound'
+import useDrawRound from '@/hooks/contracts/draw/useDrawRound'
 import { GameType } from '@/providers/SelectedGameProvider'
-import { LotteryRound } from '@/types/lottery'
+import { DrawRound } from '@/types/draw'
 import { Container } from '@blockpot-dev/blockpot-design-system'
 import { useMemo } from 'react'
 import PrizeBadge from '../../current-round/Prizes/PrizeBadge/PrizeBadge'
@@ -10,9 +10,9 @@ import { Address, isAddressEqual } from 'viem'
 import { ZERO_ADDRESS } from '@/web3/constants'
 import { ChevronRight } from 'lucide-react'
 import { formatDateWithTime } from '@/utilities/time/format-date'
-import { isPlayerWinner } from '@/utilities/lottery/is-player-winner'
+import { isPlayerWinner } from '@/utilities/draw/is-player-winner'
 
-function extractBadgeData(round: LotteryRound | null, accountAddress: Address) {
+function extractBadgeData(round: DrawRound | null, accountAddress: Address) {
     if (!round) return ['', -1] as const
     const playerTierIndex = round.draws.findIndex((draw) => isPlayerWinner(draw.winner, accountAddress))
     if (playerTierIndex !== -1) {
@@ -31,10 +31,10 @@ function extractBadgeData(round: LotteryRound | null, accountAddress: Address) {
 const gameLabel = (gameType: GameType) => gameType === 'main' ? 'Main' : 'Quick'
 
 export type _PreviousRoundProps = {
-    round: LotteryRound | null
+    round: DrawRound | null
     accountAddress: Address
     gameType: GameType
-    viewRoundSummary: (round: LotteryRound, gameType: GameType) => void
+    viewRoundSummary: (round: DrawRound, gameType: GameType) => void
 }
 
 export function _PreviousRound(props: _PreviousRoundProps) {
@@ -107,12 +107,12 @@ export type PreviousRoundProps = {
     accountAddress: Address
     roundIndex: number
     gameType: GameType
-    viewRoundSummary: (round: LotteryRound, gameType: GameType) => void
+    viewRoundSummary: (round: DrawRound, gameType: GameType) => void
 }
 
 export default function PreviousRound(props: PreviousRoundProps) {
     const { roundIndex, accountAddress, gameType, viewRoundSummary } = props
-    const round = useLotteryRound(roundIndex, gameType)
+    const round = useDrawRound(roundIndex, gameType)
 
     return <_PreviousRound round={round ?? null} accountAddress={accountAddress} gameType={gameType} viewRoundSummary={viewRoundSummary} />
 }

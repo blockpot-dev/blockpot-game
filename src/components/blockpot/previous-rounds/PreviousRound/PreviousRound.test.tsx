@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { Address } from 'viem'
 import { _PreviousRound } from './PreviousRound'
 import { ZERO_ADDRESS } from '@/web3/constants'
-import type { LotteryRound, DrawnNumber } from '@/types/lottery'
+import type { DrawRound, DrawnNumber } from '@/types/draw'
 
 vi.mock('@/utilities/time/format-date', () => ({
     formatDateWithTime: () => 'mocked date',
@@ -20,7 +20,7 @@ function makeDraw(winner: Address, ordinal: number): DrawnNumber {
     }
 }
 
-function makeRound(draws: DrawnNumber[]): LotteryRound {
+function makeRound(draws: DrawnNumber[]): DrawRound {
     return {
         roundIndex: 0,
         draws,
@@ -107,14 +107,14 @@ describe('<_PreviousRound> badge', () => {
     })
 
     it('disconnected viewer or non-winning round leaves the badge unfilled', () => {
-        const jackpotByOther = makeRound([
+        const topPrizeByOther = makeRound([
             makeDraw(WINNER_A, 1),
             makeDraw(ZERO_ADDRESS, 2),
             makeDraw(ZERO_ADDRESS, 3),
         ])
         const { container: disconnectedContainer } = render(
             <_PreviousRound
-                round={jackpotByOther}
+                round={topPrizeByOther}
                 accountAddress={ZERO_ADDRESS}
                 gameType='main'
                 viewRoundSummary={vi.fn()}
@@ -125,7 +125,7 @@ describe('<_PreviousRound> badge', () => {
 
         const { container: nonWinningContainer } = render(
             <_PreviousRound
-                round={jackpotByOther}
+                round={topPrizeByOther}
                 accountAddress={WINNER_B}
                 gameType='main'
                 viewRoundSummary={vi.fn()}

@@ -4,9 +4,9 @@ import { useQuery } from '@tanstack/react-query'
 import { randomNumberProviderAbi } from '@/abi/randomNumberProviderAbi'
 import { getContractAddress } from '@/constants/contract-addresses'
 import useAvailablePublicClient from '@/hooks/web3/useAvailablePublicClient'
-import { reproduceDrawnNumbers } from '@/utilities/lottery/reproduceDrawnNumbers'
-import { DrawProof } from '@/types/lottery/drawProof'
-import useLotteryRead from '../read/useLotteryRead'
+import { reproduceDrawnNumbers } from '@/utilities/draw/reproduceDrawnNumbers'
+import { DrawProof } from '@/types/draw/drawProof'
+import useDrawRead from '../read/useDrawRead'
 
 // Builds the provable-fairness view model for a completed round: reads the VRF
 // inputs from the LotteryRandomNumberProvider (whose address is derived
@@ -17,7 +17,7 @@ import useLotteryRead from '../read/useLotteryRead'
 export default function useDrawProof(roundIndex: number) {
     const chainId = useChainId()
     const publicClient = useAvailablePublicClient()
-    const { game, selectedGame, gameContractName } = useLotteryRead()
+    const { game, selectedGame, gameContractName } = useDrawRead()
 
     const { data, isLoading } = useQuery({
         queryKey: ['drawProof', selectedGame, chainId, roundIndex],

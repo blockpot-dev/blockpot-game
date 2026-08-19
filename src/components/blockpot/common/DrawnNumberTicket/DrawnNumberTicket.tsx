@@ -2,11 +2,11 @@ import { useEffect, useRef } from 'react'
 import HStack from '@/components/core/HStack/HStack'
 import VStack from '@/components/core/VStack/VStack'
 import { cn } from '@/lib/utils'
-import { DisplayDrawnNumberData } from '@/types/lottery/display-drawn-number-data'
+import { DisplayDrawnNumberData } from '@/types/draw/display-drawn-number-data'
 import { countDigits, formatAccountAddress, formatNumber, getDrawnNumberFontSizePx } from '@/utilities/formatters'
 import { ZERO_ADDRESS } from '@/web3/constants'
 import { Address, isAddressEqual } from 'viem'
-import { getDrawnNumberImage, getTicketVariant, ticketContentVariants } from '@/utilities/lottery/ticket-image'
+import { getDrawnNumberImage, getTicketVariant, ticketContentVariants } from '@/utilities/draw/ticket-image'
 
 function formatWinner(address: Address, isPlayerWinner: boolean) {
     if (isPlayerWinner) {

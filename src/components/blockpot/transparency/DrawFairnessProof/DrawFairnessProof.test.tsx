@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { _DrawFairnessProof } from './DrawFairnessProof'
-import { DrawProof } from '@/types/lottery/drawProof'
+import { DrawProof } from '@/types/draw/drawProof'
 
 const SEED = 0x1111111111111111111111111111111111111111111111111111111111112222n
 const REQUEST_ID = 987654321n

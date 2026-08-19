@@ -25,7 +25,7 @@ function Providers({ children }: React.PropsWithChildren) {
             client={queryClient}
             persistOptions={{persister: persister, buster: 'v6'}}
             onSuccess={() => {
-                queryClient.invalidateQueries({ queryKey: ['lotteryState'] })
+                queryClient.invalidateQueries({ queryKey: ['drawState'] })
                 queryClient.invalidateQueries({ queryKey: ['currentRoundEntryIndexes'] })
                 queryClient.invalidateQueries({ queryKey: ['roundPurchases'] })
                 queryClient.invalidateQueries({ queryKey: ['specificRound'] })

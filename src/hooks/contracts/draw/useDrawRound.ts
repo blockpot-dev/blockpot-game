@@ -1,19 +1,19 @@
 import { useChainId } from 'wagmi'
 import { useQuery } from '@tanstack/react-query'
-import { LotteryRound } from '@/types/lottery'
+import { DrawRound } from '@/types/draw'
 import { ContractName, getContractAddress } from '@/constants/contract-addresses'
-import { resolveLgoWinners } from '@/utilities/lottery/resolve-lgo-winners'
+import { resolveLgoWinners } from '@/utilities/draw/resolve-lgo-winners'
 import { GameType } from '@/providers/SelectedGameProvider'
-import useLotteryRead from '../read/useLotteryRead'
+import useDrawRead from '../read/useDrawRead'
 import useLGORead from '../read/useLGORead'
 import { calculateMaxRoundsInPot } from './useMaxRoundsInPot'
 
-export default function useLotteryRound(roundIndex: number, gameType?: GameType) {
+export default function useDrawRound(roundIndex: number, gameType?: GameType) {
     const chainId = useChainId()
-    const { game, selectedGame, gameContractName } = useLotteryRead(gameType)
+    const { game, selectedGame, gameContractName } = useDrawRead(gameType)
     const lgo = useLGORead().read
 
-    const { data } = useQuery<LotteryRound>({
+    const { data } = useQuery<DrawRound>({
         queryKey: ['specificRound', selectedGame, chainId, roundIndex.toString()],
         queryFn: async () => {
             const roundData = await game.getRoundData([roundIndex])

@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import useRoundEntryIndexes from './useRoundEntryIndexes'
-import { PurchaseData } from '@/types/lottery/purchase'
-import useLotteryRead from '../read/useLotteryRead'
+import { PurchaseData } from '@/types/draw/purchase'
+import useDrawRead from '../read/useDrawRead'
 import { useAccount } from 'wagmi'
 import { ZERO_ADDRESS } from '@/web3/constants'
 import { Address } from 'viem'
@@ -36,7 +36,7 @@ export type RoundPurchasesData = {
     totalTickets: number
 }
 export default function useRoundPurchases(roundIndex: number) {
-    const { game, selectedGame } = useLotteryRead()
+    const { game, selectedGame } = useDrawRead()
     const roundEntryIndexes = useRoundEntryIndexes(roundIndex)
     const { address } = useAccount()
     const client = useQueryClient()

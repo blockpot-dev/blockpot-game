@@ -1,5 +1,5 @@
 import { BASIS_POINTS_DIVISOR } from '@/constants/protocol'
-import { GameConfig } from '@/types/lottery/config'
+import { GameConfig } from '@/types/draw/config'
 
 export type FundRoutingEntry = {
     label: string // e.g. "Jackpot", "2nd", "Next-pot reserve", "Parent game"

@@ -8,7 +8,7 @@ import { formatEther } from 'viem'
 import { formatEtherMaxDecimalsGreedy, formatNumberMaxDecimalsGreedy } from '@/utilities/formatters'
 import PrizeBadge from '../../current-round/Prizes/PrizeBadge/PrizeBadge'
 import { computeFundRouting, FundRoutingEntry } from '@/utilities/fundRouting'
-import { GameConfig } from '@/types/lottery/config'
+import { GameConfig } from '@/types/draw/config'
 import { GameType } from '@/providers/SelectedGameProvider'
 
 // The util labels the forwarded bucket generically; the dialog knows the actual

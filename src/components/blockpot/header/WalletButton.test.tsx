@@ -32,7 +32,7 @@ vi.mock('@/components/blockpot/account/AccountDialog', () => ({
     ),
 }))
 
-// needsAttention reads four hooks (player activity, jackpot, draw, balances);
+// needsAttention reads four hooks (player activity, prize pool, draw, balances);
 // mock each to a benign default so the connected-state branch renders without
 // hitting wagmi/QueryClient.
 vi.mock('@/hooks/player-summary/usePlayerActivityState', () => ({
@@ -42,7 +42,7 @@ vi.mock('@/hooks/player-summary/useJackpotContext', () => ({
     default: () => ({ context: undefined }),
 }))
 vi.mock('@/providers/BlockpotDrawProvider', () => ({
-    useLotteryDraw: () => ({ draw: undefined }),
+    useBlockpotDraw: () => ({ draw: undefined }),
 }))
 vi.mock('@/hooks/utilities/useAccountAddress', () => ({
     default: () => '0x73AB48A14B2D6BCE26B68F11C0894EB5DDD0B657',

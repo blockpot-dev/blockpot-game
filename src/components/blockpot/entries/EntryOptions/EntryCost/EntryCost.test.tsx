@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import EntryCost from './EntryCost'
 import { PEA_PER_ENTRY_WEI } from '@/constants/protocol'
-import type { Amounts } from '@/types/lottery/tokens'
+import type { Amounts } from '@/types/draw/tokens'
 
 // EntryCost reads `currency` from useDisplayCurrency and the formatted price
 // strings from useDisplayPrices. Both hooks are chainId / Chainlink /

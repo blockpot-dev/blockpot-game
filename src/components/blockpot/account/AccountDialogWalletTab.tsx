@@ -7,7 +7,7 @@ import { PlayerActivityState } from '@/hooks/player-summary/usePlayerActivitySta
 import { formatEtherMaxDecimals } from '@/utilities/formatters'
 import LifetimeStatsRow from '@/components/blockpot/winnings/LifetimeStatsRow'
 import ClaimDecisionView from '@/components/blockpot/winnings/ClaimDecision'
-import JackpotPreCommitBanner from '@/components/blockpot/tier/JackpotPreCommitBanner'
+import PrizePoolPreCommitBanner from '@/components/blockpot/tier/PrizePoolPreCommitBanner'
 import CoolOffStatusBanner from '@/components/responsible-gaming/CoolOffStatusBanner'
 import AccountDialogWalletSection from './AccountDialogWalletSection'
 import ReferralEarningsSection from './ReferralEarningsSection'
@@ -174,7 +174,7 @@ export default function AccountDialogWalletTab(props: AccountDialogWalletTabProp
             </VStack>
 
             {!draw && (
-                <JackpotPreCommitBanner
+                <PrizePoolPreCommitBanner
                     state={state}
                     context={jackpotContext}
                     onVerify={onVerify}
