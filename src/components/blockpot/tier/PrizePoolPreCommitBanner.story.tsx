@@ -50,7 +50,7 @@ function state(headroomEurMinor: number | null): PlayerActivityState {
 export const HeldSliceAtT0: Story = {
     args: {
         state: state(500_00),
-        context: { currentJackpotEurMinor: 5_000_00, tierRequiredToFullyClaim: 'T2' },
+        context: { currentPrizePoolEurMinor: 5_000_00, tierRequiredToFullyClaim: 'T2' },
         onVerify: noop,
     },
 }
@@ -59,7 +59,7 @@ export const HeldSliceAtT0: Story = {
 export const LargePrizePool: Story = {
     args: {
         state: state(500_00),
-        context: { currentJackpotEurMinor: 125_000_00, tierRequiredToFullyClaim: 'T2' },
+        context: { currentPrizePoolEurMinor: 125_000_00, tierRequiredToFullyClaim: 'T2' },
         onVerify: noop,
     },
 }
@@ -68,7 +68,7 @@ export const LargePrizePool: Story = {
 export const FitsInHeadroom: Story = {
     args: {
         state: state(10_000_00),
-        context: { currentJackpotEurMinor: 5_000_00, tierRequiredToFullyClaim: 'T2' },
+        context: { currentPrizePoolEurMinor: 5_000_00, tierRequiredToFullyClaim: 'T2' },
         onVerify: noop,
     },
 }
@@ -77,7 +77,7 @@ export const FitsInHeadroom: Story = {
 export const UnlimitedTier: Story = {
     args: {
         state: state(null),
-        context: { currentJackpotEurMinor: 125_000_00, tierRequiredToFullyClaim: 'T2' },
+        context: { currentPrizePoolEurMinor: 125_000_00, tierRequiredToFullyClaim: 'T2' },
         onVerify: noop,
     },
 }

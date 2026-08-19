@@ -38,7 +38,7 @@ vi.mock('@/components/blockpot/account/AccountDialog', () => ({
 vi.mock('@/hooks/player-summary/usePlayerActivityState', () => ({
     default: () => ({ state: undefined }),
 }))
-vi.mock('@/hooks/player-summary/useJackpotContext', () => ({
+vi.mock('@/hooks/player-summary/usePrizePoolContext', () => ({
     default: () => ({ context: undefined }),
 }))
 vi.mock('@/providers/BlockpotDrawProvider', () => ({

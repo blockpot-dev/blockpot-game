@@ -3,14 +3,14 @@ import { authedFetch, isServiceConfigured } from '@/api/gamingServiceClient'
 import { usePlayerSession } from '@/providers/PlayerSessionProvider'
 import { PlayerTier } from './usePlayerActivityState'
 
-export type JackpotContext = {
-    currentJackpotEurMinor: number
+export type PrizePoolContext = {
+    currentPrizePoolEurMinor: number
     tierRequiredToFullyClaim: PlayerTier
 }
 
 // Wire shape — camelCase, matches httpapi/player_summary_handler.go.
-type JackpotContextResponse = {
-    currentJackpotEurMinor: number
+type PrizePoolContextResponse = {
+    currentPrizePoolEurMinor: number
     tierRequiredToFullyClaim: PlayerTier
 }
 
@@ -19,20 +19,20 @@ type JackpotContextResponse = {
 // never hits this branch — it's gated on `isServiceConfigured()` AND the
 // query is disabled until a SIWE session exists, so a fake "you need T2"
 // signal can never leak into the persisted cache.
-function buildMockContext(): JackpotContext {
+function buildMockContext(): PrizePoolContext {
     return {
-        currentJackpotEurMinor: 5_000_00,
+        currentPrizePoolEurMinor: 5_000_00,
         tierRequiredToFullyClaim: 'T2',
     }
 }
 
-async function fetchJackpotContext(): Promise<JackpotContext> {
+async function fetchPrizePoolContext(): Promise<PrizePoolContext> {
     if (!isServiceConfigured()) {
         return buildMockContext()
     }
-    const body = await authedFetch<JackpotContextResponse>('/v1/player/jackpot-context')
+    const body = await authedFetch<PrizePoolContextResponse>('/v1/player/prize-pool-context')
     return {
-        currentJackpotEurMinor: body.currentJackpotEurMinor,
+        currentPrizePoolEurMinor: body.currentPrizePoolEurMinor,
         tierRequiredToFullyClaim: body.tierRequiredToFullyClaim,
     }
 }
@@ -52,13 +52,13 @@ type Options = {
 // before SIWE, persist a "T2 required" stub to IndexedDB, and survive any
 // transient backend error (TanStack Query keeps the previous data on error).
 // That would light up the header attention dot for every fresh user.
-export default function useJackpotContext({ enabled = true }: Options = {}) {
+export default function usePrizePoolContext({ enabled = true }: Options = {}) {
     const { activeToken } = usePlayerSession()
     const liveEnabled = isServiceConfigured() ? !!activeToken() : true
 
     const query = useQuery({
-        queryKey: ['jackpotContext'],
-        queryFn: fetchJackpotContext,
+        queryKey: ['prizePoolContext'],
+        queryFn: fetchPrizePoolContext,
         enabled: enabled && liveEnabled,
         refetchInterval: POLL_INTERVAL_MS,
         refetchOnWindowFocus: true,

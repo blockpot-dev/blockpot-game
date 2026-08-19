@@ -122,7 +122,7 @@ function baseArgs(over: Partial<AccountDialogViewProps>): AccountDialogViewProps
         onOpenChange: noop,
         state: undefined,
         draw: false,
-        jackpotContext: undefined,
+        prizePoolContext: undefined,
         kycGates: {},
         onChainGates: 0n,
         tiers: FOUR_TIER_POLICY,

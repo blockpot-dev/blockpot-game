@@ -5,7 +5,7 @@ import { Wallet } from 'lucide-react'
 import { formatAccountAddress } from '@/utilities/formatters'
 import { useWalletOptionsDialogOpen } from '@/providers/ModalOpenStateProvider'
 import usePlayerActivityState, { PlayerActivityState, PlayerTier } from '@/hooks/player-summary/usePlayerActivityState'
-import useJackpotContext, { JackpotContext } from '@/hooks/player-summary/useJackpotContext'
+import usePrizePoolContext, { PrizePoolContext } from '@/hooks/player-summary/usePrizePoolContext'
 import { useBlockpotDraw } from '@/providers/BlockpotDrawProvider'
 import useAccountAddress from '@/hooks/utilities/useAccountAddress'
 import usePlayerBalances from '@/hooks/contracts/lgo/usePlayerBalances'
@@ -21,7 +21,7 @@ function tierIndex(tier: PlayerTier): number {
 
 function needsAttention(
     state: PlayerActivityState | undefined,
-    jackpot: JackpotContext | undefined, // TODO(BLO-696): wire naming until prize-pool-context lands
+    prizePoolContext: PrizePoolContext | undefined,
     drawActive: boolean,
     eth: bigint | undefined,
     weth: bigint | undefined,
@@ -30,7 +30,7 @@ function needsAttention(
     if (!state) return false
     if (Math.max(state.inflow.ratio, state.outflow.ratio) >= TIER_WARN_RATIO) return true
     if (state.pendingClaimEurMinor > 0) return true
-    if (!drawActive && jackpot && tierIndex(jackpot.tierRequiredToFullyClaim) > tierIndex(state.currentTier)) {
+    if (!drawActive && prizePoolContext && tierIndex(prizePoolContext.tierRequiredToFullyClaim) > tierIndex(state.currentTier)) {
         return true
     }
     return false
@@ -47,7 +47,7 @@ export default function WalletButton() {
 
     const { state } = usePlayerActivityState()
     const { draw } = useBlockpotDraw()
-    const { context: jackpotContext } = useJackpotContext({ enabled: isConnected && !draw })
+    const { context: prizePoolContext } = usePrizePoolContext({ enabled: isConnected && !draw })
     const playerAddress = useAccountAddress()
     const { eth, weth } = usePlayerBalances(playerAddress)
 
@@ -63,7 +63,7 @@ export default function WalletButton() {
         )
     }
 
-    const attention = needsAttention(state, jackpotContext, !!draw, eth, weth)
+    const attention = needsAttention(state, prizePoolContext, !!draw, eth, weth)
     const label = ensName ?? (address ? formatAccountAddress(address.toUpperCase()) : '')
 
     return (

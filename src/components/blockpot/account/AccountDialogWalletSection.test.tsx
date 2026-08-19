@@ -29,7 +29,7 @@ function makeProps(): React.ComponentProps<typeof AccountDialogView> {
         onOpenChange: vi.fn(),
         state: undefined,
         draw: false,
-        jackpotContext: undefined,
+        prizePoolContext: undefined,
         kycGates: undefined,
         onChainGates: 0n,
         tiers: [],

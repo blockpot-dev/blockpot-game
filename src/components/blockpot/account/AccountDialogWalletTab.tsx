@@ -2,7 +2,7 @@ import { Button } from '@blockpot-dev/blockpot-design-system'
 import HStack from '@/components/core/HStack/HStack'
 import VStack from '@/components/core/VStack/VStack'
 import { ClaimDecision } from '@/hooks/claim/types'
-import { JackpotContext } from '@/hooks/player-summary/useJackpotContext'
+import { PrizePoolContext } from '@/hooks/player-summary/usePrizePoolContext'
 import { PlayerActivityState } from '@/hooks/player-summary/usePlayerActivityState'
 import { formatEtherMaxDecimals } from '@/utilities/formatters'
 import LifetimeStatsRow from '@/components/blockpot/winnings/LifetimeStatsRow'
@@ -15,7 +15,7 @@ import ReferralEarningsSection from './ReferralEarningsSection'
 export type AccountDialogWalletTabProps = {
     state: PlayerActivityState
     draw: boolean
-    jackpotContext: JackpotContext | undefined
+    prizePoolContext: PrizePoolContext | undefined
 
     eth: bigint
     weth: bigint
@@ -49,7 +49,7 @@ function formatEur(minor: number): string {
 
 export default function AccountDialogWalletTab(props: AccountDialogWalletTabProps) {
     const {
-        state, draw, jackpotContext,
+        state, draw, prizePoolContext,
         eth, weth, wageredEurMinor, wonEurMinor, profitEurMinor, isCompliant,
         blockedUntil,
         decision, isClaiming, claimRequestPending, opStatus, opError,
@@ -176,7 +176,7 @@ export default function AccountDialogWalletTab(props: AccountDialogWalletTabProp
             {!draw && (
                 <PrizePoolPreCommitBanner
                     state={state}
-                    context={jackpotContext}
+                    context={prizePoolContext}
                     onVerify={onVerify}
                 />
             )}

@@ -6,7 +6,7 @@ import VStack from '@/components/core/VStack/VStack'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ClaimDecision } from '@/hooks/claim/types'
 import { GateRecord, GateType } from '@/hooks/player/usePlayerKyc'
-import { JackpotContext } from '@/hooks/player-summary/useJackpotContext'
+import { PrizePoolContext } from '@/hooks/player-summary/usePrizePoolContext'
 import { PlayerActivityState } from '@/hooks/player-summary/usePlayerActivityState'
 import { TierPolicy } from '@/hooks/contracts/kyc/useActivePolicy'
 import AccountDialogWalletSection from './AccountDialogWalletSection'
@@ -19,7 +19,7 @@ export type AccountDialogViewProps = {
 
     state: PlayerActivityState | undefined
     draw: boolean
-    jackpotContext: JackpotContext | undefined
+    prizePoolContext: PrizePoolContext | undefined
     kycGates: Partial<Record<GateType, GateRecord>> | undefined
     onChainGates: bigint
     tiers: readonly TierPolicy[]
@@ -48,7 +48,7 @@ export type AccountDialogViewProps = {
 export default function AccountDialogView(props: AccountDialogViewProps) {
     const {
         open, onOpenChange,
-        state, draw, jackpotContext, kycGates, onChainGates, tiers,
+        state, draw, prizePoolContext, kycGates, onChainGates, tiers,
         eth, weth, wageredEurMinor, wonEurMinor, profitEurMinor, isCompliant,
         blockedUntil,
         decision, isClaiming, claimRequestPending, opStatus, opError,
@@ -101,7 +101,7 @@ export default function AccountDialogView(props: AccountDialogViewProps) {
                                     <AccountDialogWalletTab
                                         state={state}
                                         draw={draw}
-                                        jackpotContext={jackpotContext}
+                                        prizePoolContext={prizePoolContext}
                                         eth={eth}
                                         weth={weth}
                                         wageredEurMinor={wageredEurMinor}

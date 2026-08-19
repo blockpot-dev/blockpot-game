@@ -5,7 +5,7 @@ import { Address } from 'viem'
 import { toast } from 'sonner'
 import useAccountAddress from '@/hooks/utilities/useAccountAddress'
 import usePlayerActivityState from '@/hooks/player-summary/usePlayerActivityState'
-import useJackpotContext from '@/hooks/player-summary/useJackpotContext'
+import usePrizePoolContext from '@/hooks/player-summary/usePrizePoolContext'
 import { useBlockpotDraw } from '@/providers/BlockpotDrawProvider'
 import usePlayerKyc from '@/hooks/player/usePlayerKyc'
 import useActivePolicy from '@/hooks/contracts/kyc/useActivePolicy'
@@ -35,7 +35,7 @@ export default function AccountDialog({ open, onOpenChange }: AccountDialogProps
 
     const { state } = usePlayerActivityState()
     const { draw } = useBlockpotDraw()
-    const { context: jackpotContext } = useJackpotContext({ enabled: open && !draw })
+    const { context: prizePoolContext } = usePrizePoolContext({ enabled: open && !draw })
     const { status: kycStatus } = usePlayerKyc()
     const { policy } = useActivePolicy()
     const { eth, weth } = usePlayerBalances(address)
@@ -142,7 +142,7 @@ export default function AccountDialog({ open, onOpenChange }: AccountDialogProps
             onOpenChange={onOpenChange}
             state={state}
             draw={!!draw}
-            jackpotContext={jackpotContext}
+            prizePoolContext={prizePoolContext}
             kycGates={kycStatus?.gates}
             onChainGates={onChainGates}
             tiers={policy?.tiers ?? []}

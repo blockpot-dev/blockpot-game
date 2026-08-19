@@ -1,10 +1,10 @@
 import { Button, InfoBanner } from '@blockpot-dev/blockpot-design-system'
-import { JackpotContext } from '@/hooks/player-summary/useJackpotContext'
+import { PrizePoolContext } from '@/hooks/player-summary/usePrizePoolContext'
 import { PlayerActivityState } from '@/hooks/player-summary/usePlayerActivityState'
 
 export type PrizePoolPreCommitBannerProps = {
     state: PlayerActivityState | undefined
-    context: JackpotContext | undefined
+    context: PrizePoolContext | undefined
     onVerify: () => void
     className?: string
 }
@@ -32,10 +32,10 @@ export default function PrizePoolPreCommitBanner(props: PrizePoolPreCommitBanner
 
     if (!state || !context) return null
 
-    const heldEurMinor = Math.max(0, context.currentJackpotEurMinor - state.outflow.headroomEurMinor)
+    const heldEurMinor = Math.max(0, context.currentPrizePoolEurMinor - state.outflow.headroomEurMinor)
     if (heldEurMinor <= 0) return null
 
-    const prizeEur = formatEur(context.currentJackpotEurMinor)
+    const prizeEur = formatEur(context.currentPrizePoolEurMinor)
     const heldEur = formatEur(heldEurMinor)
 
     return (

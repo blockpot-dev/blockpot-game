@@ -71,7 +71,7 @@ function makeProps(over: Partial<React.ComponentProps<typeof AccountDialogView>>
         onOpenChange: vi.fn(),
         state: T1_STATE,
         draw: false,
-        jackpotContext: undefined,
+        prizePoolContext: undefined,
         kycGates: {},
         onChainGates: 0n,
         tiers: TIERS,

@@ -40,7 +40,7 @@ describe('<PrizePoolPreCommitBanner>', () => {
         render(
             <PrizePoolPreCommitBanner
                 state={makeState()}
-                context={{ currentJackpotEurMinor: 5_000_00, tierRequiredToFullyClaim: 'T2' }}
+                context={{ currentPrizePoolEurMinor: 5_000_00, tierRequiredToFullyClaim: 'T2' }}
                 onVerify={noop}
             />,
         )
@@ -53,7 +53,7 @@ describe('<PrizePoolPreCommitBanner>', () => {
         const { container } = render(
             <PrizePoolPreCommitBanner
                 state={makeState({ capEurMinor: 10_000_00, headroomEurMinor: 10_000_00 })}
-                context={{ currentJackpotEurMinor: 5_000_00, tierRequiredToFullyClaim: 'T2' }}
+                context={{ currentPrizePoolEurMinor: 5_000_00, tierRequiredToFullyClaim: 'T2' }}
                 onVerify={noop}
             />,
         )
@@ -64,7 +64,7 @@ describe('<PrizePoolPreCommitBanner>', () => {
         const { container } = render(
             <PrizePoolPreCommitBanner
                 state={makeState({ capEurMinor: null, headroomEurMinor: Number.MAX_SAFE_INTEGER })}
-                context={{ currentJackpotEurMinor: 125_000_00, tierRequiredToFullyClaim: 'T2' }}
+                context={{ currentPrizePoolEurMinor: 125_000_00, tierRequiredToFullyClaim: 'T2' }}
                 onVerify={noop}
             />,
         )
@@ -75,7 +75,7 @@ describe('<PrizePoolPreCommitBanner>', () => {
         const { container: noState } = render(
             <PrizePoolPreCommitBanner
                 state={undefined}
-                context={{ currentJackpotEurMinor: 5_000_00, tierRequiredToFullyClaim: 'T2' }}
+                context={{ currentPrizePoolEurMinor: 5_000_00, tierRequiredToFullyClaim: 'T2' }}
                 onVerify={noop}
             />,
         )
@@ -92,7 +92,7 @@ describe('<PrizePoolPreCommitBanner>', () => {
         render(
             <PrizePoolPreCommitBanner
                 state={makeState()}
-                context={{ currentJackpotEurMinor: 5_000_00, tierRequiredToFullyClaim: 'T2' }}
+                context={{ currentPrizePoolEurMinor: 5_000_00, tierRequiredToFullyClaim: 'T2' }}
                 onVerify={onVerify}
             />,
         )
