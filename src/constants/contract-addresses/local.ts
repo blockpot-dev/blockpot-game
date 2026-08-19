@@ -9,9 +9,9 @@ const LOCAL_ADDRESSES: { [key: string]: `0x${string}` } = {
     'aggregatorV3': '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
     'aggregatorV3Eur': '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
     'approvedOperatorRegistry': '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
-    'operator': '0x7bc06c482DEAd17c0e297aFbC32f6e63d3846650',
-    'playerRegistry': '0xCD8a1C3ba11CF5ECfa6267617243239504a98d90',
-    'kycRegistry': '0x5f3f1dBD7B74C6B46e8c44f98792A1dAf8d69154',
+    'operator': '0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f',
+    'playerRegistry': '0xc6e7DF5E7b4f2A278906862b61205850344D4e7d',
+    'kycRegistry': '0x68B1D87F95878fE05B998F19b66F4baba5De1aed',
 }
 
 export default LOCAL_ADDRESSES

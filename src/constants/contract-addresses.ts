@@ -35,7 +35,7 @@ const KEY_BY_CONTRACT: Record<ContractName, string> = {
     [ContractName.APPROVED_OPERATOR_REGISTRY]: 'approvedOperatorRegistry',
     [ContractName.QUICK_GAME]: 'quickGame',
     [ContractName.WETH]: 'weth',
-    [ContractName.OPERATOR]: 'lgo',
+    [ContractName.OPERATOR]: 'operator',
     [ContractName.REFERRAL_MANAGER]: 'referralManager',
     [ContractName.PLAYER_REGISTRY]: 'playerRegistry',
     [ContractName.KYC_REGISTRY]: 'kycRegistry',
