@@ -43,7 +43,7 @@ const blockPotTestnet: Chain = {
 
 const metadata = {
     name: 'Blockpot',
-    description: 'The people\'s lottery',
+    description: 'Provably fair on-chain prize draws',
     url: 'https://blockpot.com',
     icons: ['https://avatars.githubusercontent.com/u/37784886'] // TODO: Change me
 }
