@@ -56,7 +56,7 @@ Surviving routes: `/`, `/play`, `/transparency`, `/how-to-play`.
 - `src/hooks/contracts/block-pot-config-manager/`
 - `src/hooks/contracts/write/` (contributor rewards)
 - `src/hooks/governance/`
-- Individual files: `useApplyReferralCode`, `useLotteryDiscounts`, `useStartDraw`, `useContributorInfo`, `useContributorClaim`, `useContributorPayouts`, plus the 5 corresponding `use*Read.ts` factories
+- Individual files: `useApplyReferralCode`, `useDrawDiscounts`, `useStartDraw`, `useContributorInfo`, `useContributorClaim`, `useContributorPayouts`, plus the 5 corresponding `use*Read.ts` factories
 
 ## Hook tree added
 
@@ -91,16 +91,16 @@ Surviving routes: `/`, `/play`, `/transparency`, `/how-to-play`.
 
 | File | Change |
 |---|---|
-| `src/constants/contract-addresses.ts` | `ContractName` enum narrowed: `LOTTERY_MAIN`, `CHAINLINK_AGGREGATOR_V3`, `FUNDS_MANAGER_MAIN`, `COMPLIANCE_REGISTRY` (new), `QUICK_GAME`, `WETH`. All 4 per-chain maps pruned. |
+| `src/constants/contract-addresses.ts` | `ContractName` enum narrowed: `DRAW_MAIN`, `CHAINLINK_AGGREGATOR_V3`, `FUNDS_MANAGER_MAIN`, `COMPLIANCE_REGISTRY` (new), `QUICK_GAME`, `WETH`. All 4 per-chain maps pruned. |
 | `src/constants/protocol.ts` | New: `PEA_PER_ENTRY_WEI`, `CF_BASIS_POINTS`, `DEFAULT_OF_BASIS_POINTS`, `BASIS_POINTS_DIVISOR`. |
 | `src/constants/operator.ts` | New: validated reads of `VITE_OPERATOR_ADDRESS` / `VITE_OPERATOR_FEE_BPS`; exports `OPERATOR_ADDRESS`, `OPERATOR_FEE_BPS`, `OPERATOR_CONFIG_VALID`. |
-| `src/hooks/contracts/lottery/actions/useEnterLottery.ts` | Two-transaction flow: step 1 `sendTransaction(OPERATOR_ADDRESS, of)`, step 2 `enter([roundIndex, amount, payoutInWeth, operator], { value: pea + cf })`. Gated on `useIsOperatorWhitelisted`. Exports `computeEntryCostBreakdown()`. |
+| `src/hooks/contracts/draw/actions/useEnterDraw.ts` | Two-transaction flow: step 1 `sendTransaction(OPERATOR_ADDRESS, of)`, step 2 `enter([roundIndex, amount, payoutInWeth, operator], { value: pea + cf })`. Gated on `useIsOperatorWhitelisted`. Exports `computeEntryCostBreakdown()`. |
 | `src/hooks/entry/useEntryForm.ts` | Dropped BPT/discount/referral wiring. Exposes `pea`, `cf`, `of`, `total` (all `Amounts`), `amountPerEntry`, basis-point constants, `isOperatorWhitelisted`, `error`. |
-| `src/hooks/contracts/lottery/useLotteryState.ts` | Dropped `drawNumbersOperationsRewards`. Adapted to v2 `currentGameConfig` / `getRoundData` shapes. |
+| `src/hooks/contracts/draw/useDrawState.ts` | Dropped `drawNumbersOperationsRewards`. Adapted to v2 `currentGameConfig` / `getRoundData` shapes. |
 | `src/hooks/contracts/transparency/useBalanceAllocations.ts` | Rewritten for v2 `balances()` shape (`pot`, `nextPot`, `parentGame`, `contractBalance`). |
-| `src/types/lottery/config.ts` (`GameConfig`) | Rewritten for v2: `prizeTierAllocations`, `nextPotAllocation`, `parentGamePotAllocation`, `chanceInitial/Multiplier/Increment/Max`, `ignoreOdds`. All `number` (uint24/48 fit in JS number). |
+| `src/types/draw/config.ts` (`GameConfig`) | Rewritten for v2: `prizeTierAllocations`, `nextPotAllocation`, `parentGamePotAllocation`, `chanceInitial/Multiplier/Increment/Max`, `ignoreOdds`. All `number` (uint24/48 fit in JS number). |
 | `src/providers/Web3Provider.tsx` | Short-circuits to a `OperatorConfigError` page if `OPERATOR_CONFIG_VALID` is false. |
-| `src/providers/LotteryProvider.tsx` | Narrowed to round pagination only; dropped BPT/tracker/config/proposal aggregation. |
+| `src/providers/LotteryProvider.tsx (since removed)` | Narrowed to round pagination only; dropped BPT/tracker/config/proposal aggregation. |
 | `src/providers/BlockpotEventsProvider.tsx` | Dropped subscriptions to deleted contracts. Event filter uses v2 `beneficiary` arg. |
 | `src/providers/ModalOpenStateProvider.tsx` | Dropped `bptDialogOpen` binding. |
 | `src/routes/__root.tsx` | Removed `PinataStorageProvider`. Mounted `<OperatorStatusBanner/>` directly below `<Header/>`. |
@@ -109,7 +109,7 @@ Surviving routes: `/`, `/play`, `/transparency`, `/how-to-play`.
 | `src/components/blockpot/transparency/index.tsx`, `BlockpotBalances.tsx` | ContributorPayouts removed; BlockpotBalances uses v2 balance shape. |
 | `src/components/blockpot/header/Header.tsx` | Removed BPT, earn/referrals/governance nav, fixed stale `next/image` import. |
 | `src/routes/how-to-play.tsx` | Rewritten from placeholder into real four-section explainer (ticket cost, draws, payouts, wallet). |
-| `index.html` | Title + description + OG tags reframe as licensed on-chain lottery. |
+| `index.html` | Title + description + OG tags reframe as licensed on-chain prize draws. |
 | `vite.config.ts` | Registered `@tanstack/router-plugin/vite` so `routeTree.gen.ts` regenerates on dev/build. |
 
 ---
@@ -150,7 +150,7 @@ The frontend collects `LEF = PEA + CF + OF` as **two on-chain transactions**:
 | | | |
 |---|---|---|
 | **PEA** | Protocol Entry Amount | 0.001 ETH per entry, hardcoded. Flows to prize pool. |
-| **CF** | Contributor Fee | 2% of PEA. Routed by Lottery to DevCo on-chain. |
+| **CF** | Contributor Fee | 2% of PEA. Routed by the Draw core to DevCo on-chain. |
 | **OF** | Operator Fee | 5% of PEA by default. Invisible to protocol — frontend transfers to operator wallet. |
 
 1. `sendTransactionAsync({ to: OPERATOR_ADDRESS, value: of })` — pay OF

@@ -98,7 +98,7 @@ The route gates the SumSub host on (1) connected wallet, (2) live SIWE session �
 From outer to inner:
 
 1. `CountryProvider` — geolocation / region gating
-2. `QueryClientProvider` — TanStack Query client + IndexedDB persister (`v6` buster, 1h stale/gc), Query Devtools, restore-time invalidation of `lotteryState`, `currentRoundEntryIndexes`, `roundPurchases`, `specificRound`
+2. `QueryClientProvider` — TanStack Query client + IndexedDB persister (`v6` buster, 1h stale/gc), Query Devtools, restore-time invalidation of `drawState`, `currentRoundEntryIndexes`, `roundPurchases`, `specificRound`
 3. `Web3Provider` — wagmi config, chains, connectors; short-circuits to a full-page `OperatorConfigError` if `VITE_OPERATOR_ADDRESS` is invalid
 4. `Web3ConnectionProvider` — connection state wrapper
 5. `PlayerSessionProvider` — SIWE / Bearer-token session for the connected wallet; mirrors token state into `src/api/gamingServiceClient.ts` so synchronous helpers (e.g. `evaluatePretxDeposit`) can read it without subscribing to context
@@ -108,10 +108,10 @@ From outer to inner:
 9. `SelectedGameProvider` — `main` ↔ `quick` game toggle (quick game contract addresses populated; UI unwired)
 10. `ModalOpenStateProvider` — modal open/close bindings (drawSummary, prizesOverview, previousRounds, walletOptions, missedDraw)
 11. `BlockpotEventsProvider` — contract event subscriptions (see §10)
-12. `BlockpotProvider` — current round / drawn round / view round state (`useLottery`, `useLotteryHash`, `useIsDrawingNumbers`, `useViewRoundIndex`)
+12. `BlockpotProvider` — current round / drawn round / view round state (`useDraw`, `useDrawHash`, `useIsDrawingNumbers`, `useViewRoundIndex`)
 13. `MissedDrawProvider` — tracks rounds the user missed
 14. `LotteryProvider` — round pagination only (`useLoadedRoundIndexes`); narrowed from v1 aggregator
-15. `BlockpotDrawProvider` — draw animation state (`useLotteryDraw`)
+15. `BlockpotDrawProvider` — draw animation state (`useBlockpotDraw`)
 
 Inside the shell, directly below `<Header/>`: `<LGOWhitelistBanner/>` then `<SelfExclusionBanner/>` — both render `null` in the happy path and a blocking banner otherwise. `<Modals/>` mounts inside `BlockpotDrawProvider`; `<UnsupportedRegionDialog/>` mounts inside `CountryProvider` but outside `QueryClientProvider`. Outside everything: `<Toaster/>` from Sonner and a dev-only `<TanStackRouterDevtools/>`.
 
@@ -142,14 +142,14 @@ Hand-maintained CVA-variant wrappers: `badge`, `button`, `card`, `chart`, `check
 | Folder | Surface | Notes |
 | --- | --- | --- |
 | `play/` | `/play` | Orchestrator: PlayHeader + CurrentRound/DrawnNumbersPanel + EntryPanel/RoundDraw + InfoPanel + PreviousRounds. Mounts `AttestationModal`, `SelfExclusionRouteGate`. |
-| `current-round/` | embedded | Countdown, Jackpot, Prizes, RoundInfo |
+| `current-round/` | embedded | Countdown, PrizePool, Prizes, RoundInfo |
 | `drawn-numbers-panel/` | embedded | Rolling list of drawn numbers |
 | `round-draw/` | embedded | Waiting/Drawing/Complete stages + DrawRoundInfo |
 | `entries/` | embedded | EntryPanel orchestrator + EntryOptions (amount picker) + EntrySummary (PEA/CF/OF/Total, read from `LGO.entryQuote`) + EntryButton (with `RegistrationMode` slot) + ConnectWalletPanel |
 | `previous-rounds/` | embedded | Historical round cards |
 | `info-panel/` | embedded | User ticket history |
 | `transparency/` | `/transparency` | BlockpotBalances (FundsManager pot/nextPot/parentGame) + TierThresholds (rendered EUR ladder from `useActivePolicy`) |
-| `tier/` | account / play | `HeadroomBar`, `JackpotPreCommitBanner`, `PendingCddBanner`, `TierBadge`, `TierBreakdown`, `TierUpgradePrompt` — surfaces driven by `usePlayerActivityState` |
+| `tier/` | account / play | `HeadroomBar`, `PrizePoolPreCommitBanner`, `PendingCddBanner`, `TierBadge`, `TierBreakdown`, `TierUpgradePrompt` — surfaces driven by `usePlayerActivityState` |
 | `account/` | header dialog | `AccountDialog` + `AccountDialogView` — opened from `AccountHeaderItem`; consolidates KYC tier, balances, lifetime stats, claim decisions, withdrawal CTAs |
 | `winnings/` | inside account | `ClaimDecision`, `LifetimeStatsRow` — building blocks rendered inside `AccountDialogView` |
 | `header/` | global | `Header` + `ConnectWalletItem` + `NavigationItem` + `GameTypeItem` + `AccountHeaderItem` (launches `AccountDialog`) + `AccountHeaderButton` |
@@ -184,18 +184,18 @@ src/hooks/
 ├── contracts/
 │   ├── read/
 │   │   ├── useReadContract.ts                # Base factory → viem contract object
-│   │   ├── useLotteryRead.ts
+│   │   ├── useDrawRead.ts
 │   │   ├── useFundsManagerRead.ts
 │   │   ├── useChainlinkAggregatorRead.ts
 │   │   ├── useLGORead.ts
 │   │   ├── usePlayerRegistryRead.ts
 │   │   └── useKycRegistryRead.ts
-│   ├── lottery/                              # State, rounds, entries, actions
-│   │   ├── useLotteryState.ts
-│   │   ├── useLotteryRound / useLotteryEntry / useLoadedGameRounds / useMaxRoundsInPot
+│   ├── draw/                                 # State, rounds, entries, actions
+│   │   ├── useDrawState.ts
+│   │   ├── useDrawRound / useDrawEntry / useLoadedGameRounds / useMaxRoundsInPot
 │   │   ├── usePlayerEntries / useRoundEntryIndexes / useRoundPurchases
 │   │   ├── useRoundDraw / useTimeRemaining
-│   │   └── actions/useEnterLottery.ts        # Single-tx LGO flow, triple-gated (§8)
+│   │   └── actions/useEnterDraw.ts        # Single-tx LGO flow, triple-gated (§8)
 │   ├── lgo/                                  # LGO proxy — entry gate, fee collector, custodian
 │   │   ├── useEntryQuote.ts                  # (pea, cf, of, total) breakdown from chain
 │   │   ├── useOperatorFeeBps.ts
@@ -249,7 +249,7 @@ src/hooks/
 
 Composition: low-level contract hooks → domain hooks → orchestrator hooks. Example:
 ```
-useEnterLottery       (single-tx LGO.enter / enterWeth)
+useEnterDraw          (single-tx LGO.enter / enterWeth)
 + useIsLGOWhitelisted (ComplianceRegistry gate)
 + useIsPlayerActive   (PlayerRegistry gate)
 + evaluatePretxDeposit (off-chain KYC + headroom gate; navigates to /verify on KYC_UPGRADE)
@@ -258,7 +258,7 @@ useEnterLottery       (single-tx LGO.enter / enterWeth)
 + usePlayerActivityState (target tier hint for /verify)
 ```
 
-Removed in v2 / KYC era: block-pot-token, block-pot-reward-tracker, block-pot-referral-manager, block-pot-config-manager, governance, useApplyReferralCode, useLotteryDiscounts, useStartDraw, useContributorInfo/Claim/Payouts, the old `useLifetimeStats` (replaced by `useLifetimeSnapshot`), and `lgo/actions/useWithdrawWinnings` (claim flow now goes through `claim/useClaimOperation`).
+Removed in v2 / KYC era: block-pot-token, block-pot-reward-tracker, block-pot-referral-manager, block-pot-config-manager, governance, useApplyReferralCode, useDrawDiscounts, useStartDraw, useContributorInfo/Claim/Payouts, the old `useLifetimeStats` (replaced by `useLifetimeSnapshot`), and `lgo/actions/useWithdrawWinnings` (claim flow now goes through `claim/useClaimOperation`).
 
 ---
 
@@ -279,7 +279,7 @@ Each source repo has its own `cli/` Cargo binary driven by `cli/abis.toml`. Stal
 
 ### ContractName enum (`src/constants/contract-addresses.ts`)
 ```
-LOTTERY_MAIN
+DRAW_MAIN
 CHAINLINK_AGGREGATOR_V3            # ETH/USD
 CHAINLINK_AGGREGATOR_EUR_USD       # EUR/USD — used by the LGO when computing EUR-minor totals
 FUNDS_MANAGER_MAIN
@@ -304,7 +304,7 @@ import useReadContract from '@/hooks/contracts/read/useReadContract'
 import { lotteryAbi } from '@/abi/lotteryAbi'
 import { ContractName } from '@/constants/contract-addresses'
 
-const game = useReadContract(ContractName.LOTTERY_MAIN, lotteryAbi).read
+const game = useReadContract(ContractName.DRAW_MAIN, lotteryAbi).read
 const pots = await game.currentPots()
 ```
 
@@ -336,7 +336,7 @@ The most important v2 surface. Entries route through the LGO proxy contract (the
 
 Constants for PEA/CF still live in `src/constants/protocol.ts` for display-only copy; the authoritative breakdown is `useEntryQuote`.
 
-**Single-transaction on-chain flow** (`src/hooks/contracts/lottery/actions/useEnterLottery.ts`):
+**Single-transaction on-chain flow** (`src/hooks/contracts/lottery/actions/useEnterDraw.ts`):
 - **ETH path:** read `[total] = LGO.entryQuote(lottery, amount)`, then call `LGO.enter(lottery, roundIndex, amount, payoutInWeth)` with `{ value: total }`.
 - **WETH path:** call `LGO.enterWeth(lottery, roundIndex, amount, payoutInWeth)` with no `msg.value`. The LGO pulls `total` WETH via `transferFrom` and unwraps internally. Allowance must be pre-approved against the **LGO address** (`useErc20WithAllowance(WETH, LGO)`), not the Lottery.
 
@@ -403,7 +403,7 @@ Fed by:
 **Display surfaces driven by `usePlayerActivityState`**:
 - `HeadroomBar` (wager-track headroom + projected next threshold)
 - `TierBadge`, `TierBreakdown`, `TierUpgradePrompt`
-- `JackpotPreCommitBanner` (warns when an upcoming single-win could exceed the player's win-track allowance)
+- `PrizePoolPreCommitBanner` (warns when an upcoming single-win could exceed the player's win-track allowance)
 - `PendingCddBanner` (shows escrowed winnings beyond current tier's win allowance)
 
 ---
@@ -436,13 +436,13 @@ The previous `PlayerRegistrationBanner` was retired — registration is now hand
 - Query Devtools mounted in dev (initial open).
 - Event-driven refetch: `useEventsBlockNumber` returns the latest block with matching events; consumer threads it into the query key. `BlockpotEventsProvider` drives subscription.
 
-On persister restore, `QueryClientProvider` explicitly invalidates `['lotteryState']`, `['currentRoundEntryIndexes']`, `['roundPurchases']`, `['specificRound']`.
+On persister restore, `QueryClientProvider` explicitly invalidates `['drawState']`, `['currentRoundEntryIndexes']`, `['roundPurchases']`, `['specificRound']`.
 
 **Subscriptions in `BlockpotEventsProvider`** (each tracks a per-event block number; a `useTriggerOnChanged` then invalidates the right query key):
 
 | Source | Events watched | Invalidates on player-match |
 | --- | --- | --- |
-| Lottery | `LotteryOnEntry`, `LotteryDrawingNumbers`, `LotteryDrawnNumbersReceived`, `LotteryWinnerSelected`, `LotteryNoWinner` | `lotteryState`, `currentRoundEntryIndexes`, `roundPurchases`, `balanceAllocations` |
+| Lottery | `LotteryOnEntry`, `LotteryDrawingNumbers`, `LotteryDrawnNumbersReceived`, `LotteryWinnerSelected`, `LotteryNoWinner` | `drawState`, `currentRoundEntryIndexes`, `roundPurchases`, `balanceAllocations` |
 | WETH | `Deposit({ dst: address })`, `Withdrawal({ src: address })` | `erc20:WETH` |
 | LGO | `LGOEntry`, `PlayerCredited`, `PlayerPaidDirect`, `Withdrawn`, `OperatorFeeBpsUpdated`, `LifetimeWageredUpdated`, `LifetimeWonUpdated`, `LifetimeAccountingDeferred`, `LargestSingleWinUpdated` | `lgo:balances`, `lgo:lifetime`, `kyc:isCompliant`, `kyc:tierOf` (lifetime EUR-minor counters feed the registry's profit lookup, so any LGO movement can flip compliance/tier). `OperatorFeeBpsUpdated` → `lgo:operatorFeeBps`, `lgo:entryQuote`. |
 | KYCRegistry | `PlayerGatesSet`, `TierOverrideSet`, `TierOverrideCleared` (per-player); `PolicyAdded` (global) | `kyc:tierOf`, `kyc:isCompliant`, `kyc:verifiedAt`, `kyc:playerGates`, `playerKyc`. `PolicyAdded` re-anchors the ladder for every wallet → also invalidates `kyc:activePolicy`. |
@@ -575,7 +575,7 @@ Map of where new code plugs in — not a playbook.
 ## Critical files quick-reference
 
 **Entry flow & gates**
-- `src/hooks/contracts/lottery/actions/useEnterLottery.ts`
+- `src/hooks/contracts/lottery/actions/useEnterDraw.ts`
 - `src/hooks/contracts/lgo/useEntryQuote.ts`, `useOperatorFeeBps.ts`
 - `src/hooks/entry/useEntryForm.ts`
 - `src/hooks/contracts/compliance-registry/useIsLGOWhitelisted.ts`
@@ -594,7 +594,7 @@ Map of where new code plugs in — not a playbook.
 - `src/hooks/player/{useKycToken,usePlayerKyc}.ts`
 - `src/lib/kyc/gateBitmask.ts`
 - `src/components/kyc/{KycVerificationView,SumsubSdkHost,AgeRejectionBanner,PendingCddBanner}.tsx`
-- `src/components/blockpot/tier/` (HeadroomBar, TierBadge, TierBreakdown, TierUpgradePrompt, JackpotPreCommitBanner, PendingCddBanner)
+- `src/components/blockpot/tier/` (HeadroomBar, TierBadge, TierBreakdown, TierUpgradePrompt, PrizePoolPreCommitBanner, PendingCddBanner)
 - `src/components/blockpot/transparency/TierThresholds.tsx`
 - `src/routes/verify.tsx`
 

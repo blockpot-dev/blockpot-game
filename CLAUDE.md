@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Product context
 
-This repo is the **v2.0.0 LGO frontend** for Blockpot's own Licensed Gaming Operator. It connects wallet-connected players to neutral, immutable lottery protocol contracts deployed separately (see `../unipot-contracts`). Conceptually this frontend is a licensed lottery operator, **not** the protocol itself — future third-party LGOs may deploy their own frontends against the same protocol.
+This repo is the **v2.0.0 LGO frontend** for Blockpot's own Licensed Gaming Operator. It connects wallet-connected players to neutral, immutable prize-draw protocol contracts deployed separately (see `../unipot-contracts`). Conceptually this frontend is a licensed prize draw operator, **not** the protocol itself — future third-party LGOs may deploy their own frontends against the same protocol.
 
 The v2 contracts strip BPT, governance, staking, referrals, contributor rewards, and start-draw bounties. Entries are gated by an on-chain `ComplianceRegistry` that whitelists operator addresses. See `V2_REFACTOR_INSTRUCTIONS.md` for full background.
 
@@ -41,17 +41,17 @@ The v2 contracts strip BPT, governance, staking, referrals, contributor rewards,
 - `/src/components/core/` — layout primitives (HStack, VStack, Container, Token, ContainerHeading, AnimatingNumber)
 - `/src/components/ui/` — shadcn-style Radix wrappers
 - `/src/components/web3/` — web3 UI (wallet options dialog)
-- `/src/hooks/contracts/` — per-contract read/write hooks (`lottery/`, `compliance-registry/`, `chainlink/`, `erc20/`, `weth/`, `transparency/`, plus `read/` factories)
+- `/src/hooks/contracts/` — per-contract read/write hooks (`draw/`, `compliance-registry/`, `chainlink/`, `erc20/`, `weth/`, `transparency/`, plus `read/` factories)
 - `/src/hooks/entry/`, `/hooks/forms/`, `/hooks/utilities/`, `/hooks/web3/` — orchestration and utility hooks
 - `/src/providers/` — context providers
-- `/src/utilities/` — formatters, decimals, time, lottery helpers
-- `/src/types/` — TypeScript type definitions (`lottery/`, `web3/`, `ui/`)
+- `/src/utilities/` — formatters, decimals, time, draw helpers
+- `/src/types/` — TypeScript type definitions (`draw/`, `web3/`, `ui/`)
 - `/src/abi/` — contract ABIs, synced from the contracts repo
 - `/src/constants/` — contract addresses, protocol constants, operator env validation
 
 ### v2 contract surface
 
-`ContractName` enum (`src/constants/contract-addresses.ts`): `LOTTERY_MAIN`, `CHAINLINK_AGGREGATOR_V3`, `FUNDS_MANAGER_MAIN`, `COMPLIANCE_REGISTRY`, `QUICK_GAME`, `WETH`. Per-chain addresses in `src/constants/contract-addresses/{blockpot-testnet,arbitrum-testnet,polygon-testnet,local}.ts`.
+`ContractName` enum (`src/constants/contract-addresses.ts`): `DRAW_MAIN`, `CHAINLINK_AGGREGATOR_V3`, `FUNDS_MANAGER_MAIN`, `COMPLIANCE_REGISTRY`, `QUICK_GAME`, `WETH`. Per-chain addresses in `src/constants/contract-addresses/{blockpot-testnet,arbitrum-testnet,polygon-testnet,local}.ts`.
 
 ABIs in `src/abi/`: `lotteryAbi`, `fundsManagerAbi`, `complianceRegistryAbi`, `wethAbi`.
 
@@ -103,13 +103,13 @@ Organization:
 Critical to understand: the frontend collects `LEF = PEA + CF + OF` as two on-chain transactions because the protocol is operator-agnostic.
 
 - **PEA** (Protocol Entry Amount): `0.001 ETH` per entry, hardcoded. Flows to the prize pool.
-- **CF** (Contributor Fee): `2%` of PEA. Routed by the Lottery contract to a hardcoded DevCo address.
+- **CF** (Contributor Fee): `2%` of PEA. Routed by the Draw core contract to a hardcoded DevCo address.
 - **OF** (Operator Fee): `5%` of PEA by default (`VITE_OPERATOR_FEE_BPS`). Invisible to the protocol — this frontend transfers it directly from the user's wallet to `VITE_OPERATOR_ADDRESS`.
 
-`useEnterLottery` (`src/hooks/contracts/lottery/actions/useEnterLottery.ts`) implements the two-step flow:
+`useEnterDraw` (`src/hooks/contracts/draw/actions/useEnterDraw.ts`) implements the two-step flow:
 
 1. `sendTransactionAsync({ to: OPERATOR_ADDRESS, value: of })` — pay OF.
-2. On success, `enter([roundIndex, amount, payoutInWeth, OPERATOR_ADDRESS], { value: pea + cf })` — submit the lottery entry.
+2. On success, `enter([roundIndex, amount, payoutInWeth, OPERATOR_ADDRESS], { value: pea + cf })` — submit the draw entry.
 
 Both hook calls also gate on `useIsOperatorWhitelisted`. If the operator is not whitelisted in `ComplianceRegistry`, `enter` rejects without spending any gas, and the `OperatorStatusBanner` surfaces a blocking message site-wide.
 
@@ -126,11 +126,11 @@ import { lotteryAbi } from '@/abi/lotteryAbi'
 import { ContractName } from '@/constants/contract-addresses'
 
 // Returns a viem contract object with .read methods
-const game = useReadContract(ContractName.LOTTERY_MAIN, lotteryAbi).read
+const game = useReadContract(ContractName.DRAW_MAIN, lotteryAbi).read
 const pots = await game.currentPots()
 ```
 
-Each contract also has a convenience factory (`useLotteryRead`, `useComplianceRegistryRead`, etc.) under `src/hooks/contracts/read/`.
+Each contract also has a convenience factory (`useDrawRead`, `useComplianceRegistryRead`, etc.) under `src/hooks/contracts/read/`.
 
 ### Contract writes
 ```typescript
@@ -167,7 +167,7 @@ Outer → inner:
 8. BlockpotEventsProvider
 9. BlockpotProvider
 10. MissedDrawProvider
-11. LotteryProvider (round pagination only)
+11. LotteryProvider (round pagination only; since removed)
 12. BlockpotDrawProvider
 
 Below `<Header/>`: `<OperatorStatusBanner/>` — renders a blocking banner if the configured operator is not whitelisted, nothing otherwise.
