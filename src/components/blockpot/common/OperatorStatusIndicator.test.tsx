@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { OperatorStatusIndicator } from './OperatorStatusIndicator'
 import { PlayerStatus } from '@/hooks/contracts/player-registry/usePlayerStatus'
 
-// The pill reads four hooks: wagmi's useAccount, useIsLGOWhitelisted,
+// The pill reads four hooks: wagmi's useAccount, useIsOperatorApproved,
 // usePlayerRegistration, and usePlayerStatus. Mocks live at the module
 // boundary; the test rebinds the return shape per-case via mockReturnValue.
 const useAccountMock = vi.fn()
@@ -11,9 +11,9 @@ vi.mock('wagmi', () => ({
     useAccount: () => useAccountMock(),
 }))
 
-const useIsLGOWhitelistedMock = vi.fn()
-vi.mock('@/hooks/contracts/compliance-registry/useIsLGOWhitelisted', () => ({
-    default: () => useIsLGOWhitelistedMock(),
+const useIsOperatorApprovedMock = vi.fn()
+vi.mock('@/hooks/contracts/approved-operator-registry/useIsOperatorApproved', () => ({
+    default: () => useIsOperatorApprovedMock(),
 }))
 
 const usePlayerRegistrationMock = vi.fn()
@@ -48,7 +48,7 @@ function setHooks(overrides: {
         isConnected: overrides.isConnected ?? false,
         address: overrides.address,
     })
-    useIsLGOWhitelistedMock.mockReturnValue({
+    useIsOperatorApprovedMock.mockReturnValue({
         isWhitelisted: overrides.isWhitelisted ?? true,
         isLoading: overrides.isWhitelistLoading ?? false,
     })

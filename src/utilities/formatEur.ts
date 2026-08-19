@@ -1,4 +1,4 @@
-// EUR formatter for *EUR-minor* values read on-chain via the LGO lifetime
+// EUR formatter for *EUR-minor* values read on-chain via the operator lifetime
 // counters (PlayerActivityState.cumEnteredEurMinor, .cumWonEurMinor,
 // .pendingCddEurMinor) and the pretx gate's `pendingCddEurMinor`. Always
 // EUR — distinct from the existing USD/native ETH formatters that operate

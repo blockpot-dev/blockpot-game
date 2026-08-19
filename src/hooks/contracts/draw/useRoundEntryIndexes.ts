@@ -4,24 +4,24 @@ import { useQuery } from '@tanstack/react-query'
 import { ContractName, getContractAddress } from '@/constants/contract-addresses'
 import { resolvePlayerEntries } from '@/utilities/draw/resolve-player-entries'
 import useDrawRead from '../read/useDrawRead'
-import useLGORead from '../read/useLGORead'
+import useOperatorRead from '../read/useOperatorRead'
 
 export default function useRoundEntryIndexes(roundIndex: number) {
     const chainId = useChainId()
     const { game, selectedGame, gameContractName } = useDrawRead()
-    const lgo = useLGORead().read
+    const lgo = useOperatorRead().read
     const { address } = useAccount()
 
     const { data } = useQuery({
         queryKey: ['currentRoundEntryIndexes', selectedGame, address ?? ZERO_ADDRESS, roundIndex.toString()],
         queryFn: async () => {
             const drawAddress = getContractAddress(chainId, gameContractName)
-            const lgoAddress = getContractAddress(chainId, ContractName.LGO)
+            const operatorAddress = getContractAddress(chainId, ContractName.OPERATOR)
             const entries = await resolvePlayerEntries(
                 Number(roundIndex),
                 address,
                 drawAddress,
-                lgoAddress,
+                operatorAddress,
                 game,
                 lgo,
             )

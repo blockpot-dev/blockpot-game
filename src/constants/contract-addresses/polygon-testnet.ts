@@ -10,7 +10,7 @@ const POLYGON_MUMBAI_ADDRESSES: {[key: string]: `0x${string}`} = {
     fundsManager: ZERO_ADDRESS,
     quickGame: ZERO_ADDRESS,
     complianceRegistry: ZERO_ADDRESS,
-    // TODO: populate from LGO deployment on Polygon testnet
+    // TODO: populate from operator deployment on Polygon testnet
     lgo: ZERO_ADDRESS,
     playerRegistry: ZERO_ADDRESS,
     kycRegistry: ZERO_ADDRESS,

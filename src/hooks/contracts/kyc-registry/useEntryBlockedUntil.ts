@@ -5,7 +5,7 @@ import { ZERO_ADDRESS } from '@/web3/constants'
 import useKycRegistryRead from '../read/useKycRegistryRead'
 
 // Reads the on-chain `entryBlockedUntil` primitive (task 94): epoch seconds
-// until which `LGO.enter`/`enterWeth` revert `EntryBlocked` for the player;
+// until which `the operator.enter`/`enterWeth` revert `EntryBlocked` for the player;
 // 0 = not blocked. Written by the gaming service's chainwrite queue (future
 // rolling-window / RG rules); deliberately NOT bypassed by the MLRO tier
 // override.

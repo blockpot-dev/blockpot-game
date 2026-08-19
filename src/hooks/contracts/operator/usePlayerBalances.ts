@@ -2,14 +2,14 @@ import { useQuery } from '@tanstack/react-query'
 import { useChainId } from 'wagmi'
 import { Address } from 'viem'
 import { ZERO_ADDRESS } from '@/web3/constants'
-import useLGORead from '../read/useLGORead'
+import useOperatorRead from '../read/useOperatorRead'
 
 export default function usePlayerBalances(address: Address) {
     const chainId = useChainId()
-    const lgo = useLGORead().read
+    const lgo = useOperatorRead().read
 
     const { data, isLoading } = useQuery({
-        queryKey: ['lgo:balances', chainId, address],
+        queryKey: ['operator:balances', chainId, address],
         queryFn: async () => ({
             eth: await lgo.balanceEth([address]),
             weth: await lgo.balanceWeth([address]),

@@ -1,5 +1,5 @@
 import { useAccount } from 'wagmi'
-import useIsLGOWhitelisted from '@/hooks/contracts/compliance-registry/useIsLGOWhitelisted'
+import useIsOperatorApproved from '@/hooks/contracts/approved-operator-registry/useIsOperatorApproved'
 import usePlayerRegistration from '@/hooks/contracts/player-registry/usePlayerRegistration'
 import usePlayerStatus, { PlayerStatus } from '@/hooks/contracts/player-registry/usePlayerStatus'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
@@ -25,7 +25,7 @@ const STATE_STYLES: Record<State, { dot: string, label: string, tooltip: string 
     'not-whitelisted': {
         dot: 'bg-destructive',
         label: 'Site unavailable',
-        tooltip: 'The operator is not whitelisted in ComplianceRegistry. Entries are disabled site-wide until it is approved.',
+        tooltip: 'The operator is not approved in the ApprovedOperatorRegistry. Entries are disabled site-wide until it is approved.',
     },
     'wallet-disconnected': {
         dot: 'bg-muted-foreground',
@@ -61,7 +61,7 @@ const STATE_STYLES: Record<State, { dot: string, label: string, tooltip: string 
 
 export function OperatorStatusIndicator() {
     const { address, isConnected } = useAccount()
-    const { isWhitelisted, isLoading: isWhitelistLoading } = useIsLGOWhitelisted()
+    const { isWhitelisted, isLoading: isWhitelistLoading } = useIsOperatorApproved()
     const {
         isActive,
         isActiveLoading,

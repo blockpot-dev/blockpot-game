@@ -3,7 +3,7 @@ import { useChainId } from 'wagmi'
 import { getContractAddress } from '@/constants/contract-addresses'
 import { ZERO_ADDRESS } from '@/web3/constants'
 import { useSelectedGame } from '@/providers/SelectedGameProvider'
-import useLGORead from '../read/useLGORead'
+import useOperatorRead from '../read/useOperatorRead'
 
 export type EntryQuote = {
     total: bigint
@@ -16,13 +16,13 @@ export default function useEntryQuote(amount: bigint) {
     const chainId = useChainId()
     const { gameContractName } = useSelectedGame()
     const drawAddress = getContractAddress(chainId, gameContractName)
-    const lgo = useLGORead().read
+    const lgo = useOperatorRead().read
 
-    // LGO.entryQuote takes uint16 — clamp to its valid range.
+    // the operator.entryQuote takes uint16 - clamp to its valid range.
     const clamped = amount < 0n ? 0 : amount > 0xffffn ? 0xffff : Number(amount)
 
     const { data, isLoading, isPlaceholderData } = useQuery({
-        queryKey: ['lgo:entryQuote', chainId, drawAddress, clamped],
+        queryKey: ['operator:entryQuote', chainId, drawAddress, clamped],
         queryFn: async () => {
             const [total, pea, cf, opFee] = await lgo.entryQuote([drawAddress, clamped])
             return { total, pea, cf, opFee }

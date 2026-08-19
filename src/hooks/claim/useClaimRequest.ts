@@ -35,7 +35,7 @@ const EUR_FORMAT = new Intl.NumberFormat('en-IE', {
 
 // POSTs /v1/withdrawal/request — the URL stays "withdrawal" (server-facing
 // identifier) but the player-facing primitive is "claim". On Allow=true the
-// server has enqueued a `LGO.withdrawFor` operation; the returned operationId
+// server has enqueued a `the operator.withdrawFor` operation; the returned operationId
 // is what the UI tails for status. On Allow=false the response is a verbatim
 // pretx decision the UI renders into the matching banner / dialog.
 //

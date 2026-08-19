@@ -1,4 +1,4 @@
-export const lgoAbi = [
+export const operatorAbi = [
     {
         'inputs': [],
         'stateMutability': 'nonpayable',
@@ -643,7 +643,7 @@ export const lgoAbi = [
                         'type': 'address'
                     }
                 ],
-                'internalType': 'struct LGO.InitParams',
+                'internalType': 'struct BlockpotOperator.InitParams',
                 'name': 'p',
                 'type': 'tuple'
             }
@@ -1445,67 +1445,6 @@ export const lgoAbi = [
                 'type': 'address'
             },
             {
-                'indexed': true,
-                'internalType': 'address',
-                'name': 'draw',
-                'type': 'address'
-            },
-            {
-                'indexed': true,
-                'internalType': 'uint32',
-                'name': 'roundIndex',
-                'type': 'uint32'
-            },
-            {
-                'indexed': false,
-                'internalType': 'uint48',
-                'name': 'entryIndex',
-                'type': 'uint48'
-            },
-            {
-                'indexed': false,
-                'internalType': 'uint16',
-                'name': 'amount',
-                'type': 'uint16'
-            },
-            {
-                'indexed': false,
-                'internalType': 'bool',
-                'name': 'payoutInWeth',
-                'type': 'bool'
-            },
-            {
-                'indexed': false,
-                'internalType': 'uint256',
-                'name': 'pea',
-                'type': 'uint256'
-            },
-            {
-                'indexed': false,
-                'internalType': 'uint256',
-                'name': 'cf',
-                'type': 'uint256'
-            },
-            {
-                'indexed': false,
-                'internalType': 'uint256',
-                'name': 'opFee',
-                'type': 'uint256'
-            }
-        ],
-        'name': 'LGOEntry',
-        'type': 'event'
-    },
-    {
-        'anonymous': false,
-        'inputs': [
-            {
-                'indexed': true,
-                'internalType': 'address',
-                'name': 'player',
-                'type': 'address'
-            },
-            {
                 'indexed': false,
                 'internalType': 'uint128',
                 'name': 'newDeltaEurMinor',
@@ -1733,6 +1672,67 @@ export const lgoAbi = [
             }
         ],
         'name': 'LifetimeWonUpdated',
+        'type': 'event'
+    },
+    {
+        'anonymous': false,
+        'inputs': [
+            {
+                'indexed': true,
+                'internalType': 'address',
+                'name': 'player',
+                'type': 'address'
+            },
+            {
+                'indexed': true,
+                'internalType': 'address',
+                'name': 'draw',
+                'type': 'address'
+            },
+            {
+                'indexed': true,
+                'internalType': 'uint32',
+                'name': 'roundIndex',
+                'type': 'uint32'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint48',
+                'name': 'entryIndex',
+                'type': 'uint48'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint16',
+                'name': 'amount',
+                'type': 'uint16'
+            },
+            {
+                'indexed': false,
+                'internalType': 'bool',
+                'name': 'payoutInWeth',
+                'type': 'bool'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint256',
+                'name': 'pea',
+                'type': 'uint256'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint256',
+                'name': 'cf',
+                'type': 'uint256'
+            },
+            {
+                'indexed': false,
+                'internalType': 'uint256',
+                'name': 'opFee',
+                'type': 'uint256'
+            }
+        ],
+        'name': 'OperatorEntry',
         'type': 'event'
     },
     {

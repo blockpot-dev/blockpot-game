@@ -1,16 +1,16 @@
 # Blockpot Frontend — Architecture (v2.x)
 
-Reference document for agents working on this codebase. Describes the **v2 LGO frontend** after the protocol-alignment refactor and the subsequent KYC / responsible-gaming / EUR-minor accounting work. Organized as skimmable sections with authoritative paths.
+Reference document for agents working on this codebase. Describes the **v2 Approved Operator frontend** after the protocol-alignment refactor and the subsequent KYC / responsible-gaming / EUR-minor accounting work. Organized as skimmable sections with authoritative paths.
 
 ---
 
 ## 1. Overview
 
-Blockpot is a licensed prize draw operator, powered by Unipot Protocol. This repo is **Blockpot's own Licensed Gaming Operator (LGO) frontend**, connecting wallet-connected players to neutral, immutable prize-draw protocol contracts deployed separately. The stack spans two contract repos:
-- `../unipot-contracts` — neutral protocol (Lottery, FundsManager, ComplianceRegistry, WETH)
-- `../blockpot-contracts` — LGO-owned contracts (LGO proxy, PlayerRegistry, KycRegistry)
+Blockpot is an Approved Operator, powered by Unipot Protocol. This repo is **Blockpot's own operator frontend**, connecting wallet-connected players to neutral, immutable prize-draw protocol contracts deployed separately. The stack spans two contract repos:
+- `../unipot-contracts` - neutral protocol (Lottery, FundsManager, ApprovedOperatorRegistry, WETH)
+- `../blockpot-contracts` - operator-owned contracts (BlockpotOperator proxy, PlayerRegistry, KycRegistry)
 
-The v2 protocol is deliberately minimal: no token, no governance, no staking, no protocol-level referrals (referrals exist at the operator layer via the LGO's ReferralManager), no operator-collected protocol fees in the Draw core itself. Entries must flow through an LGO proxy contract that is whitelisted in `ComplianceRegistry`; the LGO is the on-chain entry beneficiary, fee collector, and player gate. This frontend is Blockpot's licensed operator; future third-party LGOs can deploy their own LGO + frontend against the same protocol.
+The v2 protocol is deliberately minimal: no token, no governance, no staking, no protocol-level referrals (referrals exist at the operator layer via the operator's ReferralManager), no operator-collected protocol fees in the Draw core itself. Entries must flow through a `BlockpotOperator` proxy contract that is whitelisted in `ApprovedOperatorRegistry`; the operator is the on-chain entry beneficiary, fee collector, and player gate. This frontend is Blockpot's own approved operator; future third-party operators can deploy their own operator contract and frontend against the same protocol.
 
 Beyond the v2 protocol baseline, the frontend now hosts a full **regulated-operator surface**:
 - KYC ladder (T0–T4) with a per-tier required-gates bitmap and EUR-minor wager / single-win thresholds (`KYCRegistry.activePolicy`)
@@ -53,7 +53,7 @@ Beyond the v2 protocol baseline, the frontend now hosts a full **regulated-opera
 ├── CLAUDE.md                   # Agent guidance
 ├── V2_REFACTOR_INSTRUCTIONS.md # Original refactor spec
 ├── REFACTOR_SUMMARY.md         # v2 refactor outcome notes
-└── TODO.md                     # LGO compliance checklist + known limitations
+└── TODO.md                     # operator compliance checklist + known limitations
 ```
 
 ### Scripts (`package.json`)
@@ -113,7 +113,7 @@ From outer to inner:
 14. `LotteryProvider` — round pagination only (`useLoadedRoundIndexes`); narrowed from v1 aggregator
 15. `BlockpotDrawProvider` — draw animation state (`useBlockpotDraw`)
 
-Inside the shell, directly below `<Header/>`: `<LGOWhitelistBanner/>` then `<SelfExclusionBanner/>` — both render `null` in the happy path and a blocking banner otherwise. `<Modals/>` mounts inside `BlockpotDrawProvider`; `<UnsupportedRegionDialog/>` mounts inside `CountryProvider` but outside `QueryClientProvider`. Outside everything: `<Toaster/>` from Sonner and a dev-only `<TanStackRouterDevtools/>`.
+Inside the shell, directly below `<Header/>`: `<OperatorApprovalBanner/>` then `<SelfExclusionBanner/>` - both render `null` in the happy path and a blocking banner otherwise. `<Modals/>` mounts inside `BlockpotDrawProvider`; `<UnsupportedRegionDialog/>` mounts inside `CountryProvider` but outside `QueryClientProvider`. Outside everything: `<Toaster/>` from Sonner and a dev-only `<TanStackRouterDevtools/>`.
 
 `<Modals/>` itself renders only `WalletOptionsDialog` and `MissedDrawDialog` today. `DrawSummaryDialog`, `PrizesOverviewDialog`, and the previous-rounds panel are toggled from inside individual feature surfaces (e.g. `Play`), not the global Modals component — `ModalOpenStateProvider` still owns their open-state bindings.
 
@@ -145,7 +145,7 @@ Hand-maintained CVA-variant wrappers: `badge`, `button`, `card`, `chart`, `check
 | `current-round/` | embedded | Countdown, PrizePool, Prizes, RoundInfo |
 | `drawn-numbers-panel/` | embedded | Rolling list of drawn numbers |
 | `round-draw/` | embedded | Waiting/Drawing/Complete stages + DrawRoundInfo |
-| `entries/` | embedded | EntryPanel orchestrator + EntryOptions (amount picker) + EntrySummary (PEA/CF/OF/Total, read from `LGO.entryQuote`) + EntryButton (with `RegistrationMode` slot) + ConnectWalletPanel |
+| `entries/` | embedded | EntryPanel orchestrator + EntryOptions (amount picker) + EntrySummary (PEA/CF/OF/Total, read from `BlockpotOperator.entryQuote`) + EntryButton (with `RegistrationMode` slot) + ConnectWalletPanel |
 | `previous-rounds/` | embedded | Historical round cards |
 | `info-panel/` | embedded | User ticket history |
 | `transparency/` | `/transparency` | BlockpotBalances (FundsManager pot/nextPot/parentGame) + TierThresholds (rendered EUR ladder from `useActivePolicy`) |
@@ -155,7 +155,7 @@ Hand-maintained CVA-variant wrappers: `badge`, `button`, `card`, `chart`, `check
 | `header/` | global | `Header` + `ConnectWalletItem` + `NavigationItem` + `GameTypeItem` + `AccountHeaderItem` (launches `AccountDialog`) + `AccountHeaderButton` |
 | `navigation/` | global | Footer |
 | `modals/` | global | `DrawSummaryDialog`, `PrizesOverviewDialog`, `MissedDrawDialog`, `UnsupportedRegionDialog`. Only `MissedDrawDialog` is mounted from the global `Modals` aggregator (`modals/index.tsx`); the others are mounted from their respective feature surfaces. |
-| `common/` | shared | `LGOWhitelistBanner`, `OperatorStatusIndicator`, `DrawnNumberTicket/`, `HighlightDivider/`, `LabeledBalance/`, `RoundInfoStat/` |
+| `common/` | shared | `OperatorApprovalBanner`, `OperatorStatusIndicator`, `DrawnNumberTicket/`, `HighlightDivider/`, `LabeledBalance/`, `RoundInfoStat/` |
 
 **Top-level feature folders outside `blockpot/`** (cross-cutting concerns):
 - `src/components/kyc/` — `AgeRejectionBanner`, `KycVerificationView` (host shown at `/verify`), `PendingCddBanner`, `SumsubSdkHost` (mounts the SumSub web SDK)
@@ -187,7 +187,7 @@ src/hooks/
 │   │   ├── useDrawRead.ts
 │   │   ├── useFundsManagerRead.ts
 │   │   ├── useChainlinkAggregatorRead.ts
-│   │   ├── useLGORead.ts
+│   │   ├── useOperatorRead.ts
 │   │   ├── usePlayerRegistryRead.ts
 │   │   └── useKycRegistryRead.ts
 │   ├── draw/                                 # State, rounds, entries, actions
@@ -195,16 +195,16 @@ src/hooks/
 │   │   ├── useDrawRound / useDrawEntry / useLoadedGameRounds / useMaxRoundsInPot
 │   │   ├── usePlayerEntries / useRoundEntryIndexes / useRoundPurchases
 │   │   ├── useRoundDraw / useTimeRemaining
-│   │   └── actions/useEnterDraw.ts        # Single-tx LGO flow, triple-gated (§8)
-│   ├── lgo/                                  # LGO proxy — entry gate, fee collector, custodian
+│   │   └── actions/useEnterDraw.ts        # Single-tx BlockpotOperator flow, triple-gated (§8)
+│   ├── lgo/                                  # operator proxy - entry gate, fee collector, custodian
 │   │   ├── useEntryQuote.ts                  # (pea, cf, of, total) breakdown from chain
 │   │   ├── useOperatorFeeBps.ts
-│   │   ├── usePlayerBalances.ts              # ETH & WETH held in LGO for the connected player
+│   │   ├── usePlayerBalances.ts              # ETH & WETH held in BlockpotOperator for the connected player
 │   │   ├── useLifetimeSnapshot.ts            # EUR-minor counters (wagered / won / largestSingleWin)
 │   │   └── useFeedAddresses.ts               # ethUsdFeed / eurUsdFeed addresses (transparency)
 │   ├── compliance-registry/
-│   │   ├── useComplianceRegistryRead.ts
-│   │   └── useIsLGOWhitelisted.ts
+│   │   ├── useApprovedOperatorRegistryRead.ts
+│   │   └── useIsOperatorApproved.ts
 │   ├── player-registry/
 │   │   ├── useIsPlayerActive.ts              # registered + active gate
 │   │   ├── usePlayerStatus.ts
@@ -249,8 +249,8 @@ src/hooks/
 
 Composition: low-level contract hooks → domain hooks → orchestrator hooks. Example:
 ```
-useEnterDraw          (single-tx LGO.enter / enterWeth)
-+ useIsLGOWhitelisted (ComplianceRegistry gate)
+useEnterDraw          (single-tx BlockpotOperator.enter / enterWeth)
++ useIsOperatorApproved (ApprovedOperatorRegistry gate)
 + useIsPlayerActive   (PlayerRegistry gate)
 + evaluatePretxDeposit (off-chain KYC + headroom gate; navigates to /verify on KYC_UPGRADE)
 + useEntryQuote       (on-chain PEA/CF/OF/total breakdown)
@@ -272,7 +272,7 @@ Removed in v2 / KYC era: block-pot-token, block-pot-reward-tracker, block-pot-re
 ### ABIs
 - `src/abi/` — synced via `./sync-abis.sh ../unipot-contracts ../blockpot-contracts src/abi`
   - From `unipot-contracts`: `lotteryAbi`, `fundsManagerAbi`, `complianceRegistryAbi`, `wethAbi`, `aggregatorV3Abi`
-  - From `blockpot-contracts`: `lgoAbi`, `playerRegistryAbi`, `kycRegistryAbi`
+  - From `blockpot-contracts`: `operatorAbi`, `playerRegistryAbi`, `kycRegistryAbi`
 - `src/abi-3p/` — third-party ABIs that don't come from either contracts repo: `aggregatorV3InterfaceAbi`
 
 Each source repo has its own `cli/` Cargo binary driven by `cli/abis.toml`. Stale v1 ABIs (BPT token, reward tracker, referral manager, config manager, contributors reward tracker) were removed.
@@ -281,12 +281,12 @@ Each source repo has its own `cli/` Cargo binary driven by `cli/abis.toml`. Stal
 ```
 DRAW_MAIN
 CHAINLINK_AGGREGATOR_V3            # ETH/USD
-CHAINLINK_AGGREGATOR_EUR_USD       # EUR/USD — used by the LGO when computing EUR-minor totals
+CHAINLINK_AGGREGATOR_EUR_USD       # EUR/USD - used by the operator when computing EUR-minor totals
 FUNDS_MANAGER_MAIN
 COMPLIANCE_REGISTRY
 QUICK_GAME
 WETH
-LGO
+BlockpotOperator
 PLAYER_REGISTRY
 KYC_REGISTRY
 ```
@@ -324,26 +324,26 @@ Lifecycle `userPrompt → pending → success | reverted | cancelled`, Sonner to
 
 ## 8. Entry flow (PEA / CF / OF)
 
-The most important v2 surface. Entries route through the LGO proxy contract (the Option B follow-up from the original v2 plan is shipped), which makes the on-chain leg a single atomic transaction.
+The most important v2 surface. Entries route through the operator proxy contract (the Option B follow-up from the original v2 plan is shipped), which makes the on-chain leg a single atomic transaction.
 
-**Total user cost:** `total = PEA + CF + OF` — read from chain via `LGO.entryQuote(lottery, amount)`.
+**Total user cost:** `total = PEA + CF + OF` - read from chain via `BlockpotOperator.entryQuote(lottery, amount)`.
 
 | | | |
 | --- | --- | --- |
 | **PEA** | Protocol Entry Amount | `0.001 ETH` per entry, hardcoded in Lottery (`PEA_PER_ENTRY_WEI`). Flows to prize pool. |
 | **CF** | Contributor Fee | 2% of PEA (`CF_BASIS_POINTS = 200n`). Routed by Lottery to DevCo on-chain. |
-| **OF** | Operator Fee | Configured on-chain by the LGO owner (`LGO.operatorFeeBps`). Collected by the LGO contract and held until the operator withdraws. Read via `useOperatorFeeBps` / `useEntryQuote`. No env var. |
+| **OF** | Operator Fee | Configured on-chain by the operator owner (`BlockpotOperator.operatorFeeBps`). Collected by the operator contract and held until the operator withdraws. Read via `useOperatorFeeBps` / `useEntryQuote`. No env var. |
 
 Constants for PEA/CF still live in `src/constants/protocol.ts` for display-only copy; the authoritative breakdown is `useEntryQuote`.
 
 **Single-transaction on-chain flow** (`src/hooks/contracts/lottery/actions/useEnterDraw.ts`):
-- **ETH path:** read `[total] = LGO.entryQuote(lottery, amount)`, then call `LGO.enter(lottery, roundIndex, amount, payoutInWeth)` with `{ value: total }`.
-- **WETH path:** call `LGO.enterWeth(lottery, roundIndex, amount, payoutInWeth)` with no `msg.value`. The LGO pulls `total` WETH via `transferFrom` and unwraps internally. Allowance must be pre-approved against the **LGO address** (`useErc20WithAllowance(WETH, LGO)`), not the Lottery.
+- **ETH path:** read `[total] = BlockpotOperator.entryQuote(lottery, amount)`, then call `BlockpotOperator.enter(lottery, roundIndex, amount, payoutInWeth)` with `{ value: total }`.
+- **WETH path:** call `BlockpotOperator.enterWeth(lottery, roundIndex, amount, payoutInWeth)` with no `msg.value`. The BlockpotOperator pulls `total` WETH via `transferFrom` and unwraps internally. Allowance must be pre-approved against the **BlockpotOperator address** (`useErc20WithAllowance(WETH, BlockpotOperator)`), not the Lottery.
 
-LGO forwards PEA+CF to the Lottery, routes OF into its own escrow, and is recorded as the operator for the round.
+BlockpotOperator forwards PEA+CF to the Lottery, routes OF into its own escrow, and is recorded as the operator for the round.
 
 **Triple gate** (in order, each early-returns before any wallet prompt):
-1. `useIsLGOWhitelisted()` — reads `ComplianceRegistry.isWhitelisted(LGO address)`. If false, `LGOWhitelistBanner` renders site-wide.
+1. `useIsOperatorApproved()` - reads `ApprovedOperatorRegistry.isWhitelisted(BlockpotOperator address)`. If false, `OperatorApprovalBanner` renders site-wide.
 2. `useIsPlayerActive(account)` — reads `PlayerRegistry` for the connected wallet. Drives the in-EntryPanel "Register wallet" CTA via `usePlayerRegistration` (SIWE + attestation flow).
 3. `evaluatePretxDeposit({ chainId, walletAddress, amountWei: total })` — off-chain pre-tx evaluator (gaming service). Mirrors the on-chain dual-track ladder so the user sees a clean error or `/verify` redirect before they spend gas. Decisions:
    - `allow: true` → proceed.
@@ -414,12 +414,12 @@ Fed by:
 - `OPERATOR_ADDRESS: Address | null` — `null` if missing or invalid EVM address
 - `OPERATOR_CONFIG_VALID: boolean` — false if address is null
 
-This is the **human-facing operator wallet** used for footers/labels only. It is no longer an on-chain payee — OF is collected by the LGO contract.
+This is the **human-facing operator wallet** used for footers/labels only. It is no longer an on-chain payee - OF is collected by the operator contract.
 
 `Web3Provider` checks `OPERATOR_CONFIG_VALID` before mounting wagmi. Invalid → full-page `OperatorConfigError` (no wallet, no contracts, no app).
 
 Two blocking banners live directly below `<Header/>`:
-- `LGOWhitelistBanner` (`src/components/blockpot/common/`) — calls `useIsLGOWhitelisted()`; renders `null` while loading or if whitelisted, else a generic blocking message.
+- `OperatorApprovalBanner` (`src/components/blockpot/common/`) - calls `useIsOperatorApproved()`; renders `null` while loading or if whitelisted, else a generic blocking message.
 - `SelfExclusionBanner` (`src/components/responsible-gaming/`) — surfaces an active self-exclusion period and the unlock date; renders `null` otherwise.
 
 `OperatorStatusIndicator` (also in `common/`) is an inline header badge surfacing the same whitelist state in condensed form.
@@ -444,7 +444,7 @@ On persister restore, `QueryClientProvider` explicitly invalidates `['drawState'
 | --- | --- | --- |
 | Lottery | `LotteryOnEntry`, `LotteryDrawingNumbers`, `LotteryDrawnNumbersReceived`, `LotteryWinnerSelected`, `LotteryNoWinner` | `drawState`, `currentRoundEntryIndexes`, `roundPurchases`, `balanceAllocations` |
 | WETH | `Deposit({ dst: address })`, `Withdrawal({ src: address })` | `erc20:WETH` |
-| LGO | `LGOEntry`, `PlayerCredited`, `PlayerPaidDirect`, `Withdrawn`, `OperatorFeeBpsUpdated`, `LifetimeWageredUpdated`, `LifetimeWonUpdated`, `LifetimeAccountingDeferred`, `LargestSingleWinUpdated` | `lgo:balances`, `lgo:lifetime`, `kyc:isCompliant`, `kyc:tierOf` (lifetime EUR-minor counters feed the registry's profit lookup, so any LGO movement can flip compliance/tier). `OperatorFeeBpsUpdated` → `lgo:operatorFeeBps`, `lgo:entryQuote`. |
+| BlockpotOperator | `OperatorEntry`, `PlayerCredited`, `PlayerPaidDirect`, `Withdrawn`, `OperatorFeeBpsUpdated`, `LifetimeWageredUpdated`, `LifetimeWonUpdated`, `LifetimeAccountingDeferred`, `LargestSingleWinUpdated` | `operator:balances`, `operator:lifetime`, `kyc:isCompliant`, `kyc:tierOf` (lifetime EUR-minor counters feed the registry's profit lookup, so any BlockpotOperator movement can flip compliance/tier). `OperatorFeeBpsUpdated` → `operator:operatorFeeBps`, `operator:entryQuote`. |
 | KYCRegistry | `PlayerGatesSet`, `TierOverrideSet`, `TierOverrideCleared` (per-player); `PolicyAdded` (global) | `kyc:tierOf`, `kyc:isCompliant`, `kyc:verifiedAt`, `kyc:playerGates`, `playerKyc`. `PolicyAdded` re-anchors the ladder for every wallet → also invalidates `kyc:activePolicy`. |
 | PlayerRegistry | `PlayerStatusChanged` | `isPlayerActive`, `playerStatus` |
 
@@ -504,7 +504,7 @@ We deliberately did **not** pull in `@fingerprintjs/fingerprintjs` — the Tier 
 
 ## 12.2. Player session & gaming service
 
-The gaming service (`VITE_GAMING_SERVICE_URL`) is the LGO's automation backend. It owns SIWE token issuance, KYC orchestration, attestation receipts, the pre-tx deposit evaluator, and responsible-gaming state. The frontend integrates through:
+The gaming service (`VITE_GAMING_SERVICE_URL`) is the operator's automation backend. It owns SIWE token issuance, KYC orchestration, attestation receipts, the pre-tx deposit evaluator, and responsible-gaming state. The frontend integrates through:
 
 - `src/api/gamingServiceClient.ts` — Bearer-token `fetch` wrapper. Holds the active token in a module-level snapshot so non-React helpers (e.g. `evaluatePretxDeposit`) can read it synchronously. Emits `subscribeSessionExpired()` events when the snapshot expires.
 - `src/api/sessionSignal.ts` — `/v1/session/signal` POST helper (used by `SessionSignalProvider`).
@@ -534,11 +534,11 @@ Copy lives alongside the components in `lossLimitCopy.ts` and `selfExclusionCopy
 Vite-prefixed env vars (see `.env.example`):
 - `VITE_APP_MODE` — `STAGING` | anything else
 - `VITE_WALLETCONNECT_PROJECT_ID`
-- `VITE_OPERATOR_ADDRESS` — human-facing operator wallet (footers/labels only; validated at startup). The on-chain beneficiary and entry gate is the **LGO contract**, which must be whitelisted in `ComplianceRegistry`.
+- `VITE_OPERATOR_ADDRESS` - human-facing operator wallet (footers/labels only; validated at startup). The on-chain beneficiary and entry gate is the **BlockpotOperator contract**, which must be whitelisted in `ApprovedOperatorRegistry`.
 - `VITE_GAMING_SERVICE_URL` — operator automation backend (SIWE, KYC, pre-tx deposit, responsible-gaming). Optional in dev, but unset means register / KYC / responsible-gaming flows stay disabled.
 - `VITE_MOCK_COUNTRY` — bypass country detection in dev (`TRUE` | `FALSE`).
 
-Dropped: `VITE_PINATA_API_KEY`, `VITE_PINATA_API_SECRET` (v2 refactor), `VITE_OPERATOR_FEE_BPS` (LGO-routing refactor — fee is read from `LGO.operatorFeeBps`).
+Dropped: `VITE_PINATA_API_KEY`, `VITE_PINATA_API_SECRET` (v2 refactor), `VITE_OPERATOR_FEE_BPS` (BlockpotOperator-routing refactor - fee is read from `BlockpotOperator.operatorFeeBps`).
 
 `NetworkId` enum (`src/constants/network-details.ts`) declares many chains, but only `LOCAL (31337)`, `POLYGON_TESTNET (80001)`, `ARBITRUM_TESTNET (421613)`, `BLOCK_POT_TESTNET (69696)` are wired into the address resolver.
 
@@ -578,12 +578,12 @@ Map of where new code plugs in — not a playbook.
 - `src/hooks/contracts/lottery/actions/useEnterDraw.ts`
 - `src/hooks/contracts/lgo/useEntryQuote.ts`, `useOperatorFeeBps.ts`
 - `src/hooks/entry/useEntryForm.ts`
-- `src/hooks/contracts/compliance-registry/useIsLGOWhitelisted.ts`
+- `src/hooks/contracts/compliance-registry/useIsOperatorApproved.ts`
 - `src/hooks/contracts/player-registry/useIsPlayerActive.ts`, `usePlayerRegistration.ts`, `useRegisterPlayer.ts`, `useSiweSignature.ts`
 - `src/hooks/player/usePretxDeposit.ts`, `usePretxDepositPreview.ts`
 - `src/hooks/player-summary/usePlayerActivityState.ts`
 - `src/components/blockpot/entries/` (EntryPanel, EntryOptions, EntrySummary, EntryButton, ConnectWalletPanel)
-- `src/components/blockpot/common/{LGOWhitelistBanner,OperatorStatusIndicator}.tsx`
+- `src/components/blockpot/common/{OperatorApprovalBanner,OperatorStatusIndicator}.tsx`
 - `src/components/responsible-gaming/SelfExclusionBanner.tsx`
 - `src/constants/operator.ts`, `src/constants/protocol.ts`
 
@@ -626,7 +626,7 @@ Map of where new code plugs in — not a playbook.
 
 **Contracts**
 - `src/constants/contract-addresses.ts` + `src/constants/contract-addresses/*.ts`
-- `src/abi/{lotteryAbi,fundsManagerAbi,complianceRegistryAbi,wethAbi,aggregatorV3Abi,lgoAbi,playerRegistryAbi,kycRegistryAbi}.ts`
+- `src/abi/{lotteryAbi,fundsManagerAbi,complianceRegistryAbi,wethAbi,aggregatorV3Abi,operatorAbi,playerRegistryAbi,kycRegistryAbi}.ts`
 - `src/abi-3p/aggregatorV3InterfaceAbi.ts`
 - `src/hooks/contracts/read/useReadContract.ts`
 - `src/hooks/web3/useTrackedContractWrite.ts`

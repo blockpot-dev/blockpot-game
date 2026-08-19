@@ -68,7 +68,7 @@ function Play() {
         purchasingStatus,
         canEnter,
         baseBalance,
-        isLGOWhitelisted,
+        isOperatorApproved,
         isPlayerActive,
         lossLimitBreached,
     } = useEntryForm()
@@ -78,17 +78,17 @@ function Play() {
     const { country } = useCountry()
 
     let disabledReason: string | undefined
-    if (!isLGOWhitelisted) {
+    if (!isOperatorApproved) {
         disabledReason = 'This operator is not whitelisted yet — entries are disabled.'
     } else if (error) {
         disabledReason = error
     }
 
-    const needsRegistration = isLGOWhitelisted && !isPlayerActive && !playerRegistration.isActiveLoading
+    const needsRegistration = isOperatorApproved && !isPlayerActive && !playerRegistration.isActiveLoading
     // Pre-deposit fallback: player is registered on-chain but the client has no
     // attestation record. Forces them through the attestation modal before the
     // entry form becomes interactive.
-    const needsAttestationOnly = isLGOWhitelisted && playerRegistration.needsAttestation
+    const needsAttestationOnly = isOperatorApproved && playerRegistration.needsAttestation
     const registration: RegistrationMode | undefined = (needsRegistration || needsAttestationOnly)
         ? {
             register: needsRegistration ? playerRegistration.register : playerRegistration.startAttestationOnly,

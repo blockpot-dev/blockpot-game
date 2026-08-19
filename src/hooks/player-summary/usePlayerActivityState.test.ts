@@ -22,7 +22,7 @@ vi.mock('@/hooks/contracts/kyc-registry/usePlayerGates', () => ({
     default: () => gatesMock(),
 }))
 
-vi.mock('@/hooks/contracts/lgo/useLifetimeSnapshot', () => ({
+vi.mock('@/hooks/contracts/operator/useLifetimeSnapshot', () => ({
     default: () => snapshotMock(),
 }))
 

@@ -6,7 +6,7 @@
 // 1. Two-file split (default — used by local hardhat workflow):
 //    Sources:
 //      ../unipot-contracts/script/input/<chainId>/addresses.json   — core protocol
-//      ../blockpot-contracts/script/output/<chainId>/addresses.json     — LGO stack
+//      ../blockpot-contracts/script/output/<chainId>/addresses.json     - the operator stack
 //
 //    Run after each local deploy: `bun sync-addresses`
 //
@@ -48,13 +48,13 @@ const KEY_MAP_TWO_FILE = {
     // from unipot-contracts/script/input/<chain>/addresses.json
     aggregatorV3:         'aggregatorV3',
     aggregatorV3Eur:      'aggregatorV3Eur',
-    complianceRegistry:   'complianceRegistry',
+    approvedOperatorRegistry: 'approvedOperatorRegistry',
     draw:                 'draw',
     mainGameFundsManager: 'fundsManager',
     quickGame:            'quickGame',
     weth:                 'weth',
     // from blockpot-contracts/script/output/<chain>/addresses.json
-    lgo:                       'lgo',
+    operator:                  'operator',
     playerRegistry:            'playerRegistry',
     kycRegistry:               'kycRegistry',
 }
@@ -68,12 +68,12 @@ const KEY_MAP_TWO_FILE = {
 const KEY_MAP_CHAINS_CONFIG = {
     draw:               'draw',
     quickGame:          'quickGame',
-    complianceRegistry: 'complianceRegistry',
+    approvedOperatorRegistry: 'approvedOperatorRegistry',
     weth:               'weth',
     ethUsdFeed:         'aggregatorV3',
     eurUsdFeed:         'aggregatorV3Eur',
     fundsManager:       'fundsManager',
-    lgo:                'lgo',
+    operator:           'operator',
     playerRegistry:     'playerRegistry',
     kycRegistry:        'kycRegistry',
 }
@@ -85,8 +85,8 @@ const ORDER = [
     'weth',
     'aggregatorV3',
     'aggregatorV3Eur',
-    'complianceRegistry',
-    'lgo',
+    'approvedOperatorRegistry',
+    'operator',
     'playerRegistry',
     'kycRegistry',
 ]
@@ -108,17 +108,17 @@ function collectAddressesTwoFile(chainId) {
     const coreJson = readJsonOrNull(
         path.resolve(REPO_ROOT, `../unipot-contracts/script/input/${chainId}/addresses.json`),
     )
-    const lgoJson = readJsonOrNull(
+    const operatorJson = readJsonOrNull(
         path.resolve(REPO_ROOT, `../blockpot-contracts/script/output/${chainId}/addresses.json`),
     )
 
-    if (!coreJson && !lgoJson) {
+    if (!coreJson && !operatorJson) {
         throw new Error(`No addresses.json found for chain ${chainId} in either repo`)
     }
 
     const out = {}
     for (const [rawKey, targetKey] of Object.entries(KEY_MAP_TWO_FILE)) {
-        const value = (lgoJson && lgoJson[rawKey]) || (coreJson && coreJson[rawKey])
+        const value = (operatorJson && operatorJson[rawKey]) || (coreJson && coreJson[rawKey])
         if (value) out[targetKey] = value
     }
     return out

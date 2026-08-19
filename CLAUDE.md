@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Product context
 
-This repo is the **v2.0.0 LGO frontend** for Blockpot's own Licensed Gaming Operator. It connects wallet-connected players to neutral, immutable prize-draw protocol contracts deployed separately (see `../unipot-contracts`). Conceptually this frontend is a licensed prize draw operator, **not** the protocol itself — future third-party LGOs may deploy their own frontends against the same protocol.
+This repo is the **v2.0.0 operator frontend** for Blockpot, an Approved Operator. It connects wallet-connected players to neutral, immutable prize-draw protocol contracts deployed separately (see `../unipot-contracts`). Conceptually this frontend is an approved prize draw operator, **not** the protocol itself - future third-party operators may deploy their own frontends against the same protocol.
 
-The v2 contracts strip BPT, governance, staking, referrals, contributor rewards, and start-draw bounties. Entries are gated by an on-chain `ComplianceRegistry` that whitelists operator addresses. See `V2_REFACTOR_INSTRUCTIONS.md` for full background.
+The v2 contracts strip BPT, governance, staking, referrals, contributor rewards, and start-draw bounties. Entries are gated by an on-chain `ApprovedOperatorRegistry` that whitelists operator addresses. See `V2_REFACTOR_INSTRUCTIONS.md` for full background.
 
 ## Commands
 
@@ -51,15 +51,15 @@ The v2 contracts strip BPT, governance, staking, referrals, contributor rewards,
 
 ### v2 contract surface
 
-`ContractName` enum (`src/constants/contract-addresses.ts`): `DRAW_MAIN`, `CHAINLINK_AGGREGATOR_V3`, `FUNDS_MANAGER_MAIN`, `COMPLIANCE_REGISTRY`, `QUICK_GAME`, `WETH`. Per-chain addresses in `src/constants/contract-addresses/{blockpot-testnet,arbitrum-testnet,polygon-testnet,local}.ts`.
+`ContractName` enum (`src/constants/contract-addresses.ts`): `DRAW_MAIN`, `CHAINLINK_AGGREGATOR_V3`, `FUNDS_MANAGER_MAIN`, `APPROVED_OPERATOR_REGISTRY`, `QUICK_GAME`, `WETH`. Per-chain addresses in `src/constants/contract-addresses/{blockpot-testnet,arbitrum-testnet,polygon-testnet,local}.ts`.
 
-ABIs in `src/abi/`: `lotteryAbi`, `fundsManagerAbi`, `complianceRegistryAbi`, `wethAbi`.
+ABIs in `src/abi/`: `drawAbi`, `operatorAbi`, `fundsManagerAbi`, `approvedOperatorRegistryAbi`, `wethAbi`.
 
 ### Environment variables
 Vite-prefixed, loaded from `.env.local`:
 - `VITE_APP_MODE` — `STAGING` (Blockpot testnet + mainnet) or anything else (Hardhat local)
 - `VITE_WALLETCONNECT_PROJECT_ID`
-- `VITE_OPERATOR_ADDRESS` — LGO operator wallet. Must be whitelisted in `ComplianceRegistry`. Validated at startup; if invalid, `Web3Provider` renders a full-page config error and refuses to mount the app.
+- `VITE_OPERATOR_ADDRESS` - the operator wallet. Must be whitelisted in `ApprovedOperatorRegistry`. Validated at startup; if invalid, `Web3Provider` renders a full-page config error and refuses to mount the app.
 - `VITE_OPERATOR_FEE_BPS` — operator fee in basis points (500 = 5%). Defaults to 500. Clamped to ≤ 2000.
 - `VITE_MOCK_COUNTRY` — `TRUE` to bypass country detection in dev.
 
@@ -111,9 +111,9 @@ Critical to understand: the frontend collects `LEF = PEA + CF + OF` as two on-ch
 1. `sendTransactionAsync({ to: OPERATOR_ADDRESS, value: of })` — pay OF.
 2. On success, `enter([roundIndex, amount, payoutInWeth, OPERATOR_ADDRESS], { value: pea + cf })` — submit the draw entry.
 
-Both hook calls also gate on `useIsOperatorWhitelisted`. If the operator is not whitelisted in `ComplianceRegistry`, `enter` rejects without spending any gas, and the `OperatorStatusBanner` surfaces a blocking message site-wide.
+Both hook calls also gate on `useIsOperatorApproved`. If the operator is not whitelisted in `ApprovedOperatorRegistry`, `enter` rejects without spending any gas, and the `OperatorStatusBanner` surfaces a blocking message site-wide.
 
-**Known limitation**: if step 1 succeeds and step 2 fails, the user has paid OF without receiving tickets. This is a refund-required state, tracked in `TODO.md`. A thin LGO router contract (Option B) is the planned follow-up.
+**Known limitation**: if step 1 succeeds and step 2 fails, the user has paid OF without receiving tickets. This is a refund-required state, tracked in `TODO.md`. A thin operator router contract (Option B) is the planned follow-up.
 
 Cost-breakdown constants live in `src/constants/protocol.ts` (`PEA_PER_ENTRY_WEI`, `CF_BASIS_POINTS`, `BASIS_POINTS_DIVISOR`) and `src/constants/operator.ts` (`OPERATOR_FEE_BPS`, `OPERATOR_ADDRESS`).
 
@@ -122,15 +122,15 @@ Cost-breakdown constants live in `src/constants/protocol.ts` (`PEA_PER_ENTRY_WEI
 ### Contract reads
 ```typescript
 import useReadContract from '@/hooks/contracts/read/useReadContract'
-import { lotteryAbi } from '@/abi/lotteryAbi'
+import { drawAbi } from '@/abi/drawAbi'
 import { ContractName } from '@/constants/contract-addresses'
 
 // Returns a viem contract object with .read methods
-const game = useReadContract(ContractName.DRAW_MAIN, lotteryAbi).read
+const game = useReadContract(ContractName.DRAW_MAIN, drawAbi).read
 const pots = await game.currentPots()
 ```
 
-Each contract also has a convenience factory (`useDrawRead`, `useComplianceRegistryRead`, etc.) under `src/hooks/contracts/read/`.
+Each contract also has a convenience factory (`useDrawRead`, `useApprovedOperatorRegistryRead`, etc.) under `src/hooks/contracts/read/`.
 
 ### Contract writes
 ```typescript
@@ -138,7 +138,7 @@ import useTrackedContractWrite from '@/hooks/web3/useTrackedContractWrite'
 
 const { writeAsync, status, isLoading } = useTrackedContractWrite({
     address,
-    abi: lotteryAbi,
+    abi: drawAbi,
     functionName: 'enter'
 })
 

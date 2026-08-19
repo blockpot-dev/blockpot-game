@@ -4,7 +4,7 @@ import { useChainId } from 'wagmi'
 import VStack from '@/components/core/VStack/VStack'
 import { ContractName, getContractAddress } from '@/constants/contract-addresses'
 import useActivePolicy from '@/hooks/contracts/kyc/useActivePolicy'
-import useFeedAddresses from '@/hooks/contracts/lgo/useFeedAddresses'
+import useFeedAddresses from '@/hooks/contracts/operator/useFeedAddresses'
 import { formatNumber } from '@/utilities/formatters'
 
 function isUnbounded(value: bigint): boolean {
@@ -26,7 +26,7 @@ function ChecksumAddress({ value }: { value: string }) {
 
 export default function TierThresholds() {
     const chainId = useChainId()
-    const lgoAddress = getContractAddress(chainId, ContractName.LGO)
+    const operatorAddress = getContractAddress(chainId, ContractName.OPERATOR)
     const kycRegistryAddress = getContractAddress(chainId, ContractName.KYC_REGISTRY)
     const { policy } = useActivePolicy()
     const { ethUsdFeed, eurUsdFeed } = useFeedAddresses()
@@ -46,8 +46,8 @@ export default function TierThresholds() {
                 </VStack>
 
                 <VStack className='gap-1'>
-                    <span className='text-sm font-medium text-foreground'>Activity provider: LGO</span>
-                    <ChecksumAddress value={lgoAddress} />
+                    <span className='text-sm font-medium text-foreground'>Activity provider: operator contract</span>
+                    <ChecksumAddress value={operatorAddress} />
                 </VStack>
 
                 <VStack className='gap-1'>
@@ -101,8 +101,8 @@ export default function TierThresholds() {
                     and direct payouts beyond it are held in escrow until verification. Both caps
                     are gross per direction (wins never refund entry headroom, entries never
                     consume claim headroom), and a player&apos;s tier is decided by gates alone.
-                    The KYCRegistry pulls both lifetime figures from the LGO via the registered
-                    IKYCActivityProvider; the Chainlink feeds above are used by the LGO to convert
+                    The KYCRegistry pulls both lifetime figures from the operator contract via the registered
+                    IKYCActivityProvider; the Chainlink feeds above are used by the operator contract to convert
                     wei amounts into EUR-minor at the moment of each entry and payout.
                 </p>
             </VStack>

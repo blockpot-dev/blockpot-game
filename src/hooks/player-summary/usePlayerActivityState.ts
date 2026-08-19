@@ -3,7 +3,7 @@ import { Address } from 'viem'
 import useAccountAddress from '@/hooks/utilities/useAccountAddress'
 import useKycTier from '@/hooks/contracts/kyc-registry/useKycTier'
 import usePlayerGates from '@/hooks/contracts/kyc-registry/usePlayerGates'
-import useLifetimeSnapshot from '@/hooks/contracts/lgo/useLifetimeSnapshot'
+import useLifetimeSnapshot from '@/hooks/contracts/operator/useLifetimeSnapshot'
 import useActivePolicy from '@/hooks/contracts/kyc/useActivePolicy'
 import { ZERO_ADDRESS } from '@/web3/constants'
 
@@ -29,16 +29,16 @@ export type DirectionalFlow = {
 }
 
 // Fully-derived player activity state, composed client-side from chain reads
-// (KYCRegistry.tierOf + activePolicy + getPlayerGates, LGO lifetime counters).
+// (KYCRegistry.tierOf + activePolicy + getPlayerGates, the operator lifetime counters).
 //
 // After task 94 tier identity is a gates-only walk on-chain — caps no longer
 // move the tier, they bound actions at call time against the netted flow
 // position. Both flows read the caps of the player's current
 // (gate-qualified) tier:
 //
-//   - `inflow.usedEurMinor`  = LGO `lifetimeEnteredEurMinor` — every euro
+//   - `inflow.usedEurMinor`  = the operator `lifetimeEnteredEurMinor` - every euro
 //                              entering the system.
-//   - `outflow.usedEurMinor` = LGO `lifetimeClaimedEurMinor` — every euro
+//   - `outflow.usedEurMinor` = the operator `lifetimeClaimedEurMinor` - every euro
 //                              leaving (withdrawals, full direct-pays, the
 //                              paid slice of partial direct-pays).
 //   - `nextTier`             = the tier one above the chain tier, with the

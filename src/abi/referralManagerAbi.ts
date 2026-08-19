@@ -240,7 +240,7 @@ export const referralManagerAbi = [
                     },
                     {
                         'internalType': 'address',
-                        'name': 'lgo',
+                        'name': 'operatorContract',
                         'type': 'address'
                     },
                     {
@@ -271,7 +271,7 @@ export const referralManagerAbi = [
     },
     {
         'inputs': [],
-        'name': 'lgo',
+        'name': 'operatorContract',
         'outputs': [
             {
                 'internalType': 'address',
@@ -1046,7 +1046,7 @@ export const referralManagerAbi = [
                 'type': 'address'
             }
         ],
-        'name': 'NotLGO',
+        'name': 'NotOperator',
         'type': 'error'
     },
     {

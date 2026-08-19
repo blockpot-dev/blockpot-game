@@ -15,8 +15,8 @@ import useNativeCurrency from '../web3/useNativeCurrency'
 import { Amounts } from '@/types/draw/tokens'
 import { transactionStatusToInterfaceStatus } from '@/types/ui/interface-status'
 import { CF_BASIS_POINTS, BASIS_POINTS_DIVISOR, PEA_PER_ENTRY_WEI } from '@/constants/protocol'
-import useEntryQuote from '../contracts/lgo/useEntryQuote'
-import useOperatorFeeBps from '../contracts/lgo/useOperatorFeeBps'
+import useEntryQuote from '../contracts/operator/useEntryQuote'
+import useOperatorFeeBps from '../contracts/operator/useOperatorFeeBps'
 import usePretxDepositPreview from '../player/usePretxDepositPreview'
 import { PretxRequiredAction } from '../player/usePretxDeposit'
 import useIsCompliant from '../contracts/kyc-registry/useIsCompliant'
@@ -81,8 +81,8 @@ export function useEntryForm() {
     const pendingReferral = usePendingReferralCode()
     const [useWETH, setUseWETH] = useState(false)
     const [payoutInWETH, setPayoutInWETH] = useState(false)
-    // Allowance target is the LGO — it pulls WETH via transferFrom and unwraps.
-    const weth = useErc20WithAllowance(ContractName.WETH, getContractAddress(chainId, ContractName.LGO))
+    // Allowance target is the operator - it pulls WETH via transferFrom and unwraps.
+    const weth = useErc20WithAllowance(ContractName.WETH, getContractAddress(chainId, ContractName.OPERATOR))
 
     let entriesRawValue: bigint
     try {
@@ -118,7 +118,7 @@ export function useEntryForm() {
         : undefined
 
     // After task 94 the entry path is hard-gated on-chain again:
-    // LGO.enter/enterWeth revert EntryBlocked while entryBlockedUntil is in
+    // the operator.enter/enterWeth revert EntryBlocked while entryBlockedUntil is in
     // the future and NotCompliant when entered + entry would exceed the tier's
     // inflow cap. Mirror both client-side so the button disables with an
     // explanation instead of letting the wallet surface a revert.
@@ -188,7 +188,7 @@ export function useEntryForm() {
 
     const canEnter = entriesRawValue > 0n
         && !error
-        && enterDrawAction.isLGOWhitelisted
+        && enterDrawAction.isOperatorApproved
         && enterDrawAction.isPlayerActive
 
     return {
@@ -216,7 +216,7 @@ export function useEntryForm() {
         payoutInWETH: payoutInWETHProps,
         canEnter,
         baseBalance: `${formatEtherMaxDecimals(useWETH ? weth.balance : nativeBalance, 2)}`,
-        isLGOWhitelisted: enterDrawAction.isLGOWhitelisted,
+        isOperatorApproved: enterDrawAction.isOperatorApproved,
         isPlayerActive: enterDrawAction.isPlayerActive,
         lossLimitBreached,
     }

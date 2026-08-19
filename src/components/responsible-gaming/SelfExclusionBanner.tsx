@@ -4,7 +4,7 @@ import useSelfExclusion, {
 } from '@/hooks/responsible-gaming/useSelfExclusion'
 import useAccountAddress from '@/hooks/utilities/useAccountAddress'
 import usePlayerActivityState from '@/hooks/player-summary/usePlayerActivityState'
-import usePlayerBalances from '@/hooks/contracts/lgo/usePlayerBalances'
+import usePlayerBalances from '@/hooks/contracts/operator/usePlayerBalances'
 import { ZERO_ADDRESS } from '@/web3/constants'
 import { durationLabel, formatEndsAt } from './selfExclusionCopy'
 

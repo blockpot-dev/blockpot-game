@@ -3,9 +3,9 @@ import { DrawRound } from '@/types/draw'
 import { useCallback, useEffect, useState } from 'react'
 import { useBlockpotEvents } from '@/providers/BlockpotEventsProvider'
 import { ContractName, getContractAddress } from '@/constants/contract-addresses'
-import { resolveLgoWinners } from '@/utilities/draw/resolve-lgo-winners'
+import { resolveOperatorWinners } from '@/utilities/draw/resolve-operator-winners'
 import useDrawRead from '../read/useDrawRead'
-import useLGORead from '../read/useLGORead'
+import useOperatorRead from '../read/useOperatorRead'
 import { calculateMaxRoundsInPot } from './useMaxRoundsInPot'
 
 // Round.status enum on the draw contract: 0 = OPEN, 1 = DRAWING, 2 = DONE.
@@ -30,7 +30,7 @@ export default function useRoundDraw(chainChanged: boolean, drawnRoundIndexOverr
     // user doesn't get a draw animation for something they weren't watching live.
     const [lastSeenDoneRound, setLastSeenDoneRound] = useState<number | undefined>()
     const { game, selectedGame, gameContractName } = useDrawRead()
-    const lgo = useLGORead().read
+    const lgo = useOperatorRead().read
 
     const { drawRoundBlockNumber } = useBlockpotEvents()
 
@@ -39,12 +39,12 @@ export default function useRoundDraw(chainChanged: boolean, drawnRoundIndexOverr
         const maxRoundsInPot = calculateMaxRoundsInPot(await game.currentGameConfig()) ?? 0
 
         const drawAddress = getContractAddress(chainId, gameContractName)
-        const lgoAddress = getContractAddress(chainId, ContractName.LGO)
-        const draws = await resolveLgoWinners(
+        const operatorAddress = getContractAddress(chainId, ContractName.OPERATOR)
+        const draws = await resolveOperatorWinners(
             roundData.draws,
             idx,
             drawAddress,
-            lgoAddress,
+            operatorAddress,
             game,
             lgo,
         )

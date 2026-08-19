@@ -47,7 +47,7 @@ vi.mock('@/providers/BlockpotDrawProvider', () => ({
 vi.mock('@/hooks/utilities/useAccountAddress', () => ({
     default: () => '0x73AB48A14B2D6BCE26B68F11C0894EB5DDD0B657',
 }))
-vi.mock('@/hooks/contracts/lgo/usePlayerBalances', () => ({
+vi.mock('@/hooks/contracts/operator/usePlayerBalances', () => ({
     default: () => ({ eth: 0n, weth: 0n }),
 }))
 

@@ -2,14 +2,14 @@
 
 **Branch:** `feat/v2-lgo-frontend`
 **Baseline:** `dev`
-**Target:** Blockpot's own Licensed Gaming Operator (LGO) frontend, aligned to the v2 neutral-infrastructure protocol in `../unipot-contracts` (branch `feat/v2-neutral-infrastructure`).
+**Target:** Blockpot's own Approved Operator frontend, aligned to the v2 neutral-infrastructure protocol in `../unipot-contracts` (branch `feat/v2-neutral-infrastructure`).
 **Companion spec:** `V2_REFACTOR_INSTRUCTIONS.md` (committed alongside this refactor).
 
 ---
 
 ## Headline
 
-Net deletion of code. v2 strips BPT, staking, governance, referrals, contributor rewards, and the start-draw bounty; adds `ComplianceRegistry` gating and a two-transaction entry flow that collects the Operator Fee outside the protocol.
+Net deletion of code. v2 strips BPT, staking, governance, referrals, contributor rewards, and the start-draw bounty; adds `ApprovedOperatorRegistry` gating and a two-transaction entry flow that collects the Operator Fee outside the protocol.
 
 | | v1 | v2 | Δ |
 |---|---|---|---|
@@ -61,7 +61,7 @@ Surviving routes: `/`, `/play`, `/transparency`, `/how-to-play`.
 ## Hook tree added
 
 - `src/hooks/contracts/compliance-registry/`
-  - `useComplianceRegistryRead.ts` — generic factory
+  - `useApprovedOperatorRegistryRead.ts` - generic factory
   - `useIsOperatorWhitelisted.ts` — queries `isWhitelisted(OPERATOR_ADDRESS)`
 
 ---
@@ -124,7 +124,7 @@ Surviving routes: `/`, `/play`, `/transparency`, `/how-to-play`.
 ## Environment changes
 
 **Added** (`.env.example`):
-- `VITE_OPERATOR_ADDRESS` — LGO operator wallet, validated at startup
+- `VITE_OPERATOR_ADDRESS` - BlockpotOperator operator wallet, validated at startup
 - `VITE_OPERATOR_FEE_BPS` — default 500 (5%), clamped ≤ 2000
 - `VITE_MOCK_COUNTRY` — now documented
 
@@ -156,13 +156,13 @@ The frontend collects `LEF = PEA + CF + OF` as **two on-chain transactions**:
 1. `sendTransactionAsync({ to: OPERATOR_ADDRESS, value: of })` — pay OF
 2. On success, `enter([roundIndex, amount, payoutInWeth, operator], { value: pea + cf })` — submit entry
 
-Both gated on `isWhitelisted(OPERATOR_ADDRESS)` against `ComplianceRegistry`. If the operator is not whitelisted, entry is refused before any gas is spent and `OperatorStatusBanner` surfaces a site-wide message.
+Both gated on `isWhitelisted(OPERATOR_ADDRESS)` against `ApprovedOperatorRegistry`. If the operator is not whitelisted, entry is refused before any gas is spent and `OperatorStatusBanner` surfaces a site-wide message.
 
 ---
 
 ## Known limitations carried forward
 
-- **Two-wallet-prompt entry flow.** Step-1 success + step-2 failure leaves the user paying OF with no tickets (refund-required state surfaced in UI). The Option B router contract (`BlockpotLGORouter`) is the planned follow-up for single-tx entry.
+- **Two-wallet-prompt entry flow.** Step-1 success + step-2 failure leaves the user paying OF with no tickets (refund-required state surfaced in UI). The Option B router contract (`BlockpotOperatorRouter`) is the planned follow-up for single-tx entry.
 - **All per-chain `complianceRegistry` addresses are `ZERO_ADDRESS` placeholders.** Must be populated from v2 deployment before launch.
 - **KYC/AML, self-exclusion, age gate, session limits, problem-gambling resources** — explicitly out of scope; stubbed by `ResponsibleGamingPlaceholder`. Tracked in `TODO.md`.
 - **Storybook** — 3 entries/* stories deleted (v1 prop shapes unreconstructable without rebuilding); surviving stories build clean.

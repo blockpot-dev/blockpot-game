@@ -24,7 +24,7 @@ import MissedDrawProvider from '@/providers/MissedDrawProvider'
 import PlayerSessionProvider from '@/providers/PlayerSessionProvider'
 import SessionSignalProvider from '@/providers/SessionSignalProvider'
 import SessionExpiryRecovery from '@/api/SessionExpiryRecovery'
-import LGOWhitelistBanner from '@/components/blockpot/common/LGOWhitelistBanner'
+import OperatorApprovalBanner from '@/components/blockpot/common/OperatorApprovalBanner'
 import SelfExclusionBanner from '@/components/responsible-gaming/SelfExclusionBanner'
 
 // Lazy load the dev tools only in development
@@ -60,7 +60,7 @@ export const Route = createRootRoute({
                                                                         <div className='flex flex-col h-full'>
                                                                             <ContractIdentityWatcher />
                                                                             <Header />
-                                                                            <LGOWhitelistBanner />
+                                                                            <OperatorApprovalBanner />
                                                                             <SelfExclusionBanner />
                                                                             <div className='relative overflow-auto flex flex-col flex-1'>
                                                                                 <div className="absolute top-0 left-0 w-full lg:h-full overflow-hidden z-[-1]">

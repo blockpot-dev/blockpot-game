@@ -1,6 +1,6 @@
 # Blockpot Frontend — Refactor Instructions for Claude Code
 
-**Target version:** v2.0.0 (LGO frontend for neutral-infrastructure protocol)
+**Target version:** v2.0.0 (BlockpotOperator frontend for neutral-infrastructure protocol)
 **Author:** Stefan
 **Status:** Ready for execution
 **Companion document:** `BLOCKPOT_REFACTOR_INSTRUCTIONS.md` (contracts repo). Execute the contracts refactor first; this frontend refactor depends on the v2 ABIs produced there.
@@ -10,7 +10,7 @@
 
 ## 0. Read Before You Start
 
-This document is the authoritative spec for refactoring the Blockpot frontend from v1.0.0 to v2.0.0. The v1.0.0 frontend was a community draw dApp with BPT staking, governance voting, affiliate referrals, and start-draw bounties. The v2.0.0 frontend is the user-facing web application for **Blockpot’s own Licensed Gaming Operator (LGO)**, connecting to neutral, immutable protocol infrastructure. Roughly 40% of the v1 feature surface maps to on-chain features that no longer exist.
+This document is the authoritative spec for refactoring the Blockpot frontend from v1.0.0 to v2.0.0. The v1.0.0 frontend was a community draw dApp with BPT staking, governance voting, affiliate referrals, and start-draw bounties. The v2.0.0 frontend is the user-facing web application for **Blockpot’s own Approved Operator**, connecting to neutral, immutable protocol infrastructure. Roughly 40% of the v1 feature surface maps to on-chain features that no longer exist.
 
 Before you write any code:
 
@@ -27,16 +27,16 @@ If any step in this document conflicts with what you find in the code, **stop an
 
 ## 1. Strategic Context (the why)
 
-The contracts have been refactored to neutral infrastructure: no token, no governance, no referrals, no staking, no on-chain rewards, no operator-collected fees. Entries are gated by an on-chain `ComplianceRegistry` that whitelists operator addresses.
+The contracts have been refactored to neutral infrastructure: no token, no governance, no referrals, no staking, no on-chain rewards, no operator-collected fees. Entries are gated by an on-chain `ApprovedOperatorRegistry` that whitelists operator addresses.
 
-This frontend is **Blockpot’s own LGO frontend**, run by the Costa Rica gaming operator entity in Phase 1. It is not “the protocol.” It is a licensed prize draw operator that happens to use Unipot Protocol as its backend. It competes with (in principle) future third-party LGOs that will run their own frontends against the same protocol.
+This frontend is **Blockpot’s own BlockpotOperator frontend**, run by the Costa Rica gaming operator entity in Phase 1. It is not “the protocol.” It is a licensed prize draw operator that happens to use Unipot Protocol as its backend. It competes with (in principle) future third-party operators that will run their own frontends against the same protocol.
 
 That framing has two practical consequences:
 
 1. **User-facing copy** should read as a lottery product, not as a community-owned protocol. Language like “stake to earn a share of protocol revenue,” “vote on proposals,” “refer your friends and earn BPT” goes away entirely.
 1. **The frontend owns the Operator Fee (OF).** The protocol does not know about the OF. The frontend collects `LEF = PEA + CF + OF` from the user, keeps the OF, and forwards `PEA + CF` to the protocol via the entry call. See §5.3.
 
-Responsible gaming, KYC/AML, and other LGO-compliance features are explicitly **out of scope for this refactor** (see §8). A placeholder will be added so they are not forgotten.
+Responsible gaming, KYC/AML, and other BlockpotOperator-compliance features are explicitly **out of scope for this refactor** (see §8). A placeholder will be added so they are not forgotten.
 
 -----
 
@@ -48,9 +48,9 @@ Responsible gaming, KYC/AML, and other LGO-compliance features are explicitly **
 |**CF**                |Contributor Fee. 2% of PEA. Paid to DevCo via the protocol.                                                                                         |
 |**OF**                |Operator Fee. 5% of PEA by default (configurable via env var — see §5.3). Kept by this frontend’s operator wallet. Invisible to the protocol.       |
 |**LEF**               |Lottery Entry Fee. Total user pays: `LEF = PEA + CF + OF`.                                                                                          |
-|**LGO**               |Licensed Gaming Operator. This frontend belongs to Blockpot’s own LGO.                                                                              |
-|**Operator wallet**   |The on-chain address whitelisted in `ComplianceRegistry` for this LGO. Passed as the `operator` parameter on every entry call. Also receives the OF.|
-|**ComplianceRegistry**|New v2 contract. On-chain allowlist of operator addresses.                                                                                          |
+|**BlockpotOperator**               |Approved Operator. This frontend belongs to Blockpot’s own BlockpotOperator.                                                                              |
+|**Operator wallet**   |The on-chain address whitelisted in `ApprovedOperatorRegistry` for this BlockpotOperator. Passed as the `operator` parameter on every entry call. Also receives the OF.|
+|**ApprovedOperatorRegistry**|New v2 contract. On-chain allowlist of operator addresses.                                                                                          |
 
 -----
 
@@ -118,7 +118,7 @@ Delete the following utility hook:
 
 New folder: `src/hooks/contracts/compliance-registry/`
 
-- `useComplianceRegistryRead.ts` — generic read factory (mirrors pattern of other `use*Read.ts` files).
+- `useApprovedOperatorRegistryRead.ts` - generic read factory (mirrors pattern of other `use*Read.ts` files).
 - `useIsOperatorWhitelisted.ts` — domain hook returning `{ isWhitelisted: boolean, isLoading: boolean }` for the configured operator address. Used by the app shell to surface a critical error banner if the operator is not whitelisted (see §5.4).
 
 ### 3.6 Contract hooks to refactor
@@ -228,7 +228,7 @@ From `src/components/blockpot/common/`:
 ### 3.12 Components to add
 
 - `src/components/blockpot/common/ResponsibleGamingPlaceholder.tsx` — minimal stub component (see §8).
-- `src/components/blockpot/common/OperatorStatusBanner.tsx` — renders a blocking banner if the configured operator address is not whitelisted in `ComplianceRegistry`. See §5.4.
+- `src/components/blockpot/common/OperatorStatusBanner.tsx` - renders a blocking banner if the configured operator address is not whitelisted in `ApprovedOperatorRegistry`. See §5.4.
 
 ### 3.13 Types to delete
 
@@ -256,13 +256,13 @@ Keep the `lottery/` utility folder (results, `displayDrawnNumberData`, `ticketIm
 Add to `.env.example`:
 
 ```
-# The LGO operator wallet address. Must be whitelisted in ComplianceRegistry
+# The BlockpotOperator operator wallet address. Must be whitelisted in ApprovedOperatorRegistry
 # on the target network, otherwise the frontend will display a blocking
 # operator-status banner and entry submission will be disabled.
 VITE_OPERATOR_ADDRESS=0x0000000000000000000000000000000000000000
 
 # Operator Fee rate in basis points. 500 = 5%. Default for Blockpot's own
-# LGO is 500. Third-party LGOs deploying this frontend can adjust.
+# BlockpotOperator is 500. Third-party operators deploying this frontend can adjust.
 VITE_OPERATOR_FEE_BPS=500
 ```
 
@@ -387,7 +387,7 @@ Implementation options (recommend option A; confirm in PR review):
 
 Downside: two wallet prompts per ticket purchase. User friction.
 
-**Option B (single-tx via a thin frontend router contract):** Deploy a thin contract (`BlockpotLGORouter`) that receives `msg.value = PEA + CF + OF`, takes the OF, and forwards `PEA + CF` as a call to `Lottery.enter`. One wallet prompt. Cleaner UX. Requires a new contract deployment and trust in it, but since it’s operator-controlled that’s fine.
+**Option B (single-tx via a thin frontend router contract):** Deploy a thin contract (`BlockpotOperatorRouter`) that receives `msg.value = PEA + CF + OF`, takes the OF, and forwards `PEA + CF` as a call to `UnipotDraw.enter`. One wallet prompt. Cleaner UX. Requires a new contract deployment and trust in it, but since it’s operator-controlled that’s fine.
 
 **For this refactor:** implement option A. Flag option B as a potential follow-up in the PR description. The extra prompt is an acceptable first-cut tradeoff against scope creep.
 
@@ -444,7 +444,7 @@ Derive the exact `enter` argument list from the synced v2 `lotteryAbi.ts`; do no
 
 ```tsx
 // src/components/blockpot/common/OperatorStatusBanner.tsx
-// Renders nothing if the configured operator is whitelisted in ComplianceRegistry.
+// Renders nothing if the configured operator is whitelisted in ApprovedOperatorRegistry.
 // Renders a blocking red banner if not whitelisted, and disables entry submissions
 // (the check is also enforced in useEnterLottery).
 export function OperatorStatusBanner(): JSX.Element | null { ... }
@@ -463,7 +463,7 @@ export function OperatorStatusBanner(): JSX.Element | null { ... }
 Keep the route; simplify the surface:
 
 - Display contract balances for `Lottery`, `FundsManager`, `BlockpotRewardLostAndFound` (useful for the “failed payouts are recoverable” story).
-- Display the `ComplianceRegistry` contract address with a read-only view of whitelisted operators (pulled via `getWhitelistedOperators()`). This actively reinforces the “licensed operators only” story.
+- Display the `ApprovedOperatorRegistry` contract address with a read-only view of whitelisted operators (pulled via `getWhitelistedOperators()`). This actively reinforces the “licensed operators only” story.
 - Delete all contributor payout and contributor claim UI.
 - Delete any staking / rewards / reward-tracker displays.
 
@@ -490,7 +490,7 @@ A full copy pass is required. The v1 frontend is saturated with community / gove
 **Replacement guidance:**
 
 - Overall framing: “licensed prize draw operator, powered by Unipot Protocol,” “provably fair draws on-chain,” “instant automatic payouts.” These map to the user-visible value proposition without invoking community-ownership.
-- The brand tagline “Powered by People, Driven by Blockchain” appears in the brand guidelines but is protocol-level positioning. For the LGO frontend, prefer operator-positioning taglines in marketing surface; keep any tagline usage restrained to footer/about-style placements.
+- The brand tagline “Powered by People, Driven by Blockchain” appears in the brand guidelines but is protocol-level positioning. For the operator frontend, prefer operator-positioning taglines in marketing surface; keep any tagline usage restrained to footer/about-style placements.
 - Where the v1 copy says things like “As a BPT staker you earn a share of every ticket sold,” delete the claim entirely — do not replace with anything.
 - Where headings named deleted features (e.g. “Earn”, “Governance”, “Referrals” as nav items), remove the nav entries.
 
@@ -550,7 +550,7 @@ Work in this order. After each phase, run `bun typecheck`, `bun lint`, and `bun 
 
 ### Phase 3: Hook layer refactor
 
-1. Add `src/hooks/contracts/compliance-registry/useComplianceRegistryRead.ts`, `useIsOperatorWhitelisted.ts`.
+1. Add `src/hooks/contracts/compliance-registry/useApprovedOperatorRegistryRead.ts`, `useIsOperatorWhitelisted.ts`.
 1. Refactor `useEnterLottery` per §5.3.
 1. Refactor `useEntryForm` to drop referral/BPT/discount wiring and add OF display.
 1. Refactor `useLotteryState`, `useLotteryEntry`, and any round-fetching hooks against the v2 ABI.
@@ -584,11 +584,11 @@ Work in this order. After each phase, run `bun typecheck`, `bun lint`, and `bun 
 1. Apply the `CLAUDE.md` edits proposed in §15 of the architecture file (Vite/TanStack framing, removed legacy tree, etc.).
 1. Additionally update `CLAUDE.md` to reflect v2:
 - Delete references to BPT, staking, governance, referrals, contributor rewards.
-- Add a “v2 LGO frontend” framing paragraph.
-- Add `ComplianceRegistry` to the contract list.
+- Add a “v2 BlockpotOperator frontend” framing paragraph.
+- Add `ApprovedOperatorRegistry` to the contract list.
 - Add the env vars from §4.1.
 - Document the entry flow (two-transaction, PEA+CF to protocol, OF to operator).
-1. Update `ARCHITECTURE.md` to reflect v2. Keep the existing section structure. Strip everything deleted, add new sections for `ComplianceRegistry`, operator fee handling, and the operator-status banner.
+1. Update `ARCHITECTURE.md` to reflect v2. Keep the existing section structure. Strip everything deleted, add new sections for `ApprovedOperatorRegistry`, operator fee handling, and the operator-status banner.
 
 ### Phase 7: Final verification
 
@@ -620,7 +620,7 @@ The following are deliberately excluded from this refactor and will be handled i
 - **Responsible gaming features.** No self-exclusion, deposit limits, session time limits, age gates, or problem-gambling help copy beyond a single placeholder component (see below).
 - **Fiat onramp / Google Pay integration.** Crypto-only.
 - **Quick Game UI.** Contract addresses stay populated; no UI wiring.
-- **Third-party LGO support.** This frontend is for Blockpot’s own LGO. Fork-and-rebrand is a future concern.
+- **Third-party BlockpotOperator support.** This frontend is for Blockpot’s own BlockpotOperator. Fork-and-rebrand is a future concern.
 - **Internationalization.** Copy is English-only.
 - **Mobile-specific UX work.** Responsive layout should continue to work but no mobile-first redesigns.
 
@@ -632,8 +632,8 @@ Add `src/components/blockpot/common/ResponsibleGamingPlaceholder.tsx`:
 // PLACEHOLDER — NOT PRODUCTION
 // This component is a stand-in for responsible gaming features (self-exclusion,
 // deposit limits, session time limits, age gate, problem-gambling resources).
-// It must be replaced with real LGO compliance UI before launch.
-// See TODO.md in the repo root for the full LGO compliance checklist.
+// It must be replaced with real BlockpotOperator compliance UI before launch.
+// See TODO.md in the repo root for the full BlockpotOperator compliance checklist.
 export function ResponsibleGamingPlaceholder() {
   return (
     <div className="text-xs text-muted-foreground border border-dashed border-destructive/50 rounded p-3 mt-8">
@@ -652,10 +652,10 @@ Render it in `src/routes/play.tsx` at the bottom of the page. This will be visua
 Create `TODO.md` at the repo root:
 
 ```md
-# Outstanding LGO Compliance Features
+# Outstanding BlockpotOperator Compliance Features
 
 This file tracks compliance and product features that are required for the
-Blockpot LGO frontend to go to production, and which are explicitly out of
+Blockpot BlockpotOperator frontend to go to production, and which are explicitly out of
 scope for the v2 protocol-alignment refactor.
 
 ## Required before launch
@@ -679,7 +679,7 @@ scope for the v2 protocol-alignment refactor.
 ## Infrastructure
 
 - [ ] Keeper service that calls drawNumbers / finalizeRound on schedule.
-      Out-of-repo. Owned by the LGO Costa Rica entity's ops team.
+      Out-of-repo. Owned by the operator Costa Rica entity's ops team.
 - [ ] Monitoring and alerting for operator wallet balance (OF receipts,
       gas for keeper).
 - [ ] Backend for customer support, refund handling (including the known
@@ -688,7 +688,7 @@ scope for the v2 protocol-alignment refactor.
 ## Known limitations to revisit
 
 - [ ] Two-transaction entry flow (OF transfer + Lottery.enter). Consider
-      migrating to a single-tx LGO router contract to cut user friction.
+      migrating to a single-tx BlockpotOperator router contract to cut user friction.
 ```
 
 -----
@@ -701,7 +701,7 @@ The refactor is complete when:
 - `bun lint` — zero warnings.
 - `bun build` — clean.
 - All deleted feature folders and files from §3 are gone.
-- `ComplianceRegistry` ABI and hooks are integrated; operator-status banner works.
+- `ApprovedOperatorRegistry` ABI and hooks are integrated; operator-status banner works.
 - Entry flow is two transactions (OF transfer + `Lottery.enter`), displaying PEA / CF / OF / total breakdown.
 - Copy pass (§6) has been executed and committed separately.
 - `CLAUDE.md` and `ARCHITECTURE.md` reflect v2.

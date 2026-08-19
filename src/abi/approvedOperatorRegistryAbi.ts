@@ -1,4 +1,4 @@
-export const complianceRegistryAbi = [
+export const approvedOperatorRegistryAbi = [
     {
         'inputs': [
             {

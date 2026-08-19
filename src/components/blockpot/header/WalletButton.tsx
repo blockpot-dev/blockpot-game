@@ -8,7 +8,7 @@ import usePlayerActivityState, { PlayerActivityState, PlayerTier } from '@/hooks
 import usePrizePoolContext, { PrizePoolContext } from '@/hooks/player-summary/usePrizePoolContext'
 import { useBlockpotDraw } from '@/providers/BlockpotDrawProvider'
 import useAccountAddress from '@/hooks/utilities/useAccountAddress'
-import usePlayerBalances from '@/hooks/contracts/lgo/usePlayerBalances'
+import usePlayerBalances from '@/hooks/contracts/operator/usePlayerBalances'
 import AccountDialog from '@/components/blockpot/account/AccountDialog'
 import { cn } from '@/lib/utils'
 

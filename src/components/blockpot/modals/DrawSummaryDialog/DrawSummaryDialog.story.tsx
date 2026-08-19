@@ -28,21 +28,21 @@ export default meta
 
 type Story = StoryObj<typeof _DrawSummaryDialog>
 
-// Regression scenario for task 52: in v2 the on-chain beneficiary is the LGO contract,
+// Regression scenario for task 52: in v2 the on-chain beneficiary is the operator contract,
 // so entriesForBeneficiary(round, connectedWallet) returns []. The fix routes the lookup
-// through resolvePlayerEntries which queries entriesForBeneficiary(round, LGO_ADDRESS),
-// then maps each entry to its real owner via lgo.entryOwnerOf, then filters by the
+// through resolvePlayerEntries which queries entriesForBeneficiary(round, OPERATOR_ADDRESS),
+// then maps each entry to its real owner via operator.entryOwnerOf, then filters by the
 // connected wallet. Pre-fix this story renders Total Tickets: 0; post-fix it renders one
 // row with from=100, to=104 and Total Tickets: 5.
 const REGRESSION_ROUND = 7
 const REGRESSION_DRAW = '0x0000000000000000000000000000000000000A11' as Address
-const REGRESSION_LGO = '0x0000000000000000000000000000000000000B22' as Address
+const REGRESSION_OPERATOR = '0x0000000000000000000000000000000000000B22' as Address
 const REGRESSION_PLAYER = '0x0000000000000000000000000000000000000C33' as Address
 const REGRESSION_ENTRY_INDEX = 42
 
 const regressionGame = {
     entriesForBeneficiary: async ([round, beneficiary]: readonly [number, Address]) => {
-        if (round === REGRESSION_ROUND && isAddressEqual(beneficiary, REGRESSION_LGO)) {
+        if (round === REGRESSION_ROUND && isAddressEqual(beneficiary, REGRESSION_OPERATOR)) {
             return [REGRESSION_ENTRY_INDEX]
         }
         return []
@@ -50,7 +50,7 @@ const regressionGame = {
     getEntry: async ([entryIndex, round]: readonly [number, number]) => {
         if (entryIndex === REGRESSION_ENTRY_INDEX && round === REGRESSION_ROUND) {
             return {
-                beneficiary: REGRESSION_LGO,
+                beneficiary: REGRESSION_OPERATOR,
                 entryStart: 100,
                 amount: 5,
                 payoutInWeth: false,
@@ -60,7 +60,7 @@ const regressionGame = {
     },
 } as unknown as Parameters<typeof resolvePlayerEntries>[4]
 
-const regressionLgo = {
+const regressionOperator = {
     entryOwnerOf: async ([draw, round, entryIndex]: readonly [Address, number, number]) => {
         if (
             isAddressEqual(draw, REGRESSION_DRAW)
@@ -73,7 +73,7 @@ const regressionLgo = {
     },
 } as unknown as Parameters<typeof resolvePlayerEntries>[5]
 
-function PlayerEntriesResolvedFromLgoOwnershipRender(props: _DrawSummaryDialogProps) {
+function PlayerEntriesResolvedFromOperatorOwnershipRender(props: _DrawSummaryDialogProps) {
     const [purchases, setPurchases] = useState<DrawEntry[]>([])
     useEffect(() => {
         let cancelled = false
@@ -81,9 +81,9 @@ function PlayerEntriesResolvedFromLgoOwnershipRender(props: _DrawSummaryDialogPr
             REGRESSION_ROUND,
             REGRESSION_PLAYER,
             REGRESSION_DRAW,
-            REGRESSION_LGO,
+            REGRESSION_OPERATOR,
             regressionGame,
-            regressionLgo,
+            regressionOperator,
         ).then((entries) => {
             if (!cancelled) setPurchases(entries)
         })
@@ -92,8 +92,8 @@ function PlayerEntriesResolvedFromLgoOwnershipRender(props: _DrawSummaryDialogPr
     return <Template {...props} purchases={purchases} />
 }
 
-export const PlayerEntriesResolvedFromLgoOwnership: Story = {
-    render: (props: _DrawSummaryDialogProps) => <PlayerEntriesResolvedFromLgoOwnershipRender
+export const PlayerEntriesResolvedFromOperatorOwnership: Story = {
+    render: (props: _DrawSummaryDialogProps) => <PlayerEntriesResolvedFromOperatorOwnershipRender
         {...props}
         displayDrawnNumberData={[]}
         roundId={{

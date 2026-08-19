@@ -90,11 +90,11 @@ describe('EXPECTED_IDENTITY', () => {
 
     it('covers every first-party contract with its Solidity type name', () => {
         expect(EXPECTED_IDENTITY[ContractName.KYC_REGISTRY]).toEqual({ type: 'KYCRegistry', majorVersion: 1 })
-        expect(EXPECTED_IDENTITY[ContractName.LGO]).toEqual({ type: 'LGO', majorVersion: 1 })
+        expect(EXPECTED_IDENTITY[ContractName.OPERATOR]).toEqual({ type: 'BlockpotOperator', majorVersion: 1 })
         expect(EXPECTED_IDENTITY[ContractName.PLAYER_REGISTRY]).toEqual({ type: 'PlayerRegistry', majorVersion: 1 })
         expect(EXPECTED_IDENTITY[ContractName.DRAW_MAIN]).toEqual({ type: 'UnipotDraw', majorVersion: 1 })
         expect(EXPECTED_IDENTITY[ContractName.QUICK_GAME]).toEqual({ type: 'UnipotDraw', majorVersion: 1 })
         expect(EXPECTED_IDENTITY[ContractName.FUNDS_MANAGER_MAIN]).toEqual({ type: 'UnipotFundsManager', majorVersion: 1 })
-        expect(EXPECTED_IDENTITY[ContractName.COMPLIANCE_REGISTRY]).toEqual({ type: 'ComplianceRegistry', majorVersion: 1 })
+        expect(EXPECTED_IDENTITY[ContractName.APPROVED_OPERATOR_REGISTRY]).toEqual({ type: 'ApprovedOperatorRegistry', majorVersion: 1 })
     })
 })

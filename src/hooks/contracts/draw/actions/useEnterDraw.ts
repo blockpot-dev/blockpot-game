@@ -2,12 +2,12 @@ import { useChainId } from 'wagmi'
 import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { ContractName, getContractAddress } from '@/constants/contract-addresses'
-import { lgoAbi } from '@/abi/lgoAbi'
+import { operatorAbi } from '@/abi/operatorAbi'
 import useTrackedContractWrite from '@/hooks/web3/useTrackedContractWrite'
-import useIsLGOWhitelisted from '@/hooks/contracts/compliance-registry/useIsLGOWhitelisted'
+import useIsOperatorApproved from '@/hooks/contracts/approved-operator-registry/useIsOperatorApproved'
 import useIsPlayerActive from '@/hooks/contracts/player-registry/useIsPlayerActive'
 import useAccountAddress from '@/hooks/utilities/useAccountAddress'
-import useLGORead from '@/hooks/contracts/read/useLGORead'
+import useOperatorRead from '@/hooks/contracts/read/useOperatorRead'
 import { useSelectedGame } from '@/providers/SelectedGameProvider'
 import usePlayerActivityState, { PlayerTier } from '@/hooks/player-summary/usePlayerActivityState'
 import { evaluatePretxDeposit } from '@/hooks/player/usePretxDeposit'
@@ -21,7 +21,7 @@ export type EnterDrawParams = {
     useWeth: boolean
     /**
      * Optional referral code for an unbound wallet's attributed entry (BLO-646). Routed via
-     * the LGO's 5-arg overloads only when a ReferralManager is configured on this chain;
+     * the operator's 5-arg overloads only when a ReferralManager is configured on this chain;
      * otherwise the legacy 4-arg signatures are used and the code is dropped (fail-soft).
      */
     referralCode?: string
@@ -32,22 +32,22 @@ export default function useEnterDraw() {
     const account = useAccountAddress()
     const navigate = useNavigate()
     const { gameContractName } = useSelectedGame()
-    const lgoAddress = getContractAddress(chainId, ContractName.LGO)
+    const operatorAddress = getContractAddress(chainId, ContractName.OPERATOR)
     const drawAddress = getContractAddress(chainId, gameContractName)
-    const lgo = useLGORead().read
-    const { isWhitelisted } = useIsLGOWhitelisted()
+    const lgo = useOperatorRead().read
+    const { isWhitelisted } = useIsOperatorApproved()
     const { isActive } = useIsPlayerActive(account)
     const { state } = usePlayerActivityState()
 
     const enterWrite = useTrackedContractWrite({
-        address: lgoAddress,
-        abi: lgoAbi,
+        address: operatorAddress,
+        abi: operatorAbi,
         functionName: 'enter',
     })
 
     const enterWethWrite = useTrackedContractWrite({
-        address: lgoAddress,
-        abi: lgoAbi,
+        address: operatorAddress,
+        abi: operatorAbi,
         functionName: 'enterWeth',
     })
 
@@ -56,11 +56,11 @@ export default function useEnterDraw() {
     const enter = async (params: EnterDrawParams) => {
         const { roundIndex, amount, payoutInWeth, useWeth, referralCode } = params
         // The 5-arg attributed overload is used only when a manager exists to receive the fee
-        // routing; viem resolves the LGO `enter`/`enterWeth` overloads by argument arity.
+        // routing; viem resolves the operator `enter`/`enterWeth` overloads by argument arity.
         const attributed = Boolean(referralCode) && referralManagerAddress !== ZERO_ADDRESS
 
         if (!isWhitelisted) {
-            console.error('[useEnterDraw] LGO not whitelisted in ComplianceRegistry; refusing to enter.')
+            console.error('[useEnterDraw] operator not approved in ApprovedOperatorRegistry; refusing to enter.')
             return false
         }
         if (!isActive) {
@@ -68,7 +68,7 @@ export default function useEnterDraw() {
             return false
         }
 
-        // ETH path needs `total` (PEA + CF + OF) quoted by the LGO. WETH path
+        // ETH path needs `total` (PEA + CF + OF) quoted by the operator. WETH path
         // transfers `total` via transferFrom, but the pretx check wants the
         // same figure either way — compute it up front.
         const [total] = await lgo.entryQuote([drawAddress, amount])
@@ -103,8 +103,8 @@ export default function useEnterDraw() {
 
         try {
             if (useWeth) {
-                // WETH path: LGO pulls `total` WETH via transferFrom then unwraps;
-                // no msg.value. Allowance must be pre-approved against the LGO address.
+                // WETH path: the operator pulls `total` WETH via transferFrom then unwraps;
+                // no msg.value. Allowance must be pre-approved against the operator address.
                 if (attributed && referralCode) {
                     await enterWethWrite.writeAsync(
                         [drawAddress, roundIndex, amount, payoutInWeth, referralCode],
@@ -117,7 +117,7 @@ export default function useEnterDraw() {
                     )
                 }
             } else {
-                // ETH path: msg.value must equal LGO.entryQuote(draw, amount).total.
+                // ETH path: msg.value must equal the operator.entryQuote(draw, amount).total.
                 if (attributed && referralCode) {
                     await enterWrite.writeAsync(
                         [drawAddress, roundIndex, amount, payoutInWeth, referralCode],
@@ -153,7 +153,7 @@ export default function useEnterDraw() {
         isSuccess: enterWrite.isSuccess || enterWethWrite.isSuccess,
         isIdle: enterWrite.isIdle || enterWethWrite.isIdle,
         status: enterWrite.status || enterWethWrite.status,
-        isLGOWhitelisted: isWhitelisted,
+        isOperatorApproved: isWhitelisted,
         isPlayerActive: isActive,
     }
 }

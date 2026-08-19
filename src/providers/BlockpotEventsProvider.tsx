@@ -1,6 +1,6 @@
 import { drawAbi } from '@/abi/drawAbi'
 import { wethAbi } from '@/abi/wethAbi'
-import { lgoAbi } from '@/abi/lgoAbi'
+import { operatorAbi } from '@/abi/operatorAbi'
 import { kycRegistryAbi } from '@/abi/kycRegistryAbi'
 import { playerRegistryAbi } from '@/abi/playerRegistryAbi'
 import { ContractName } from '@/constants/contract-addresses'
@@ -33,7 +33,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
 
     const draw = useReadContract(gameContractName, drawAbi)
     const weth = useReadContract(ContractName.WETH, wethAbi)
-    const lgo = useReadContract(ContractName.LGO, lgoAbi)
+    const operator = useReadContract(ContractName.OPERATOR, operatorAbi)
     const kyc = useReadContract(ContractName.KYC_REGISTRY, kycRegistryAbi)
     const players = useReadContract(ContractName.PLAYER_REGISTRY, playerRegistryAbi)
 
@@ -43,8 +43,8 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
     const [entriesBlockNumber, setEntriesBlockNumber] = useState(0n)
     const [wethBlockNumber, setWETHBlockNumber] = useState(0n)
     const [drawRoundBlockNumber, setDrawRoundBlockNumber] = useState(0n)
-    const [lgoPlayerBlockNumber, setLgoPlayerBlockNumber] = useState(0n)
-    const [lgoConfigBlockNumber, setLgoConfigBlockNumber] = useState(0n)
+    const [operatorPlayerBlockNumber, setOperatorPlayerBlockNumber] = useState(0n)
+    const [operatorConfigBlockNumber, setOperatorConfigBlockNumber] = useState(0n)
     const [kycPlayerBlockNumber, setKycPlayerBlockNumber] = useState(0n)
     const [kycPolicyBlockNumber, setKycPolicyBlockNumber] = useState(0n)
     const [playerStatusBlockNumber, setPlayerStatusBlockNumber] = useState(0n)
@@ -113,13 +113,13 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
         }
     }, [draw.address, address]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    // LGO Event Watchers
+    // Operator Event Watchers
     useEffect(() => {
-        // v2 routes every entry through LGO, so the Draw core’s DrawOnEntry beneficiary
-        // is the LGO contract — never the player. The real player lands here in
-        // LGOEntry.args.player, so this watcher is the source of truth for
+        // v2 routes every entry through the operator, so the Draw core’s DrawOnEntry beneficiary
+        // is the operator contract, never the player. The real player lands here in
+        // OperatorEntry.args.player, so this watcher is the source of truth for
         // player-scoped entry-cache invalidation as well as lifetime/balance bumps.
-        const unwatchLGOEntry = lgo.watchEvent.LGOEntry(
+        const unwatchOperatorEntry = operator.watchEvent.OperatorEntry(
             {},
             {
                 onLogs: (logs) => {
@@ -127,19 +127,19 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
                     const matches = logs.some((l) => l.args.player && isAddressEqual(l.args.player, address))
                     if (matches) {
                         const latestBlock = logs[logs.length - 1].blockNumber ?? 0n
-                        setLgoPlayerBlockNumber(latestBlock)
+                        setOperatorPlayerBlockNumber(latestBlock)
                         setPlayerEntriesBlockNumber(latestBlock)
                     }
                 },
             },
         )
-        const unwatchPlayerCredited = lgo.watchEvent.PlayerCredited(
+        const unwatchPlayerCredited = operator.watchEvent.PlayerCredited(
             {},
             {
                 onLogs: (logs) => {
                     const matches = logs.some((l) => l.args.player === address)
                     if (matches) {
-                        setLgoPlayerBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
+                        setOperatorPlayerBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
                     }
                 },
             },
@@ -150,61 +150,61 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
         // pulls entered + claimed meters via IKYCActivityProvider). Only
         // the former affects the pullable escrow balance, but invalidating
         // balances on direct-pay is harmless.
-        const unwatchPlayerPaidDirect = lgo.watchEvent.PlayerPaidDirect(
+        const unwatchPlayerPaidDirect = operator.watchEvent.PlayerPaidDirect(
             {},
             {
                 onLogs: (logs) => {
                     const matches = logs.some((l) => l.args.player === address)
                     if (matches) {
-                        setLgoPlayerBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
+                        setOperatorPlayerBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
                     }
                 },
             },
         )
-        const unwatchWithdrawn = lgo.watchEvent.Withdrawn(
+        const unwatchWithdrawn = operator.watchEvent.Withdrawn(
             {},
             {
                 onLogs: (logs) => {
                     const matches = logs.some((l) => l.args.player === address)
                     if (matches) {
-                        setLgoPlayerBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
+                        setOperatorPlayerBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
                     }
                 },
             },
         )
-        const unwatchOperatorFeeBpsUpdated = lgo.watchEvent.OperatorFeeBpsUpdated({
+        const unwatchOperatorFeeBpsUpdated = operator.watchEvent.OperatorFeeBpsUpdated({
             onLogs: (logs) => {
-                setLgoConfigBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
+                setOperatorConfigBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
             },
         })
-        // Task-35 aggregation deltas. They fire alongside LGOEntry /
+        // Task-35 aggregation deltas. They fire alongside OperatorEntry /
         // PlayerCredited / PlayerPaidDirect at the same site, so under normal
         // operation they're redundant with the watchers above — but the chain
         // is the source of truth for cumulative EUR after task 35, and a
         // dedicated subscription means a contract whose entry-time emit shape
         // changes (e.g. a future variant that bumps the lifetime counters
-        // without an LGOEntry log) still invalidates the chain-read snapshot.
-        const unwatchLifetimeEnteredUpdated = lgo.watchEvent.LifetimeEnteredUpdated(
+        // without an OperatorEntry log) still invalidates the chain-read snapshot.
+        const unwatchLifetimeEnteredUpdated = operator.watchEvent.LifetimeEnteredUpdated(
             {},
             {
                 onLogs: (logs) => {
                     const matches = logs.some((l) => l.args.player === address)
                     if (matches) {
-                        setLgoPlayerBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
+                        setOperatorPlayerBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
                     }
                 },
             },
         )
         // Task 49 depends on this listener: the directional flow meters
-        // govern the entry gate, so a win must invalidate ['lgo:lifetime']
+        // govern the entry gate, so a win must invalidate ['operator:lifetime']
         // for the headroom meter and the forward-looking entry guard to refresh.
-        const unwatchLifetimeWonUpdated = lgo.watchEvent.LifetimeWonUpdated(
+        const unwatchLifetimeWonUpdated = operator.watchEvent.LifetimeWonUpdated(
             {},
             {
                 onLogs: (logs) => {
                     const matches = logs.some((l) => l.args.player === address)
                     if (matches) {
-                        setLgoPlayerBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
+                        setOperatorPlayerBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
                     }
                 },
             },
@@ -213,13 +213,13 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
         // largestSingleWinEurMinor scalar, so a win that advances the
         // running max can flip the player's win-track tier (and therefore
         // tierOf / isCompliant) independently of the tier ladder.
-        const unwatchLargestSingleWinUpdated = lgo.watchEvent.LargestSingleWinUpdated(
+        const unwatchLargestSingleWinUpdated = operator.watchEvent.LargestSingleWinUpdated(
             {},
             {
                 onLogs: (logs) => {
                     const matches = logs.some((l) => l.args.player === address)
                     if (matches) {
-                        setLgoPlayerBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
+                        setOperatorPlayerBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
                     }
                 },
             },
@@ -228,21 +228,21 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
         // full direct-pays, the paid slice of partial direct-pays) and gates
         // it against the tier's outflow cap. The flow meter and the
         // forward-looking claim guard read this scalar, so every bump must
-        // invalidate ['lgo:lifetime'].
-        const unwatchLifetimeClaimedUpdated = lgo.watchEvent.LifetimeClaimedUpdated(
+        // invalidate ['operator:lifetime'].
+        const unwatchLifetimeClaimedUpdated = operator.watchEvent.LifetimeClaimedUpdated(
             {},
             {
                 onLogs: (logs) => {
                     const matches = logs.some((l) => l.args.player === address)
                     if (matches) {
-                        setLgoPlayerBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
+                        setOperatorPlayerBlockNumber(logs[logs.length - 1].blockNumber ?? 0n)
                     }
                 },
             },
         )
 
         return () => {
-            unwatchLGOEntry()
+            unwatchOperatorEntry()
             unwatchPlayerCredited()
             unwatchPlayerPaidDirect()
             unwatchWithdrawn()
@@ -252,7 +252,7 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
             unwatchLargestSingleWinUpdated()
             unwatchLifetimeClaimedUpdated()
         }
-    }, [lgo.address, address]) // eslint-disable-line react-hooks/exhaustive-deps
+    }, [operator.address, address]) // eslint-disable-line react-hooks/exhaustive-deps
 
     // KYC Event Watchers. After task 44 the registry owns the active KYCPolicy
     // (the EUR-minor profit ladder + per-tier required-gate masks) and exposes
@@ -390,18 +390,18 @@ export default function BlockpotEventsProvider({ children }: Props): React.React
         queryClient.invalidateQueries({ queryKey: ['specificRound'] })
     })
 
-    useTriggerOnChanged(lgoPlayerBlockNumber, () => {
-        queryClient.invalidateQueries({ queryKey: ['lgo:balances'] })
-        queryClient.invalidateQueries({ queryKey: ['lgo:lifetime'] })
+    useTriggerOnChanged(operatorPlayerBlockNumber, () => {
+        queryClient.invalidateQueries({ queryKey: ['operator:balances'] })
+        queryClient.invalidateQueries({ queryKey: ['operator:lifetime'] })
         // Lifetime EUR-minor counters feed the registry's profit lookup, so
-        // any LGO-side movement can flip isCompliant / tierOf for the player.
+        // any operator-side movement can flip isCompliant / tierOf for the player.
         queryClient.invalidateQueries({ queryKey: ['kyc:isCompliant'] })
         queryClient.invalidateQueries({ queryKey: ['kyc:tierOf'] })
     })
 
-    useTriggerOnChanged(lgoConfigBlockNumber, () => {
-        queryClient.invalidateQueries({ queryKey: ['lgo:operatorFeeBps'] })
-        queryClient.invalidateQueries({ queryKey: ['lgo:entryQuote'] })
+    useTriggerOnChanged(operatorConfigBlockNumber, () => {
+        queryClient.invalidateQueries({ queryKey: ['operator:operatorFeeBps'] })
+        queryClient.invalidateQueries({ queryKey: ['operator:entryQuote'] })
     })
 
     useTriggerOnChanged(kycPlayerBlockNumber, () => {

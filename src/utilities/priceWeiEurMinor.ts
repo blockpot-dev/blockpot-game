@@ -1,4 +1,4 @@
-// Forward-looking mirror of the LGO's `_priceWeiEur` conversion. Returns the
+// Forward-looking mirror of the operator's `_priceWeiEur` conversion. Returns the
 // EUR-minor amount a wei figure would price to under the current Chainlink
 // feeds, or null when either feed is missing (e.g. EUR/USD isn't wired
 // locally) so callers fall back to the on-chain / server-side gate rather

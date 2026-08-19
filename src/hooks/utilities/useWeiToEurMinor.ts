@@ -1,7 +1,7 @@
 import { useNativeCurrencyToUSDPrice } from '@/hooks/contracts/chainlink/useNativeCurrencyToUSDPrice'
 import { useEurToUSDPrice } from '@/hooks/contracts/chainlink/useEurToUSDPrice'
 
-// Mirrors `LGO._priceWeiEur`'s formula client-side:
+// Mirrors `the operator._priceWeiEur`'s formula client-side:
 //   eur8 = (weiAmount * ethUsd) / (eurUsd * 1e10)
 //   eurMinor = eur8 / 1e6
 // Returns `null` when either feed is missing (e.g. the EUR/USD feed isn't

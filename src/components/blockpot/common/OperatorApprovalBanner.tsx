@@ -1,7 +1,7 @@
-import useIsLGOWhitelisted from '@/hooks/contracts/compliance-registry/useIsLGOWhitelisted'
+import useIsOperatorApproved from '@/hooks/contracts/approved-operator-registry/useIsOperatorApproved'
 
-export default function LGOWhitelistBanner() {
-    const { isWhitelisted, isLoading } = useIsLGOWhitelisted()
+export default function OperatorApprovalBanner() {
+    const { isWhitelisted, isLoading } = useIsOperatorApproved()
     if (isLoading || isWhitelisted) return null
 
     return (
@@ -10,7 +10,7 @@ export default function LGOWhitelistBanner() {
             className='w-full bg-destructive text-destructive-foreground text-sm py-2 px-4 text-center'
         >
             <strong className='mr-2'>Entries disabled:</strong>
-            this Licensed Gaming Operator is not whitelisted in the ComplianceRegistry.
+            this operator is not approved in the ApprovedOperatorRegistry.
             Contact the operator to resolve.
         </div>
     )

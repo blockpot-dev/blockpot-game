@@ -190,22 +190,22 @@ export const ConnectedNoPurchases: Story = {
     }
 }
 
-// Regression scenario for task 52: in v2 the on-chain beneficiary is the LGO contract, so
+// Regression scenario for task 52: in v2 the on-chain beneficiary is the operator contract, so
 // useRoundEntryIndexes -> entriesForBeneficiary(round, connectedWallet) is empty and the
 // InfoPanel "Your Tickets" list is blank. The fix routes the lookup through
-// resolvePlayerEntries which queries entriesForBeneficiary(round, LGO_ADDRESS), then maps
-// each entry back to its real owner via lgo.entryOwnerOf, then filters by the connected
+// resolvePlayerEntries which queries entriesForBeneficiary(round, OPERATOR_ADDRESS), then maps
+// each entry back to its real owner via operator.entryOwnerOf, then filters by the connected
 // wallet. Pre-fix this story renders zero rows; post-fix it renders one Purchase row
 // covering ticket numbers 100..104.
 const REGRESSION_ROUND = 7
 const REGRESSION_DRAW = '0x0000000000000000000000000000000000000A11' as Address
-const REGRESSION_LGO = '0x0000000000000000000000000000000000000B22' as Address
+const REGRESSION_OPERATOR = '0x0000000000000000000000000000000000000B22' as Address
 const REGRESSION_PLAYER = '0x0000000000000000000000000000000000000C33' as Address
 const REGRESSION_ENTRY_INDEX = 42
 
 const regressionGame = {
     entriesForBeneficiary: async ([round, beneficiary]: readonly [number, Address]) => {
-        if (round === REGRESSION_ROUND && isAddressEqual(beneficiary, REGRESSION_LGO)) {
+        if (round === REGRESSION_ROUND && isAddressEqual(beneficiary, REGRESSION_OPERATOR)) {
             return [REGRESSION_ENTRY_INDEX]
         }
         return []
@@ -213,7 +213,7 @@ const regressionGame = {
     getEntry: async ([entryIndex, round]: readonly [number, number]) => {
         if (entryIndex === REGRESSION_ENTRY_INDEX && round === REGRESSION_ROUND) {
             return {
-                beneficiary: REGRESSION_LGO,
+                beneficiary: REGRESSION_OPERATOR,
                 entryStart: 100,
                 amount: 5,
                 payoutInWeth: false,
@@ -223,7 +223,7 @@ const regressionGame = {
     },
 } as unknown as Parameters<typeof resolvePlayerEntries>[4]
 
-const regressionLgo = {
+const regressionOperator = {
     entryOwnerOf: async ([draw, round, entryIndex]: readonly [Address, number, number]) => {
         if (
             isAddressEqual(draw, REGRESSION_DRAW)
@@ -244,7 +244,7 @@ function entryToPurchaseData(entry: { index: number, entryStart: number, amount:
     return { id: entry.index, type: 'multiple', numberStart: Number(entry.entryStart), numberEnd: Number(entryEnd) }
 }
 
-function PlayerEntriesResolvedFromLgoOwnershipRender(props: _InfoPanelProps) {
+function PlayerEntriesResolvedFromOperatorOwnershipRender(props: _InfoPanelProps) {
     const [purchases, setPurchases] = useState<PurchaseData[]>([])
     const [animationsEnabled, setAnimationsEnabled] = useState(true)
     const [lastPurchaseId, setLastPurchaseId] = useState<number | null>(null)
@@ -254,9 +254,9 @@ function PlayerEntriesResolvedFromLgoOwnershipRender(props: _InfoPanelProps) {
             REGRESSION_ROUND,
             REGRESSION_PLAYER,
             REGRESSION_DRAW,
-            REGRESSION_LGO,
+            REGRESSION_OPERATOR,
             regressionGame,
-            regressionLgo,
+            regressionOperator,
         ).then((entries) => {
             if (!cancelled) setPurchases(entries.map(entryToPurchaseData))
         })
@@ -275,8 +275,8 @@ function PlayerEntriesResolvedFromLgoOwnershipRender(props: _InfoPanelProps) {
     )
 }
 
-export const PlayerEntriesResolvedFromLgoOwnership: Story = {
-    render: (args) => <PlayerEntriesResolvedFromLgoOwnershipRender {...args} />,
+export const PlayerEntriesResolvedFromOperatorOwnership: Story = {
+    render: (args) => <PlayerEntriesResolvedFromOperatorOwnershipRender {...args} />,
     args: {
         isConnected: true,
         purchases: [],

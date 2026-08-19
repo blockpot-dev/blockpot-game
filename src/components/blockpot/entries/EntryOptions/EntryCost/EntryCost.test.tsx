@@ -34,7 +34,7 @@ vi.mock('@/hooks/utilities/useDisplayPrices', async () => {
 // `amountPerEntry`. We mock it here at the boundary so any future refactor
 // that wires useEntryQuote into EntryCost would land on a stub that returns
 // the clamped quote, not real wagmi data.
-vi.mock('@/hooks/contracts/lgo/useEntryQuote', () => ({
+vi.mock('@/hooks/contracts/operator/useEntryQuote', () => ({
     default: vi.fn((amount: bigint) => {
         const clamped = amount > 0xffffn ? 0xffffn : amount
         const peaPerEntry = PEA_PER_ENTRY_WEI

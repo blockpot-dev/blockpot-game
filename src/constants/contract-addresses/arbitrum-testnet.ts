@@ -9,9 +9,9 @@ const ARBITRUM_TESTNET_ADDRESSES: {[key: string]: `0x${string}`} = {
     'weth': '0xEe01c0CD76354C383B8c7B4e65EA88D00B06f36f',
     // TODO: populate from v2 deployment
     'quickGame': ZERO_ADDRESS,
-    'complianceRegistry': ZERO_ADDRESS,
-    // TODO: populate from LGO deployment on Arbitrum testnet
-    'lgo': ZERO_ADDRESS,
+    'approvedOperatorRegistry': ZERO_ADDRESS,
+    // TODO: populate from operator deployment on Arbitrum testnet
+    'operator': ZERO_ADDRESS,
     'playerRegistry': ZERO_ADDRESS,
     'kycRegistry': ZERO_ADDRESS,
 }

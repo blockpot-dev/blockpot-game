@@ -2,16 +2,16 @@ import { useChainId } from 'wagmi'
 import { useQuery } from '@tanstack/react-query'
 import { DrawRound } from '@/types/draw'
 import { ContractName, getContractAddress } from '@/constants/contract-addresses'
-import { resolveLgoWinners } from '@/utilities/draw/resolve-lgo-winners'
+import { resolveOperatorWinners } from '@/utilities/draw/resolve-operator-winners'
 import { GameType } from '@/providers/SelectedGameProvider'
 import useDrawRead from '../read/useDrawRead'
-import useLGORead from '../read/useLGORead'
+import useOperatorRead from '../read/useOperatorRead'
 import { calculateMaxRoundsInPot } from './useMaxRoundsInPot'
 
 export default function useDrawRound(roundIndex: number, gameType?: GameType) {
     const chainId = useChainId()
     const { game, selectedGame, gameContractName } = useDrawRead(gameType)
-    const lgo = useLGORead().read
+    const lgo = useOperatorRead().read
 
     const { data } = useQuery<DrawRound>({
         queryKey: ['specificRound', selectedGame, chainId, roundIndex.toString()],
@@ -20,12 +20,12 @@ export default function useDrawRound(roundIndex: number, gameType?: GameType) {
             const maxRoundsInPot = calculateMaxRoundsInPot(await game.currentGameConfig()) ?? 0
 
             const drawAddress = getContractAddress(chainId, gameContractName)
-            const lgoAddress = getContractAddress(chainId, ContractName.LGO)
-            const draws = await resolveLgoWinners(
+            const operatorAddress = getContractAddress(chainId, ContractName.OPERATOR)
+            const draws = await resolveOperatorWinners(
                 roundData.draws,
                 roundIndex,
                 drawAddress,
-                lgoAddress,
+                operatorAddress,
                 game,
                 lgo,
             )

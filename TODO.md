@@ -1,7 +1,7 @@
-# Outstanding LGO Compliance Features
+# Outstanding BlockpotOperator Compliance Features
 
 This file tracks compliance and product features that are required for the
-Blockpot LGO frontend to go to production, and which are explicitly out of
+Blockpot BlockpotOperator frontend to go to production, and which are explicitly out of
 scope for the v2 protocol-alignment refactor.
 
 ## Required before launch
@@ -25,7 +25,7 @@ scope for the v2 protocol-alignment refactor.
 ## Infrastructure
 
 - [ ] Keeper service that calls drawNumbers / finalizeRound on schedule.
-      Out-of-repo. Owned by the LGO Costa Rica entity's ops team.
+      Out-of-repo. Owned by the operator Costa Rica entity's ops team.
 - [ ] Monitoring and alerting for operator wallet balance (OF receipts,
       gas for keeper).
 - [ ] Backend for customer support, refund handling (including the known
@@ -34,8 +34,8 @@ scope for the v2 protocol-alignment refactor.
 ## Known limitations to revisit
 
 - [ ] Two-transaction entry flow (OF transfer + Lottery.enter). Consider
-      migrating to a single-tx LGO router contract to cut user friction.
-- [ ] `ComplianceRegistry` addresses on `arbitrum-testnet` and
+      migrating to a single-tx BlockpotOperator router contract to cut user friction.
+- [ ] `ApprovedOperatorRegistry` addresses on `arbitrum-testnet` and
       `polygon-testnet` are still zero-address placeholders. Populate
       once v2 is deployed to those networks (blockpot-testnet and local
       are populated).

@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 import { useChainId } from 'wagmi'
-import useLGORead from '../read/useLGORead'
+import useOperatorRead from '../read/useOperatorRead'
 
 export default function useOperatorFeeBps() {
     const chainId = useChainId()
-    const lgo = useLGORead().read
+    const lgo = useOperatorRead().read
 
     const { data, isLoading } = useQuery({
-        queryKey: ['lgo:operatorFeeBps', chainId],
+        queryKey: ['operator:operatorFeeBps', chainId],
         queryFn: async () => lgo.operatorFeeBps(),
     })
 

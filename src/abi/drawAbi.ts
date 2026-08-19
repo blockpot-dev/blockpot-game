@@ -18,7 +18,7 @@ export const drawAbi = [
             },
             {
                 'internalType': 'address',
-                'name': '_complianceRegistry',
+                'name': '_approvedOperatorRegistry',
                 'type': 'address'
             },
             {
@@ -98,6 +98,19 @@ export const drawAbi = [
     },
     {
         'inputs': [],
+        'name': 'approvedOperatorRegistry',
+        'outputs': [
+            {
+                'internalType': 'contract ApprovedOperatorRegistry',
+                'name': '',
+                'type': 'address'
+            }
+        ],
+        'stateMutability': 'view',
+        'type': 'function'
+    },
+    {
+        'inputs': [],
         'name': 'balances',
         'outputs': [
             {
@@ -134,19 +147,6 @@ export const drawAbi = [
                 'internalType': 'uint24',
                 'name': '',
                 'type': 'uint24'
-            }
-        ],
-        'stateMutability': 'view',
-        'type': 'function'
-    },
-    {
-        'inputs': [],
-        'name': 'complianceRegistry',
-        'outputs': [
-            {
-                'internalType': 'contract ComplianceRegistry',
-                'name': '',
-                'type': 'address'
             }
         ],
         'stateMutability': 'view',
