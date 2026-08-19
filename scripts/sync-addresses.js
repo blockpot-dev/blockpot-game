@@ -57,6 +57,7 @@ const KEY_MAP_TWO_FILE = {
     operator:                  'operator',
     playerRegistry:            'playerRegistry',
     kycRegistry:               'kycRegistry',
+    referralManager:           'referralManager',
 }
 
 /**
@@ -76,6 +77,7 @@ const KEY_MAP_CHAINS_CONFIG = {
     operator:           'operator',
     playerRegistry:     'playerRegistry',
     kycRegistry:        'kycRegistry',
+    referralManager:    'referralManager',
 }
 
 const ORDER = [
@@ -89,6 +91,7 @@ const ORDER = [
     'operator',
     'playerRegistry',
     'kycRegistry',
+    'referralManager',
 ]
 
 function readJsonOrNull(p) {

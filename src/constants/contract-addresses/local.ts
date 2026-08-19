@@ -12,6 +12,7 @@ const LOCAL_ADDRESSES: { [key: string]: `0x${string}` } = {
     'operator': '0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f',
     'playerRegistry': '0xc6e7DF5E7b4f2A278906862b61205850344D4e7d',
     'kycRegistry': '0x68B1D87F95878fE05B998F19b66F4baba5De1aed',
+    'referralManager': '0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690',
 }
 
 export default LOCAL_ADDRESSES
