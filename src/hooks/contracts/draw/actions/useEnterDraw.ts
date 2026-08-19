@@ -117,7 +117,7 @@ export default function useEnterDraw() {
                     )
                 }
             } else {
-                // ETH path: msg.value must equal LGO.entryQuote(lottery, amount).total.
+                // ETH path: msg.value must equal LGO.entryQuote(draw, amount).total.
                 if (attributed && referralCode) {
                     await enterWrite.writeAsync(
                         [drawAddress, roundIndex, amount, payoutInWeth, referralCode],

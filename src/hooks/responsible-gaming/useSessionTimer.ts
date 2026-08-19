@@ -35,7 +35,7 @@ function writeSnapshot(address: string, snapshot: SessionSnapshot) {
 }
 
 // Client-only session clock + net-spend meter for the reality check (task 113).
-// Lifetime net spend (cumWagered − cumWon, EUR-minor) comes from the existing
+// Lifetime net spend (cumEntered − cumWon, EUR-minor) comes from the existing
 // on-chain-derived activity state; the session figure is the delta against the
 // baseline captured when the session snapshot was created. No network beyond
 // the reads the app already performs.

@@ -11,7 +11,7 @@ export type PlayerTier = 'T0' | 'T1' | 'T2' | 'T3' | 'T4'
 
 // One direction of the player's cumulative flow position. Gates are shared
 // per tier; only the amounts split by direction — `inflow` reports gross
-// cumulative wagers against `TierPolicy.inflowCapEurMinor` (the on-chain
+// cumulative entries against `TierPolicy.inflowCapEurMinor` (the on-chain
 // entry gate), `outflow` reports gross cumulative claims against
 // `outflowCapEurMinor` (the on-chain withdraw / direct-pay gate).
 //

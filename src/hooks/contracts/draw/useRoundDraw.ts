@@ -8,7 +8,7 @@ import useDrawRead from '../read/useDrawRead'
 import useLGORead from '../read/useLGORead'
 import { calculateMaxRoundsInPot } from './useMaxRoundsInPot'
 
-// Round.status enum on the lottery contract: 0 = OPEN, 1 = DRAWING, 2 = DONE.
+// Round.status enum on the draw contract: 0 = OPEN, 1 = DRAWING, 2 = DONE.
 // We use the DONE flag (rather than `currentRoundIndex` advancing) as the
 // signal that a draw has completed, because nothing in the protocol
 // guarantees that index advancement is co-temporal with the draw — it can
