@@ -14,7 +14,7 @@ export type LifetimeSnapshot = {
 // Single chain-snapshot of the EUR-minor lifetime counters plus the running
 // max single-win figure. The central event provider invalidates the
 // `lgo:lifetime` query-key prefix on LGOEntry / PlayerCredited /
-// PlayerPaidDirect plus the LifetimeWageredUpdated / LifetimeWonUpdated /
+// PlayerPaidDirect plus the LifetimeEnteredUpdated / LifetimeWonUpdated /
 // LargestSingleWinUpdated / LifetimeClaimedUpdated bumps emitted from the
 // EUR backfill path.
 export default function useLifetimeSnapshot(address: Address) {

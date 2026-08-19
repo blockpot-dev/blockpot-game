@@ -5,7 +5,7 @@ import { ZERO_ADDRESS } from '@/web3/constants'
 import useDrawRead from '../read/useDrawRead'
 
 // Derives the funds-manager address for the selected game directly from the
-// lottery contract (`lottery.fundsManager()`) rather than the static
+// draw contract (`draw.fundsManager()`) rather than the static
 // CHAINS_CONFIG-synced address. This keeps the Transparency panel correct even
 // when the synced `fundsManager` key is missing (see task 102).
 export default function useFundsManagerAddress() {

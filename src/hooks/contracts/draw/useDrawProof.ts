@@ -10,7 +10,7 @@ import useDrawRead from '../read/useDrawRead'
 
 // Builds the provable-fairness view model for a completed round: reads the VRF
 // inputs from the DrawRandomNumberProvider (whose address is derived
-// on-chain via lottery.randomNumberProvider(), never static config), reproduces
+// on-chain via draw.randomNumberProvider(), never static config), reproduces
 // the draw client-side, and cross-checks it against the on-chain drawn numbers.
 // getRandomNumberGeneratorInputsForGameAndRound reverts RequestNotFound until
 // the round's VRF request is fulfilled — that revert maps to 'unavailable'.

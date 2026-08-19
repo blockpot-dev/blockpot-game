@@ -16,7 +16,7 @@ export type ActivePolicy = {
 // Reads the currently-active KYCPolicy from the registry. `tiers[0]` is the
 // T0 catch-all (zero requiredGates, empty bitmap). Gates are shared per tier;
 // only the cap amounts split by direction: `inflowCapEurMinor` bounds gross
-// cumulative wagers (gated on-chain in LGO.enter/enterWeth) and
+// cumulative entries (gated on-chain in LGO.enter/enterWeth) and
 // `outflowCapEurMinor` bounds gross cumulative claims (withdrawals + the paid
 // slice of direct-pays). Both caps are strictly increasing per field across
 // tiers; the top tier carries `type(uint256).max` on both, meaning unlimited.
