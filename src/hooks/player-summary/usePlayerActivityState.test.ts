@@ -105,7 +105,7 @@ describe('usePlayerActivityState — directional flow derivation', () => {
     })
 
     it('derives the asymmetric T0 inflow and outflow flows independently', () => {
-        // T0 caps: €900 in / €500 out. With €300 wagered and €100 claimed the
+        // T0 caps: €900 in / €500 out. With €300 entered and €100 claimed the
         // two sides scale against their own caps, not a shared one.
         withDefaults({ snapshot: { enteredEurMinor: 300_00n, claimedEurMinor: 100_00n } })
 

@@ -24,7 +24,7 @@ const UINT256_MAX = (1n << 256n) - 1n
 
 // Mirrors the seeded gaming-service KYCPolicy after task 94: gates are
 // shared per tier; only the cap amounts split by direction. Each tier
-// carries a gross cumulative inflow cap (wagers, gated on entry) and a
+// carries a gross cumulative inflow cap (entries, gated on entry) and a
 // gross cumulative outflow cap (claims, gated on exit). The top tier sits
 // at the unlimited sentinel on both fields.
 const FOUR_TIER_POLICY: TierPolicy[] = [

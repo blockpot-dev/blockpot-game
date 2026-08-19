@@ -23,16 +23,16 @@ function flow(used: number, cap: number) {
     }
 }
 
-function state(opts: { wagered?: number, claimed?: number }): PlayerActivityState {
-    const wagered = opts.wagered ?? 0
+function state(opts: { entered?: number, claimed?: number }): PlayerActivityState {
+    const entered = opts.entered ?? 0
     const claimed = opts.claimed ?? 0
     return {
         currentTier: 'T0',
-        cumEnteredEurMinor: wagered,
+        cumEnteredEurMinor: entered,
         cumWonEurMinor: 0,
         cumClaimsEurMinor: claimed,
         largestSingleWinEurMinor: 0,
-        inflow: flow(wagered, T0_INFLOW_CAP),
+        inflow: flow(entered, T0_INFLOW_CAP),
         outflow: flow(claimed, T0_OUTFLOW_CAP),
         nextTier: {
             tier: 'T1',
@@ -47,13 +47,13 @@ function state(opts: { wagered?: number, claimed?: number }): PlayerActivityStat
 const noop = () => { /* storybook */ }
 
 export const NotYet: Story = {
-    args: { state: state({ wagered: 200_00, claimed: 100_00 }), onVerify: noop },
+    args: { state: state({ entered: 200_00, claimed: 100_00 }), onVerify: noop },
 }
 export const InflowEightyPercent: Story = {
-    args: { state: state({ wagered: 720_00 }), onVerify: noop },
+    args: { state: state({ entered: 720_00 }), onVerify: noop },
 }
 export const InflowNinetyFivePercent: Story = {
-    args: { state: state({ wagered: 860_00 }), onVerify: noop },
+    args: { state: state({ entered: 860_00 }), onVerify: noop },
 }
 export const OutflowEightyPercent: Story = {
     args: { state: state({ claimed: 400_00 }), onVerify: noop },
@@ -64,5 +64,5 @@ export const OutflowNinetyFivePercent: Story = {
 // Both directions past warn — renders one banner per direction so the player
 // sees a distinct "keep playing" prompt and a "keep claiming" prompt.
 export const BothDirectionsWarn: Story = {
-    args: { state: state({ wagered: 720_00, claimed: 400_00 }), onVerify: noop },
+    args: { state: state({ entered: 720_00, claimed: 400_00 }), onVerify: noop },
 }

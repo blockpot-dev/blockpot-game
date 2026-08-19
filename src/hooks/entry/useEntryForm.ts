@@ -69,7 +69,7 @@ export type PayoutInWETHConfig = {
 export function useEntryForm() {
     const chainId = useChainId()
     const [entries, setEntries] = useState<EntryAmount>({ type: 'fixed', amount: 1 })
-    const lottery = useDraw()
+    const draw = useDraw()
     const { selectedGame } = useSelectedGame()
     const nativeToken = useNativeCurrency()
 
@@ -114,7 +114,7 @@ export function useEntryForm() {
     const pretxReason = pretxBlocked ? pretxReasonCopy(pretxDecision.requiredAction) : undefined
     const lossLimitBreached = pretxBlocked && pretxDecision.requiredAction === 'LIMIT_EXCEEDED'
     const complianceReason = address && !isCompliant
-        ? 'Complete your KYC profile to enter this lottery.'
+        ? 'Complete your KYC profile to enter this draw.'
         : undefined
 
     // After task 94 the entry path is hard-gated on-chain again:
@@ -159,7 +159,7 @@ export function useEntryForm() {
             ? pendingReferral.code
             : undefined
         const ok = await enterDrawAction.enter({
-            roundIndex: Number(lottery.roundIndex),
+            roundIndex: Number(draw.roundIndex),
             amount: Number(entriesRawValue),
             payoutInWeth: payoutInWETH,
             useWeth: useWETH,
@@ -204,7 +204,7 @@ export function useEntryForm() {
         cfBasisPoints: CF_BASIS_POINTS,
         ofBasisPoints: operatorFeeBps,
         basisPointsDivisor: BASIS_POINTS_DIVISOR,
-        gameConfig: lottery.gameConfig,
+        gameConfig: draw.gameConfig,
         selectedGame,
 
         error,
