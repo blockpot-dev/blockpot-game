@@ -20,8 +20,8 @@ export type CurrentRoundProps = {
 };
 
 export default function CurrentRound(props: CurrentRoundProps) {
-    const lottery = useDraw()
-    const { currentRound, timeBetweenRounds } = lottery
+    const draw = useDraw()
+    const { currentRound, timeBetweenRounds } = draw
     const nextDrawTime = currentRound.drawTime
 
     return <VStack className='p-6 gap-12 min-h-[720px]'>
