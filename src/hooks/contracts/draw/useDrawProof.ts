@@ -7,6 +7,7 @@ import useAvailablePublicClient from '@/hooks/web3/useAvailablePublicClient'
 import { reproduceDrawnNumbers } from '@/utilities/draw/reproduceDrawnNumbers'
 import { DrawProof } from '@/types/draw/drawProof'
 import useDrawRead from '../read/useDrawRead'
+import { GameType } from '@/providers/SelectedGameProvider'
 
 // Builds the provable-fairness view model for a completed round: reads the VRF
 // inputs from the DrawRandomNumberProvider (whose address is derived
@@ -14,10 +15,10 @@ import useDrawRead from '../read/useDrawRead'
 // the draw client-side, and cross-checks it against the on-chain drawn numbers.
 // getRandomNumberGeneratorInputsForGameAndRound reverts RequestNotFound until
 // the round's VRF request is fulfilled — that revert maps to 'unavailable'.
-export default function useDrawProof(roundIndex: number) {
+export default function useDrawProof(selectedGame: GameType, roundIndex: number) {
     const chainId = useChainId()
     const publicClient = useAvailablePublicClient()
-    const { game, selectedGame, gameContractName } = useDrawRead()
+    const { game, gameContractName } = useDrawRead(selectedGame)
 
     const { data, isLoading } = useQuery({
         queryKey: ['drawProof', selectedGame, chainId, roundIndex],

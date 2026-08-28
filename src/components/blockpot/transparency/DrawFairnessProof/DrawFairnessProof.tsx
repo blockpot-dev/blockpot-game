@@ -5,6 +5,7 @@ import VStack from '@/components/core/VStack/VStack'
 import HStack from '@/components/core/HStack/HStack'
 import useDrawProof from '@/hooks/contracts/draw/useDrawProof'
 import { DrawProof, DrawProofStatus } from '@/types/draw/drawProof'
+import { GameType } from '@/providers/SelectedGameProvider'
 
 const CHAINLINK_VRF_DOCS_URL = 'https://docs.chain.link/vrf'
 
@@ -148,12 +149,13 @@ export function _DrawFairnessProof(props: _DrawFairnessProofProps) {
 }
 
 export type DrawFairnessProofProps = {
+    game: GameType
     roundIndex: number
 }
 
 export default function DrawFairnessProof(props: DrawFairnessProofProps) {
-    const { roundIndex } = props
-    const { drawProof, isLoading } = useDrawProof(roundIndex)
+    const { game, roundIndex } = props
+    const { drawProof, isLoading } = useDrawProof(game, roundIndex)
 
     if (isLoading || !drawProof) {
         return (
