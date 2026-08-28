@@ -165,9 +165,9 @@ function Play() {
                             />
                             :
                             isConnected ?
-                                <VStack className='gap-3'>
-                                    <ReferralBanner />
+                                <VStack className='gap-3 self-stretch'>
                                     <EntryPanel
+                                        referral={<ReferralBanner />}
                                         status={purchasingStatus}
                                         enter={enter}
                                         selectedEntries={{

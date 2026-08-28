@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import { ChevronDown } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import useReferralBinding from '@/hooks/referral/useReferralBinding'
 import usePendingReferralCode from '@/hooks/referral/usePendingReferralCode'
 import useReferralCodeCheck, { ReferralCodeStatus } from '@/hooks/referral/useReferralCodeCheck'
@@ -11,53 +14,74 @@ export type ReferralBannerViewProps = {
     code: string
     onCodeChange: (value: string) => void
     checkStatus: ReferralCodeStatus
+    /** Start expanded (defaults to true when a code is already present, e.g. from `?ref=`). */
+    defaultOpen?: boolean
 }
 
-/** Props-driven view (storybook target). */
-export function ReferralBannerView({ referrer, code, onCodeChange, checkStatus }: ReferralBannerViewProps) {
+/**
+ * Props-driven view (storybook target). Renders as a one-line disclosure that sits
+ * directly above the Register button; the input only appears once the player opts in.
+ */
+export function ReferralBannerView({ referrer, code, onCodeChange, checkStatus, defaultOpen }: ReferralBannerViewProps) {
+    const [open, setOpen] = useState(defaultOpen ?? code.length > 0)
+
     if (referrer) {
         return (
-            <div className="rounded-md border border-border bg-muted/40 px-3 py-2 text-sm">
-                Referred by <span className="font-mono">{shorten(referrer)}</span> — your entries
+            <p className='text-xs text-secondary-foreground leading-snug'>
+                Referred by <span className='font-mono text-foreground'>{shorten(referrer)}</span> — your entries
                 support your referrer at no cost to you or the prize pool.
-            </div>
+            </p>
         )
     }
 
     return (
-        <div className="space-y-1 rounded-md border border-border px-3 py-2">
-            <label htmlFor="referral-code" className="text-sm font-medium">
-                Referral code <span className="text-muted-foreground">(optional)</span>
-            </label>
-            <input
-                id="referral-code"
-                className="w-full rounded border border-border bg-transparent px-2 py-1 font-mono text-sm"
-                placeholder="CRYPTOJOE"
-                value={code}
-                onChange={(e) => onCodeChange(e.target.value)}
-            />
-            {checkStatus === 'valid' && (
-                <p className="text-xs text-muted-foreground">
-                    Your entries will support <span className="font-mono">{code.toUpperCase()}</span> —
-                    paid from the operator fee, never the prize pool.
-                </p>
-            )}
-            {(checkStatus === 'invalid' || checkStatus === 'inactive') && (
-                <p className="text-xs text-amber-600">
-                    This code doesn&apos;t match an active referrer right now. Entries still go
-                    through — the code is simply ignored on-chain.
-                </p>
+        <div className='flex flex-col gap-2'>
+            <button
+                type='button'
+                onClick={() => setOpen(v => !v)}
+                aria-expanded={open}
+                aria-controls='referral-code-field'
+                className='self-start inline-flex items-center gap-1 text-xs text-secondary-foreground hover:text-foreground underline-offset-2 hover:underline cursor-pointer'
+            >
+                Have a referral code?
+                <ChevronDown className={cn('size-3 transition-transform', open && 'rotate-180')} />
+            </button>
+            {open && (
+                <div id='referral-code-field' className='flex flex-col gap-1'>
+                    <input
+                        id='referral-code'
+                        aria-label='Referral code (optional)'
+                        className='w-full h-[41px] bg-background border border-border rounded-sm px-3 font-mono text-sm uppercase placeholder:normal-case placeholder:text-secondary-foreground/60 focus:outline-none focus:border-foreground/40'
+                        placeholder='Referral code'
+                        autoComplete='off'
+                        spellCheck={false}
+                        value={code}
+                        onChange={(e) => onCodeChange(e.target.value)}
+                    />
+                    {checkStatus === 'valid' && (
+                        <p className='text-xs text-secondary-foreground leading-snug'>
+                            Your entries will support <span className='font-mono text-foreground'>{code.toUpperCase()}</span> —
+                            paid from the operator fee, never the prize pool.
+                        </p>
+                    )}
+                    {(checkStatus === 'invalid' || checkStatus === 'inactive') && (
+                        <p className='text-xs text-amber-500 leading-snug'>
+                            This code doesn&apos;t match an active referrer right now. Entries still go
+                            through — the code is simply ignored on-chain.
+                        </p>
+                    )}
+                </div>
             )}
         </div>
     )
 }
 
 /**
- * Referral attribution surface on the play page. Before a wallet is bound it offers the
- * code field (pre-filled from `?ref=` deep links); once the first attributed entry lands,
- * the immutable on-chain binding takes over and only the attribution notice remains.
- * All copy is fail-soft: a bad code warns, but never blocks an entry — mirroring the
- * contract's behavior.
+ * Referral attribution surface in the entry panel. Before a wallet is bound it offers the
+ * code field behind a disclosure (auto-open when pre-filled from `?ref=` deep links); once
+ * the first attributed entry lands, the immutable on-chain binding takes over and only the
+ * attribution notice remains. All copy is fail-soft: a bad code warns, but never blocks an
+ * entry — mirroring the contract's behavior.
  */
 export default function ReferralBanner() {
     const { configured, referrer } = useReferralBinding()

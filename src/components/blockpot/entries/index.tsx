@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import { AlertCircle } from 'lucide-react'
 import EntryOptions, { EntryOptionsProps } from './EntryOptions/EntryOptions'
 import EntrySummary, { EntrySummaryProps } from './EntrySummary/EntrySummary'
@@ -15,18 +16,20 @@ export type EntryPanelProps = {
     error?: string
     registration?: RegistrationMode
     lossLimitBreached?: boolean
+    /** Optional referral-code disclosure rendered directly above the entry button. */
+    referral?: ReactNode
 } & EntryOptionsProps & EntrySummaryProps;
 
 export default function EntryPanel(props: EntryPanelProps) {
-    const { status, enter, canEnter, disabledReason, error, registration, lossLimitBreached } = props
+    const { status, enter, canEnter, disabledReason, error, registration, lossLimitBreached, referral } = props
     const needsRegistration = !!registration
     const dimmed = needsRegistration ? 'opacity-50 pointer-events-none select-none' : ''
     const showErrorBanner = !needsRegistration && !!error && !lossLimitBreached
     const showLossLimitBanner = !needsRegistration && !!lossLimitBreached
 
     return (
-        <Container containerClassName='w-[300px]' className='p-6'>
-            <VStack className='gap-8'>
+        <Container containerClassName='w-[300px] flex-1 flex flex-col' className='p-6 flex-1 flex flex-col'>
+            <VStack className='gap-8 flex-1'>
                 <div className={dimmed} aria-disabled={needsRegistration}>
                     <EntryOptions
                         selectedEntries={props.selectedEntries}
@@ -58,6 +61,9 @@ export default function EntryPanel(props: EntryPanelProps) {
                             <span className='text-xs leading-snug'>{error}</span>
                         </div>
                     )}
+                    {referral}
+                </VStack>
+                <div className='mt-auto'>
                     <EntryButton
                         enter={enter}
                         status={status}
@@ -65,7 +71,7 @@ export default function EntryPanel(props: EntryPanelProps) {
                         disabledReason={disabledReason}
                         registration={registration}
                     />
-                </VStack>
+                </div>
             </VStack>
         </Container>
     )

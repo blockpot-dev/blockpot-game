@@ -43,6 +43,8 @@ describe('ReferralBanner', () => {
     it('lets an unbound player type a code', () => {
         pendingState.code = ''
         render(<ReferralBanner />)
+        expect(screen.queryByLabelText(/referral code/i)).toBeNull()
+        fireEvent.click(screen.getByRole('button', { name: /have a referral code/i }))
         const input = screen.getByLabelText(/referral code/i)
         fireEvent.change(input, { target: { value: 'CRYPTOJOE' } })
         expect(pendingState.setCode).toHaveBeenCalledWith('CRYPTOJOE')

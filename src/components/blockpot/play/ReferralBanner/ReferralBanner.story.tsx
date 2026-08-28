@@ -5,7 +5,7 @@ const meta: Meta<typeof ReferralBannerView> = {
     component: ReferralBannerView,
     decorators: [
         (Story) => (
-            <div style={{ maxWidth: 420 }}>
+            <div style={{ width: 252 }}>
                 <Story />
             </div>
         ),
@@ -18,8 +18,13 @@ type Story = StoryObj<typeof ReferralBannerView>
 
 const noop = () => undefined
 
+/** Collapsed disclosure — the default state above the Register button. */
 export const Unbound: Story = {
     args: { referrer: null, code: '', onCodeChange: noop, checkStatus: 'idle' },
+}
+
+export const UnboundExpanded: Story = {
+    args: { referrer: null, code: '', onCodeChange: noop, checkStatus: 'idle', defaultOpen: true },
 }
 
 export const ValidCode: Story = {
