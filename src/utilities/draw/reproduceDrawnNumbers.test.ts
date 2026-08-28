@@ -1,59 +1,66 @@
-import { describe, expect, it } from 'vitest'
-import { reproduceDrawnNumbers } from './reproduceDrawnNumbers'
+import { describe, expect, it, vi } from 'vitest'
+import vectors from './__fixtures__/draw-vectors.json'
+import { reproduceDrawnNumbers, uniformBelow } from './reproduceDrawnNumbers'
 
-// Ground-truth fixtures computed by the Solidity implementation itself:
-// a Foundry harness exposing DrawRandomNumberProvider._drawNumbers
-// (unipot-contracts) was run over these inputs and its outputs captured here.
-// The util must reproduce them byte-exactly, including the rejection-sampling
-// loop's retry-counter behaviour (double increment on a used-number collision).
-const fixtures = [
-    {
-        name: 'fixtureA: 5 numbers in [0, 99]',
-        seed: 0x1111111111111111111111111111111111111111111111111111111111112222n,
-        maxNumber: 99,
-        totalNumbers: 5,
-        expectedNumbers: [62, 37, 75, 74, 92]
-    },
-    {
-        name: 'fixtureB: 8 numbers in [0, 9] (collision-heavy)',
-        seed: 0xabcdefn,
-        maxNumber: 9,
-        totalNumbers: 8,
-        expectedNumbers: [4, 0, 9, 3, 1, 5, 6, 7]
-    },
-    {
-        name: 'fixtureC: 3 numbers in [0, 48]',
-        seed: 0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefn,
-        maxNumber: 48,
-        totalNumbers: 3,
-        expectedNumbers: [43, 17, 26]
-    }
-]
-
+// Ground-truth vectors emitted by the Solidity implementation itself:
+// `unipot-contracts/script/GenerateDrawVectors.s.sol` runs the production
+// `DrawRandomNumberProvider._drawNumbers` (partial Fisher-Yates + `_uniformBelow`)
+// through `test/harness/DrawNumbersHarness.sol` with the real keccak NumberGenerator.
+// Regenerate with `CONTRACT_COMMIT=$(git rev-parse HEAD) forge script script/GenerateDrawVectors.s.sol`
+// and copy `out/draw-vectors.json` here verbatim. The `contractCommit` field records
+// the unipot-contracts commit the vectors were generated at.
 describe('reproduceDrawnNumbers', () => {
-    for (const fixture of fixtures) {
-        it(`reproduces the on-chain draw for ${fixture.name}`, () => {
+    it('carries provenance', () => {
+        expect(vectors.generator).toBe('unipot-contracts/script/GenerateDrawVectors.s.sol')
+        expect(vectors.contractCommit).toMatch(/^[0-9a-f]{40}$/)
+    })
+
+    for (const v of vectors.vectors) {
+        it(`reproduces the on-chain draw for ${v.name}`, () => {
             const numbers = reproduceDrawnNumbers({
                 requestId: 1n,
-                seed: fixture.seed,
-                maxNumber: fixture.maxNumber,
-                totalNumbers: fixture.totalNumbers
+                seed: BigInt(v.seed),
+                maxNumber: v.maxNumber,
+                totalNumbers: v.totalNumbers
             })
-            expect(numbers).toEqual(fixture.expectedNumbers)
+            expect(numbers).toEqual(v.expected)
         })
     }
 
-    it('returns unique numbers within [0, maxNumber]', () => {
-        const numbers = reproduceDrawnNumbers({
-            requestId: 1n,
-            seed: 0xabcdefn,
-            maxNumber: 9,
-            totalNumbers: 8
-        })
+    it('returns distinct numbers within [0, maxNumber]', () => {
+        const numbers = reproduceDrawnNumbers({ requestId: 1n, seed: 0xabcdefn, maxNumber: 9, totalNumbers: 8 })
         expect(new Set(numbers).size).toBe(8)
         for (const n of numbers) {
             expect(n).toBeGreaterThanOrEqual(0)
             expect(n).toBeLessThanOrEqual(9)
         }
+    })
+})
+
+describe('uniformBelow', () => {
+    it('short-circuits to 0 when range is 1', () => {
+        expect(uniformBelow(123n, 0, 1n)).toBe(0)
+    })
+
+    it('rejects a word in the bottom residue and accepts the next attempt', async () => {
+        // The rejection branch is unreachable with real keccak output (P ≈ 2^-208), so stub the
+        // hash: attempt 0 yields a word below rejectBelow, attempt 1 yields an accepted word.
+        vi.resetModules()
+        const range = 7n
+        const rejectBelow = ((2n ** 256n - 1n) % range + 1n) % range // == 2^256 % range == 2
+        expect(rejectBelow).toBe(2n)
+        const words = [rejectBelow - 1n, rejectBelow + 4n] // 1 → rejected; 6 → accepted, 6 % 7 == 6
+        let call = 0
+        vi.doMock('viem', async () => {
+            const actual = await vi.importActual<typeof import('viem')>('viem')
+            return {
+                ...actual,
+                keccak256: () => `0x${words[call++]!.toString(16).padStart(64, '0')}` as `0x${string}`,
+            }
+        })
+        const { uniformBelow: stubbed } = await import('./reproduceDrawnNumbers')
+        expect(stubbed(1n, 0, range)).toBe(6)
+        expect(call).toBe(2)
+        vi.doUnmock('viem')
     })
 })

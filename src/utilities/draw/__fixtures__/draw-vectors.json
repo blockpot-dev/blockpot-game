@@ -1,0 +1,66 @@
+{
+    "contractCommit": "8e3edec893da1624c70c32ff0b3ba05e49a0881f",
+    "generator": "unipot-contracts/script/GenerateDrawVectors.s.sol",
+    "vectors": [
+        {
+            "expected": [
+                2,
+                0,
+                4,
+                3,
+                1
+            ],
+            "maxNumber": 4,
+            "name": "full-permutation",
+            "seed": "0x1111111111111111111111111111111111111111111111111111111111112222",
+            "totalNumbers": 5
+        },
+        {
+            "expected": [
+                43,
+                18,
+                45
+            ],
+            "maxNumber": 48,
+            "name": "typical",
+            "seed": "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+            "totalNumbers": 3
+        },
+        {
+            "expected": [
+                193562108942744,
+                211750505443030,
+                189789510055523,
+                243762857427224,
+                96539390408543,
+                114659641669497
+            ],
+            "maxNumber": 281474976710655,
+            "name": "large-space",
+            "seed": "0x0000000000000000000000000000000000000000000000000000000000abcdef",
+            "totalNumbers": 6
+        },
+        {
+            "expected": [
+                0
+            ],
+            "maxNumber": 0,
+            "name": "range-one",
+            "seed": "0x0000000000000000000000000000000000000000000000000000000000000042",
+            "totalNumbers": 1
+        },
+        {
+            "expected": [
+                4,
+                0,
+                1,
+                2,
+                3
+            ],
+            "maxNumber": 4,
+            "name": "swap-chain",
+            "seed": "0x0000000000000000000000000000000000000000000000000000000000000010",
+            "totalNumbers": 5
+        }
+    ]
+}
