@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { _DrawFairnessProof } from './DrawFairnessProof'
 import { DrawProof } from '@/types/draw/drawProof'
+import { DRAW_ALGORITHM_LABEL } from '@/constants/draw'
 
 const SEED = 0x1111111111111111111111111111111111111111111111111111111111112222n
 const REQUEST_ID = 987654321n
@@ -72,5 +73,18 @@ describe('<_DrawFairnessProof>', () => {
         render(<_DrawFairnessProof proof={proof()} />)
         const link = screen.getByRole('link', { name: /chainlink/i })
         expect(link).toHaveAttribute('href', expect.stringContaining('chain.link'))
+    })
+
+    it('exposes the derivation inputs: number space, numbers drawn, and algorithm', () => {
+        render(<_DrawFairnessProof proof={proof()} />)
+        expect(screen.getByTestId('number-space')).toHaveTextContent('0 – 99')
+        expect(screen.getByTestId('numbers-drawn')).toHaveTextContent('5')
+        expect(screen.getByTestId('algorithm')).toHaveTextContent(DRAW_ALGORITHM_LABEL)
+    })
+
+    it('hides the derivation rows while the proof is unavailable', () => {
+        render(<_DrawFairnessProof proof={proof({ status: 'unavailable', reproducedNumbers: [], onChainNumbers: [] })} />)
+        expect(screen.queryByTestId('number-space')).toBeNull()
+        expect(screen.queryByTestId('algorithm')).toBeNull()
     })
 })

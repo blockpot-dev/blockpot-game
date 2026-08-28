@@ -6,6 +6,7 @@ import HStack from '@/components/core/HStack/HStack'
 import useDrawProof from '@/hooks/contracts/draw/useDrawProof'
 import { DrawProof, DrawProofStatus } from '@/types/draw/drawProof'
 import { GameType } from '@/providers/SelectedGameProvider'
+import { DRAW_ALGORITHM_LABEL } from '@/constants/draw'
 
 const CHAINLINK_VRF_DOCS_URL = 'https://docs.chain.link/vrf'
 
@@ -60,6 +61,16 @@ function NumberRow(props: { label: string; numbers: readonly number[]; testId: s
     )
 }
 
+function ValueRow(props: { label: string; value: string; testId: string }) {
+    const { label, value, testId } = props
+    return (
+        <HStack className='justify-between'>
+            <span className='text-sm text-secondary-foreground'>{label}</span>
+            <span className='text-sm font-mono' data-testid={testId}>{value}</span>
+        </HStack>
+    )
+}
+
 export type _DrawFairnessProofProps = {
     proof: DrawProof
 }
@@ -99,6 +110,22 @@ export function _DrawFairnessProof(props: _DrawFairnessProofProps) {
                         <div className='border-t border-border' />
 
                         <VStack className='gap-2'>
+                            <ValueRow
+                                label='Number space'
+                                value={`0 – ${proof.inputs.maxNumber}`}
+                                testId='number-space'
+                            />
+                            <ValueRow
+                                label='Numbers drawn'
+                                value={String(proof.inputs.totalNumbers)}
+                                testId='numbers-drawn'
+                            />
+                            <ValueRow label='Algorithm' value={DRAW_ALGORITHM_LABEL} testId='algorithm' />
+                        </VStack>
+
+                        <div className='border-t border-border' />
+
+                        <VStack className='gap-2'>
                             <NumberRow
                                 label='Recomputed from seed'
                                 numbers={proof.reproducedNumbers}
@@ -126,12 +153,17 @@ export function _DrawFairnessProof(props: _DrawFairnessProofProps) {
                     <span className='text-sm font-medium text-foreground'>Verify it yourself</span>
                     <p className='text-xs text-muted-foreground'>
                         Each draw&apos;s numbers are derived deterministically from a Chainlink VRF
-                        random word: your browser recomputes them from the seed above
-                        (keccak256 rejection sampling) and compares them with the on-chain draw.
-                        To independently verify the seed itself, look up the VRF request ID on the
-                        random-number provider contract and confirm the fulfillment transaction —
-                        the VRF coordinator verifies the cryptographic proof on-chain before the
-                        seed is accepted, as documented by Chainlink.
+                        random word by a partial Fisher-Yates shuffle over the number space
+                        0 – maxNumber. For each step <span className='font-mono'>i</span>, the index to
+                        swap is <span className='font-mono'>i + (keccak256(abi.encode(seed, i, attempt)) mod (maxNumber + 1 − i))</span>,
+                        where hash words below <span className='font-mono'>2²⁵⁶ mod range</span> are
+                        rejected and <span className='font-mono'>attempt</span> increments, so every
+                        index is drawn with exactly zero modulo bias. Your browser recomputes the shuffle
+                        from the seed above and compares it with the on-chain draw. To independently
+                        verify the seed itself, look up the VRF request ID on the random-number provider
+                        contract and confirm the fulfillment transaction — the VRF coordinator verifies
+                        the cryptographic proof on-chain before the seed is accepted, as documented by
+                        Chainlink.
                     </p>
                     <a
                         href={CHAINLINK_VRF_DOCS_URL}

@@ -1,4 +1,4 @@
-import { KeyboardEvent, useEffect, useState } from 'react'
+import { KeyboardEvent, ReactNode, useEffect, useState } from 'react'
 import { useSearch } from '@tanstack/react-router'
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import { Button } from '@blockpot-dev/blockpot-design-system'
@@ -15,6 +15,8 @@ export type DrawFairnessSectionPureProps = {
     roundIndex: number
     latestRoundIndex: number
     onRoundChange: (roundIndex: number) => void
+    /** The proof panel for (game, roundIndex); injected so the controls can be rendered without chain hooks. */
+    children: ReactNode
 }
 
 function clampRound(value: number, latestRoundIndex: number): number {
@@ -23,7 +25,7 @@ function clampRound(value: number, latestRoundIndex: number): number {
 
 /** Props-driven view (storybook + test target): game toggle, ◀ [round] ▶ stepper, Latest shortcut. */
 export function DrawFairnessSectionPure(props: DrawFairnessSectionPureProps) {
-    const { game, onGameChange, roundIndex, latestRoundIndex, onRoundChange } = props
+    const { game, onGameChange, roundIndex, latestRoundIndex, onRoundChange, children } = props
     const [draft, setDraft] = useState(String(roundIndex))
 
     useEffect(() => {
@@ -104,7 +106,7 @@ export function DrawFairnessSectionPure(props: DrawFairnessSectionPureProps) {
                     </Button>
                 </HStack>
             </HStack>
-            <DrawFairnessProof game={game} roundIndex={roundIndex} />
+            {children}
         </VStack>
     )
 }
@@ -144,6 +146,8 @@ export default function DrawFairnessSection() {
             roundIndex={roundIndex}
             latestRoundIndex={latestRoundIndex}
             onRoundChange={setSelectedRound}
-        />
+        >
+            <DrawFairnessProof game={game} roundIndex={roundIndex} />
+        </DrawFairnessSectionPure>
     )
 }
