@@ -93,7 +93,7 @@ export function _DrawSummaryDialog(props: _DrawSummaryDialogProps) {
                         <ShareIcon size={24} />
                         <span>Share</span>
                     </Button>
-                    <Link to='/transparency' search={{ round: proofRoundIndex }} className='flex-1' onClick={onClose}>
+                    <Link to='/transparency' search={{ game: gameType, round: proofRoundIndex }} className='flex-1' onClick={onClose}>
                         <Button variant='outline' className='w-full'>
                             <ShieldCheckIcon size={24} />
                             <span>Fairness proof</span>
