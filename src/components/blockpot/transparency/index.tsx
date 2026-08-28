@@ -59,8 +59,8 @@ function DrawFairnessSection() {
 
 export default function Transparency() {
     return (
-        <div className='@container w-full h-full'>
-            <div className='@min-xs:max-w-[1348px] mx-auto mt-8 mb-auto'>
+        <div className='@container w-full flex-1 pb-8'>
+            <div className='@min-xs:max-w-[1348px] mx-auto mt-8'>
                 <VStack className='gap-8 p-6'>
                     <h1 className='heading-4xl text-foreground'>Transparency</h1>
 
