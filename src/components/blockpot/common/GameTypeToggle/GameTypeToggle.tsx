@@ -12,12 +12,12 @@ export type GameTypeToggleProps = {
 export default function GameTypeToggle({ value, onChange, className }: GameTypeToggleProps) {
     return (
         <div className={cn('flex flex-row gap-8 h-10', className)} role='tablist' aria-label='Game'>
-            <div role='tab' aria-selected={value === 'main'} className='h-full'>
-                <GameTypeItem isSelected={value === 'main'} onClick={() => onChange('main')}>Main Game</GameTypeItem>
-            </div>
-            <div role='tab' aria-selected={value === 'quick'} className='h-full'>
-                <GameTypeItem isSelected={value === 'quick'} onClick={() => onChange('quick')}>Quick Game</GameTypeItem>
-            </div>
+            <button type='button' role='tab' aria-selected={value === 'main'} className='h-full cursor-pointer' onClick={() => onChange('main')}>
+                <GameTypeItem isSelected={value === 'main'}>Main Game</GameTypeItem>
+            </button>
+            <button type='button' role='tab' aria-selected={value === 'quick'} className='h-full cursor-pointer' onClick={() => onChange('quick')}>
+                <GameTypeItem isSelected={value === 'quick'}>Quick Game</GameTypeItem>
+            </button>
         </div>
     )
 }
