@@ -35,7 +35,7 @@ export const DisabledAccountUnderReview: Story = {
 export const DisabledAccountClosed: Story = {
     args: {
         canEnter: false,
-        disabledReason: 'This account has been closed. Contact support if you believe this is an error.',
+        disabledReason: 'This account has been closed. If you believe this is an error, contact support.',
     },
 }
 

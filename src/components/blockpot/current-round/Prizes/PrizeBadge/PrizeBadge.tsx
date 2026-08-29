@@ -6,11 +6,11 @@ function ordinalToText(ordinal: number) {
     case 1:
         return 'Top prize'
     case 2:
-        return '2nd'
+        return '2nd prize'
     case 3:
-        return '3rd'
+        return '3rd prize'
     default:
-        return '+ More'
+        return 'Other prizes'
     }
 }
 

@@ -75,7 +75,7 @@ export default function ClaimDecisionView({ decision, onClose, onVerify, onRetry
         // Sybil clustering verdict — same neutrality rule as sanctions.
         return (
             <InfoBanner tone='block'>
-                We&apos;re unable to process this transaction; our compliance team will review.
+                We&apos;re unable to process this claim; our compliance team will review.
             </InfoBanner>
         )
     }
@@ -86,11 +86,11 @@ export default function ClaimDecisionView({ decision, onClose, onVerify, onRetry
                 tone='info'
                 action={
                     <Button size='sm' variant='default' onClick={onRetry}>
-                        Retry
+                        Retry claim
                     </Button>
                 }
             >
-                Pricing temporarily unavailable, please retry.
+                We can&apos;t confirm the amount right now.
             </InfoBanner>
         )
     }
@@ -112,7 +112,14 @@ export default function ClaimDecisionView({ decision, onClose, onVerify, onRetry
     }
 
     return (
-        <InfoBanner tone='warn'>
+        <InfoBanner
+            tone='warn'
+            action={
+                <Button size='sm' variant='default' onClick={onRetry}>
+                    Retry claim
+                </Button>
+            }
+        >
             We could not process this claim right now. Please try again shortly.
         </InfoBanner>
     )

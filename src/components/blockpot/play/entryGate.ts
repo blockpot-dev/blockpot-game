@@ -12,6 +12,8 @@ export type EntryGate = {
     // Player-facing copy for a registry status that forbids entering.
     // Deliberately avoids internal vocabulary (suspended, closure, blocked).
     accessReason?: string
+    // True when the reason should be followed by a support link (SUPPORT_URL).
+    supportLink?: boolean
 }
 
 // BLO-734: `!isActive` alone cannot route to registration — SUSPENDED and
@@ -35,7 +37,8 @@ export function deriveEntryGate(inputs: EntryGateInputs): EntryGate {
     case PlayerStatus.BANNED:
         return {
             needsRegistration: false,
-            accessReason: 'This account has been closed. Contact support if you believe this is an error.',
+            accessReason: 'This account has been closed. If you believe this is an error, contact support.',
+            supportLink: true,
         }
     default:
         return { needsRegistration: false }

@@ -11,6 +11,7 @@ export type RegistrationMode = {
     isPending: boolean
     isFailed: boolean
     disabled: boolean
+    // Shown inline under the button when disabled or after a failure.
     disabledReason?: string
     // Optional overrides for labels. Used by the pre-deposit attestation
     // fallback to surface "ACCEPT TERMS" instead of "REGISTER TO ENTER".
@@ -23,11 +24,22 @@ export type EntryButtonProps = {
     status: InterfaceStatus
     canEnter: boolean
     disabledReason?: string
+    // Optional action rendered after the reason (e.g. a support link).
+    disabledReasonAction?: React.ReactNode
     registration?: RegistrationMode
 }
 
+function DisabledReason({ reason, action }: { reason: string, action?: React.ReactNode }) {
+    return (
+        <p role='status' className='mt-2 text-xs leading-snug text-secondary-foreground'>
+            {reason}
+            {action ? <> {action}</> : null}
+        </p>
+    )
+}
+
 export default function EntryButton(props: EntryButtonProps) {
-    const { status, enter, canEnter, disabledReason, registration } = props
+    const { status, enter, canEnter, disabledReason, disabledReasonAction, registration } = props
     const [showSuccess, setShowSuccess] = useState(false)
     const { start } = useTimeout(() => {
         setShowSuccess(false)
@@ -49,9 +61,9 @@ export default function EntryButton(props: EntryButtonProps) {
         let label: React.ReactNode = idleLabel
         if (isSigning) label = <><Loader2 className='mr-2 h-4 w-4 animate-spin' /><span>{signingLabel}</span></>
         else if (isPending) label = <><Loader2 className='mr-2 h-4 w-4 animate-spin' /><span>REGISTERING…</span></>
-        else if (isFailed) label = 'TRY AGAIN'
+        else if (isFailed) label = 'RETRY REGISTRATION'
 
-        const showReason = disabled && !busy && regReason
+        const showReason = (disabled || isFailed) && !busy && regReason
         return (
             <span className='block w-full' title={showReason ? regReason : undefined}>
                 <Button
@@ -62,6 +74,7 @@ export default function EntryButton(props: EntryButtonProps) {
                 >
                     {label}
                 </Button>
+                {showReason && <DisabledReason reason={regReason} />}
             </span>
         )
     }
@@ -85,6 +98,7 @@ export default function EntryButton(props: EntryButtonProps) {
                         )
                 }
             </Button>
+            {showReason && <DisabledReason reason={disabledReason} action={disabledReasonAction} />}
         </span>
     )
 }

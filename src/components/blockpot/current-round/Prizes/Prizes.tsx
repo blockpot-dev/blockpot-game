@@ -19,7 +19,7 @@ export function _Prizes(props: _PrizesProps) {
             <h2 className='heading-xl leading-[0.8]'>Prizes</h2>
             <button className='cursor-pointer relative' onClick={() => prizesOverviewDialogOpen.update(true)}>
                 <HStack className='items-center gap-0 text-gray-300 before:absolute before:-inset-1 before:-ml-2 before:rounded-md before:transition-colors before:duration-300 before:z-[-1] hover:before:bg-gray-800/50'>
-                    <span className='text-sm leading-[0.8]'>Overview</span>
+                    <span className='text-sm leading-[0.8]'>See all prizes</span>
                     <ChevronRightIcon className='size-6' />
                 </HStack>
             </button>

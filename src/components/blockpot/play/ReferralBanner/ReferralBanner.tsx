@@ -43,7 +43,7 @@ export function ReferralBannerView({ referrer, code, onCodeChange, checkStatus, 
                 aria-controls='referral-code-field'
                 className='self-start inline-flex items-center gap-1 text-xs text-secondary-foreground hover:text-foreground underline-offset-2 hover:underline cursor-pointer'
             >
-                Have a referral code?
+                Add a referral code
                 <ChevronDown className={cn('size-3 transition-transform', open && 'rotate-180')} />
             </button>
             {open && (
@@ -71,8 +71,7 @@ export function ReferralBannerView({ referrer, code, onCodeChange, checkStatus, 
                     )}
                     {(checkStatus === 'invalid' || checkStatus === 'inactive') && (
                         <p className='text-xs text-amber-500 leading-snug'>
-                            This code doesn&apos;t match an active referrer right now. Entries still go
-                            through — the code is simply ignored on-chain.
+                            This code isn&apos;t active. You can still enter — the code just won&apos;t be applied.
                         </p>
                     )}
                 </div>

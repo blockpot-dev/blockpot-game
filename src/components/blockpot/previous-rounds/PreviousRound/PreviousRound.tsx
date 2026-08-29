@@ -89,7 +89,7 @@ export function _PreviousRound(props: _PreviousRoundProps) {
                         <HStack className='justify-between text-sm text-secondary-foreground'>
                             <span>{formattedDate}</span>
                             <button className='gap-1 inline-flex items-center text-secondary-foreground hover:text-foreground hover:cursor-pointer' onClick={() => viewRoundSummary(round, gameType)}>
-                                View
+                                View results
                                 <ChevronRight size={20} className='translate-y-0.5' />
                             </button>
                         </HStack>

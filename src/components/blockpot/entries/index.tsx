@@ -13,6 +13,8 @@ export type EntryPanelProps = {
     status: InterfaceStatus
     canEnter: boolean
     disabledReason?: string
+    /** Optional action rendered after the disabled reason / error (e.g. a support link). */
+    disabledReasonAction?: ReactNode
     error?: string
     registration?: RegistrationMode
     lossLimitBreached?: boolean
@@ -21,7 +23,10 @@ export type EntryPanelProps = {
 } & EntryOptionsProps & EntrySummaryProps;
 
 export default function EntryPanel(props: EntryPanelProps) {
-    const { status, enter, canEnter, disabledReason, error, registration, lossLimitBreached, referral } = props
+    const { status, enter, canEnter, disabledReason, disabledReasonAction, error, registration, lossLimitBreached, referral } = props
+    // The error banner and the reason under the button would otherwise say the
+    // same thing twice.
+    const showButtonReason = !(error && error === disabledReason) || lossLimitBreached
     const needsRegistration = !!registration
     const dimmed = needsRegistration ? 'opacity-50 pointer-events-none select-none' : ''
     const showErrorBanner = !needsRegistration && !!error && !lossLimitBreached
@@ -58,7 +63,7 @@ export default function EntryPanel(props: EntryPanelProps) {
                             className='flex items-start gap-2 rounded-md border border-destructive/50 bg-destructive/15 text-destructive px-3 py-2'
                         >
                             <AlertCircle className='mt-0.5 size-4 shrink-0' />
-                            <span className='text-xs leading-snug'>{error}</span>
+                            <span className='text-xs leading-snug'>{error}{disabledReasonAction ? <> {disabledReasonAction}</> : null}</span>
                         </div>
                     )}
                     {referral}
@@ -68,7 +73,8 @@ export default function EntryPanel(props: EntryPanelProps) {
                         enter={enter}
                         status={status}
                         canEnter={canEnter}
-                        disabledReason={disabledReason}
+                        disabledReason={showButtonReason ? disabledReason : undefined}
+                        disabledReasonAction={showButtonReason ? disabledReasonAction : undefined}
                         registration={registration}
                     />
                 </div>

@@ -32,7 +32,7 @@ export default function RoundInfo(props: RoundInfoProps) {
                 }
                 forceFlex={isQuickGame}
                 imageUrl='/assets/pngs/number-badge.png'
-                imageAlt='Pot and Round Info'
+                imageAlt=''
             />
             {!isQuickGame && (
                 <RoundInfoStatContainer
@@ -40,7 +40,7 @@ export default function RoundInfo(props: RoundInfoProps) {
                         { label: TERM_TOP_PRIZE_ODDS, value: oddsFormatted, description: topPrizeOddsDescription(oddsFormatted) }
                     ]}
                     imageUrl='/assets/pngs/chance-badge.png'
-                    imageAlt='Odds'
+                    imageAlt=''
                 />
             )}
             <RoundInfoStatContainer
@@ -69,7 +69,7 @@ export default function RoundInfo(props: RoundInfoProps) {
                     }
                 ]}
                 imageUrl='/assets/pngs/tickets-badge.png'
-                imageAlt='Entries Info'
+                imageAlt=''
             />
         </HStack>
     )

@@ -32,6 +32,8 @@ export type AttestationModalProps = {
     tos: CurrentTos | undefined
     tosLoading: boolean
     tosError?: string
+    /** Retry loading the terms after `tosError`. */
+    onRetryTos?: () => void
     submitting?: boolean
     submitError?: string
     onConfirm: (value: AttestationFormValue) => void
@@ -93,6 +95,7 @@ export default function AttestationModal({
     tos,
     tosLoading,
     tosError,
+    onRetryTos,
     submitting = false,
     submitError,
     onConfirm,
@@ -239,7 +242,14 @@ export default function AttestationModal({
                                 </div>
                             )}
                             {!tosLoading && tosError && (
-                                <span className='text-destructive'>{tosError}</span>
+                                <div className='flex items-center gap-2'>
+                                    <span role='alert' className='text-destructive'>{tosError}</span>
+                                    {onRetryTos && (
+                                        <button type='button' onClick={onRetryTos} className='underline underline-offset-2 text-foreground cursor-pointer'>
+                                            Retry loading terms
+                                        </button>
+                                    )}
+                                </div>
                             )}
                             {!tosLoading && !tosError && tos && (
                                 <Markdown source={tos.bodyMarkdown} className='text-xs text-gray-300 font-body' />

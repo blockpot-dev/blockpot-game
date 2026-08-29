@@ -16,7 +16,7 @@ import { useBlockpotDraw } from '@/providers/BlockpotDrawProvider'
 import { useDrawSummaryDialogOpen, usePreviousRoundsPanelOpen } from '@/providers/ModalOpenStateProvider'
 import { formatEtherMaxDecimalsGreedy } from '@/utilities/formatters'
 import { Container } from '@blockpot-dev/blockpot-design-system'
-import { memo } from 'react'
+import { memo, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import PreviousRounds from '@/components/blockpot/previous-rounds'
 import PlayHeader from '@/components/blockpot/play/PlayHeader/PlayHeader'
@@ -31,6 +31,13 @@ import useCurrentTos from '@/hooks/tos/useCurrentTos'
 import { useCountry } from '@/providers/CountryProvider'
 import SelfExclusionRouteGate from '@/components/responsible-gaming/SelfExclusionRouteGate'
 import RealityCheckHost from '@/components/responsible-gaming/RealityCheckHost'
+import { SUPPORT_LINK_LABEL, SUPPORT_URL } from '@/constants/support'
+
+// BLO-752: raw register / ToS errors never reach the player.
+const REGISTRATION_FAILED_COPY = 'Registration didn\'t complete. Check your wallet and try again.'
+const TOS_LOAD_FAILED_COPY = 'We couldn\'t load the terms. Retry.'
+const REGISTRATION_UNAVAILABLE_COPY = 'Registration is unavailable right now.'
+const ENTRIES_NOT_OPEN_COPY = 'Entries are not open yet. Check back soon.'
 
 function createPrizes(pots: readonly bigint[], fiatConverter: FiatConverter) {
     const prizes = pots.slice(0, 3).map((pot) => ({
@@ -94,14 +101,30 @@ function Play() {
 
     let disabledReason: string | undefined
     if (!isOperatorApproved) {
-        disabledReason = 'This operator is not whitelisted yet — entries are disabled.'
+        disabledReason = ENTRIES_NOT_OPEN_COPY
     } else if (gate.accessReason) {
         disabledReason = gate.accessReason
     } else if (error) {
         disabledReason = error
     }
 
+    const disabledReasonAction = gate.supportLink
+        ? <a href={SUPPORT_URL} target='_blank' rel='noreferrer' className='underline underline-offset-2 hover:text-foreground'>{SUPPORT_LINK_LABEL}</a>
+        : undefined
+
     const needsRegistration = gate.needsRegistration && !isPlayerActive
+    // Dev-only diagnostic: the player sees REGISTRATION_UNAVAILABLE_COPY.
+    useEffect(() => {
+        if (!playerRegistration.serviceConfigured) {
+            console.warn('[play] gaming service URL is not configured; registration is disabled')
+        }
+    }, [playerRegistration.serviceConfigured])
+    if (playerRegistration.registerError) {
+        console.warn('[play] registration failed:', playerRegistration.registerError)
+    }
+    if (tosQuery.error) {
+        console.warn('[play] terms failed to load:', tosQuery.error)
+    }
     // Pre-deposit fallback: player is registered on-chain but the client has no
     // attestation record. Forces them through the attestation modal before the
     // entry form becomes interactive.
@@ -114,8 +137,8 @@ function Play() {
             isFailed: needsRegistration ? playerRegistration.isFailed : false,
             disabled: !playerRegistration.serviceConfigured || !playerRegistration.hasAddress,
             disabledReason: !playerRegistration.serviceConfigured
-                ? 'Gaming service URL is not configured.'
-                : playerRegistration.registerError?.message,
+                ? REGISTRATION_UNAVAILABLE_COPY
+                : (needsRegistration && playerRegistration.isFailed ? REGISTRATION_FAILED_COPY : undefined),
             ...(needsAttestationOnly && !needsRegistration
                 ? { idleLabel: 'ACCEPT TERMS', signingLabel: 'SIGNING…' }
                 : {}),
@@ -208,6 +231,7 @@ function Play() {
                                         error={gate.accessReason ?? error}
                                         canEnter={canEnter}
                                         disabledReason={disabledReason}
+                                        disabledReasonAction={disabledReasonAction}
                                         baseBalance={baseBalance}
                                         registration={registration}
                                         lossLimitBreached={lossLimitBreached}
@@ -250,9 +274,10 @@ function Play() {
                 }}
                 tos={tosQuery.data}
                 tosLoading={tosQuery.isLoading}
-                tosError={tosQuery.error ? (tosQuery.error as Error).message : undefined}
+                tosError={tosQuery.error ? TOS_LOAD_FAILED_COPY : undefined}
+                onRetryTos={() => { void tosQuery.refetch() }}
                 submitting={playerRegistration.isSubmittingAny}
-                submitError={playerRegistration.registerError?.message}
+                submitError={playerRegistration.registerError ? REGISTRATION_FAILED_COPY : undefined}
                 onConfirm={(value) => {
                     void playerRegistration.confirmAttestation({
                         dobSelfDeclared: value.dob,

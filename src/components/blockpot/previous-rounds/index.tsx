@@ -120,7 +120,7 @@ export default function PreviousRounds(props: PreviousRoundsProps) {
                             <IconHistory size={24} />
                             <h2 className='heading-xl'>{TERM.pastDraws}</h2>
                         </HStack>
-                        <Button variant='ghost' size='icon' onClick={() => {
+                        <Button variant='ghost' size='icon' aria-label='Close past draws' onClick={() => {
                             isOpen.update(false)
                         }}>
                             <XIcon size={24} />

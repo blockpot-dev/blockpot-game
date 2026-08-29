@@ -36,3 +36,26 @@ describe('EntryButton', () => {
         expect(screen.getByRole('button')).toHaveTextContent('CONFIRM IN WALLET…')
     })
 })
+
+// BLO-752: a disabled CTA shows its reason as visible text, not only as a
+// hover `title`.
+describe('EntryButton disabled reasons', () => {
+    it('renders the disabled reason as visible text under the button', () => {
+        render(<EntryButton enter={() => {}} status='idle' canEnter={false} disabledReason='Entries are not open yet. Check back soon.' />)
+        expect(screen.getByRole('button')).toBeDisabled()
+        expect(screen.getByText('Entries are not open yet. Check back soon.')).toBeVisible()
+    })
+
+    it('renders a registration disabled reason as visible text', () => {
+        const registration = { register: () => {}, isSigning: false, isPending: false, isFailed: false, disabled: true, disabledReason: 'Registration is unavailable right now.' }
+        render(<EntryButton enter={() => {}} status='idle' canEnter registration={registration} />)
+        expect(screen.getByText('Registration is unavailable right now.')).toBeVisible()
+    })
+
+    it('labels a failed registration RETRY REGISTRATION with the reason inline', () => {
+        const registration = { register: () => {}, isSigning: false, isPending: false, isFailed: true, disabled: false, disabledReason: 'Registration didn\'t complete. Check your wallet and try again.' }
+        render(<EntryButton enter={() => {}} status='idle' canEnter registration={registration} />)
+        expect(screen.getByRole('button')).toHaveTextContent('RETRY REGISTRATION')
+        expect(screen.getByText(/Registration didn't complete/)).toBeVisible()
+    })
+})

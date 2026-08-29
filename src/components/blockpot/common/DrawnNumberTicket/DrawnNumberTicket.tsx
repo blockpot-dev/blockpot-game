@@ -47,7 +47,7 @@ function DrawnNumberContent(props: { drawnNumber: DisplayDrawnNumberData }) {
             <HStack className='justify-between items-center'>
                 <span className='font-bold leading-[0.8]' style={{ fontSize: `${fontSize}px` }}>{formattedDrawnNumber}</span>
                 <HStack className='gap-2 inline-flex items-center'>
-                    <img className='w-6 h-6 min-w-6 min-h-6' src={`/assets/svgs/tokens/${'eth'}.svg`} alt={'eth'} />
+                    <img className='w-6 h-6 min-w-6 min-h-6' src='/assets/svgs/tokens/eth.svg' alt='ETH' />
                     <VStack className='gap-0.5'>
                         <span className='body-sm leading-none font-bold'>{drawnNumber.prize.amountFormatted}</span>
                         <span className={cn('body-xs leading-none', variant === 'neutral' && 'text-secondary-foreground')}>{drawnNumber.prize.fiatFormatted}</span>
@@ -89,7 +89,7 @@ export default function DrawnNumberTicket(props: DrawnNumberTicketProps) {
         <VStack className="w-full h-[119px] relative justify-start gap-2">
             <img
                 src={'/assets/svgs/ticket-outline.svg'}
-                alt='Info'
+                alt=''
                 className={'absolute top-0 left-0 z-0 w-[252px] h-[119px]'}
             />
             {
@@ -106,7 +106,7 @@ export default function DrawnNumberTicket(props: DrawnNumberTicketProps) {
                     <div ref={animatedElementRef} className={cn('relative z-1', animate && 'animate-grow-in')}>
                         <img
                             src={getDrawnNumberImage(drawnNumber)}
-                            alt='Info'
+                            alt=''
                             className={'absolute top-0 left-0 z-0 w-[252px] h-[119px] filter-[drop-shadow(0_4px_8px_rgba(0,0,0,0.2))]'}
                         />
 

@@ -189,7 +189,7 @@ function Purchase(props: PurchaseProps) {
         <VStack className="w-full h-[119px] h-min-[119px] relative justify-start gap-2">
             <img
                 src={'/assets/svgs/ticket-outline.svg'}
-                alt='Info'
+                alt=''
                 className={'absolute top-0 left-0 z-0 w-[252px] h-[119px]'}
             />
             {
@@ -197,7 +197,7 @@ function Purchase(props: PurchaseProps) {
                     <div className={cn('relative z-1', animationsEnabled && 'animate-grow-in')}>
                         <img
                             src={image}
-                            alt='Info'
+                            alt=''
                             className={'absolute top-0 left-0 z-0 w-[252px] h-[119px] filter-[drop-shadow(0_4px_8px_rgba(0,0,0,0.2))]'}
                         />
                         <div className='z-1 p-2 flex leading-[0.7]'>

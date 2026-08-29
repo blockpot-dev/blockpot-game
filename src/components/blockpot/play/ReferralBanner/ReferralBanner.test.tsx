@@ -44,7 +44,7 @@ describe('ReferralBanner', () => {
         pendingState.code = ''
         render(<ReferralBanner />)
         expect(screen.queryByLabelText(/referral code/i)).toBeNull()
-        fireEvent.click(screen.getByRole('button', { name: /have a referral code/i }))
+        fireEvent.click(screen.getByRole('button', { name: /add a referral code/i }))
         const input = screen.getByLabelText(/referral code/i)
         fireEvent.change(input, { target: { value: 'CRYPTOJOE' } })
         expect(pendingState.setCode).toHaveBeenCalledWith('CRYPTOJOE')
@@ -54,8 +54,8 @@ describe('ReferralBanner', () => {
         pendingState.code = 'NOSUCH'
         checkState.status = 'invalid'
         render(<ReferralBanner />)
-        expect(screen.getByText(/doesn.t match an active referrer/i)).toBeInTheDocument()
-        expect(screen.getByText(/entries still go through/i)).toBeInTheDocument()
+        expect(screen.getByText(/this code isn.t active/i)).toBeInTheDocument()
+        expect(screen.getByText(/you can still enter/i)).toBeInTheDocument()
         checkState.status = 'idle'
     })
 
