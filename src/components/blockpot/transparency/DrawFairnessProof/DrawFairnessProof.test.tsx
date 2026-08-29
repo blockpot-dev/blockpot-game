@@ -18,8 +18,8 @@ function proof(overrides: Partial<DrawProof> = {}): DrawProof {
             maxNumber: 99,
             totalNumbers: 5,
         },
-        reproducedNumbers: [62, 37, 75, 74, 92],
-        onChainNumbers: [62, 37, 75, 74, 92],
+        reproducedNumbers: [62, 83, 73, 68, 77],
+        onChainNumbers: [62, 83, 73, 68, 77],
         matches: true,
         status: 'verified',
         ...overrides,
@@ -32,8 +32,8 @@ describe('<_DrawFairnessProof>', () => {
 
         expect(screen.getAllByText(new RegExp(SEED.toString(16), 'i')).length).toBeGreaterThan(0)
         expect(screen.getByText(new RegExp(REQUEST_ID.toString()))).toBeInTheDocument()
-        expect(screen.getByTestId('reproduced-numbers')).toHaveTextContent('62 37 75 74 92')
-        expect(screen.getByTestId('onchain-numbers')).toHaveTextContent('62 37 75 74 92')
+        expect(screen.getByTestId('reproduced-numbers')).toHaveTextContent('62 83 73 68 77')
+        expect(screen.getByTestId('onchain-numbers')).toHaveTextContent('62 83 73 68 77')
         expect(screen.getByText(/verified/i)).toBeInTheDocument()
     })
 
@@ -95,7 +95,7 @@ describe('<_DrawFairnessProof>', () => {
         expect(screen.getByRole('tablist', { name: /verification language/i })).toBeInTheDocument()
         expect(screen.getByRole('tab', { name: 'JavaScript' })).toHaveAttribute('aria-selected', 'true')
         expect(screen.getByRole('tabpanel')).toHaveTextContent(`seed: 0x${SEED.toString(16)}n`)
-        expect(screen.getByRole('tabpanel')).toHaveTextContent('// expected: 62, 37, 75, 74, 92')
+        expect(screen.getByRole('tabpanel')).toHaveTextContent('// expected: 62, 83, 73, 68, 77')
     })
 
     it('shows placeholder snippets without expected output while the proof is unavailable', () => {
