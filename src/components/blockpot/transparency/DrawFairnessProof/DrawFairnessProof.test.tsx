@@ -18,6 +18,7 @@ function proof(overrides: Partial<DrawProof> = {}): DrawProof {
             maxNumber: 99,
             totalNumbers: 5,
         },
+        fulfillmentTxHash: '0x9f2c1a7e5d3b4c6a8e0f1d2c3b4a5968778695a4b3c2d1e0f9a8b7c6d5e4f3a2',
         reproducedNumbers: [62, 83, 73, 68, 77],
         onChainNumbers: [62, 83, 73, 68, 77],
         matches: true,
@@ -127,5 +128,30 @@ describe('<_DrawFairnessProof>', () => {
     it('tells the reader where to report a mismatch', () => {
         render(<_DrawFairnessProof proof={proof({ reproducedNumbers: [1, 2, 3, 4, 5], matches: false, status: 'mismatch' })} chainId={31337} />)
         expect(screen.getByRole('link', { name: /report it/i })).toHaveAttribute('href', expect.stringContaining('t.me'))
+    })
+
+    it('shows the fulfillment tx and contract addresses with explorer links when the chain has one', () => {
+        render(<_DrawFairnessProof proof={proof()} chainId={1} />)
+        expect(screen.getByTestId('fulfillment-tx')).toHaveTextContent('0x9f2c1a7e')
+        expect(screen.getByRole('link', { name: /fulfillment transaction on the block explorer/i }))
+            .toHaveAttribute('href', 'https://etherscan.io/tx/0x9f2c1a7e5d3b4c6a8e0f1d2c3b4a5968778695a4b3c2d1e0f9a8b7c6d5e4f3a2')
+        expect(screen.getByRole('link', { name: /provider contract on the block explorer/i }))
+            .toHaveAttribute('href', 'https://etherscan.io/address/0x2000000000000000000000000000000000000002')
+        expect(screen.getByRole('link', { name: /draw contract on the block explorer/i })).toBeInTheDocument()
+        expect(screen.queryByTestId('no-explorer')).toBeNull()
+    })
+
+    it('shows the hash with copy only, and says so, when the chain has no explorer', () => {
+        render(<_DrawFairnessProof proof={proof()} chainId={31337} />)
+        expect(screen.getByTestId('fulfillment-tx')).toBeInTheDocument()
+        expect(screen.getByRole('button', { name: /copy fulfillment transaction/i })).toBeInTheDocument()
+        expect(screen.queryByRole('link', { name: /block explorer/i })).toBeNull()
+        expect(screen.getByTestId('no-explorer')).toBeInTheDocument()
+    })
+
+    it('explains when the fulfillment transaction could not be found', () => {
+        render(<_DrawFairnessProof proof={proof({ fulfillmentTxHash: null })} chainId={1} />)
+        expect(screen.getByTestId('fulfillment-tx-missing')).toHaveTextContent(/not found on this node/i)
+        expect(screen.queryByTestId('fulfillment-tx')).toBeNull()
     })
 })

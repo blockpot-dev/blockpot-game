@@ -7,6 +7,7 @@ import useDrawProof from '@/hooks/contracts/draw/useDrawProof'
 import { DrawProof, DrawProofStatus } from '@/types/draw/drawProof'
 import { GameType } from '@/providers/SelectedGameProvider'
 import { DRAW_ALGORITHM_LABEL } from '@/constants/draw'
+import { BLOCK_EXPLORER_URL, NetworkId, explorerAddressUrl, explorerTxUrl } from '@/constants/network-details'
 import { useChainId } from 'wagmi'
 import VerifySnippets from '@/components/blockpot/transparency/VerifySnippets/VerifySnippets'
 import { SnippetInputs } from '@/components/blockpot/transparency/VerifySnippets/snippets'
@@ -22,8 +23,8 @@ const statusStyles: Record<DrawProofStatus | 'loading', { label: string; classNa
     unavailable: { label: 'Unavailable', className: 'bg-gray-500/15 text-muted-foreground' },
 }
 
-function CopyableValue(props: { label: string; value: string }) {
-    const { label, value } = props
+function CopyableValue(props: { label: string; value: string; href?: string; hrefLabel?: string; testId?: string }) {
+    const { label, value, href, hrefLabel, testId } = props
     const [copied, setCopied] = useState(false)
 
     const handleCopy = async () => {
@@ -40,7 +41,7 @@ function CopyableValue(props: { label: string; value: string }) {
         <VStack className='gap-1'>
             <span className='text-sm font-medium text-foreground'>{label}</span>
             <HStack className='gap-2 items-start'>
-                <span className='font-mono text-xs text-muted-foreground break-all'>{value}</span>
+                <span className='font-mono text-xs text-muted-foreground break-all' data-testid={testId}>{value}</span>
                 <button
                     type='button'
                     aria-label={`Copy ${label}`}
@@ -49,6 +50,17 @@ function CopyableValue(props: { label: string; value: string }) {
                 >
                     {copied ? <CheckIcon size={14} /> : <CopyIcon size={14} />}
                 </button>
+                {href && (
+                    <a
+                        href={href}
+                        target='_blank'
+                        rel='noreferrer'
+                        aria-label={hrefLabel ?? `View ${label} on the block explorer`}
+                        className='shrink-0 text-muted-foreground hover:text-foreground'
+                    >
+                        <ExternalLinkIcon size={14} />
+                    </a>
+                )}
             </HStack>
         </VStack>
     )
@@ -140,6 +152,43 @@ export function _DrawFairnessProof(props: _DrawFairnessProofProps) {
                         <VStack className='gap-3'>
                             <CopyableValue label='VRF request ID' value={proof.inputs.requestId.toString()} />
                             <CopyableValue label='VRF seed' value={`0x${proof.inputs.seed.toString(16)}`} />
+                            {proof.fulfillmentTxHash ? (
+                                <CopyableValue
+                                    label='Fulfillment transaction'
+                                    value={proof.fulfillmentTxHash}
+                                    href={explorerTxUrl(chainId, proof.fulfillmentTxHash)}
+                                    hrefLabel='View fulfillment transaction on the block explorer'
+                                    testId='fulfillment-tx'
+                                />
+                            ) : (
+                                <VStack className='gap-1'>
+                                    <span className='text-sm font-medium text-foreground'>Fulfillment transaction</span>
+                                    <span className='text-xs text-muted-foreground' data-testid='fulfillment-tx-missing'>
+                                        Not found on this node. Search the random-number provider contract for the
+                                        request ID above.
+                                    </span>
+                                </VStack>
+                            )}
+                            <CopyableValue
+                                label='Random-number provider contract'
+                                value={proof.randomNumberProviderAddress}
+                                href={explorerAddressUrl(chainId, proof.randomNumberProviderAddress)}
+                                hrefLabel='View provider contract on the block explorer'
+                                testId='provider-address'
+                            />
+                            <CopyableValue
+                                label='Draw contract'
+                                value={proof.drawAddress}
+                                href={explorerAddressUrl(chainId, proof.drawAddress)}
+                                hrefLabel='View draw contract on the block explorer'
+                                testId='draw-address'
+                            />
+                            {!BLOCK_EXPLORER_URL[chainId as NetworkId] && (
+                                <p className='text-xs text-muted-foreground' data-testid='no-explorer'>
+                                    No public block explorer for this network yet — copy the hash and inspect it
+                                    against any node for this chain.
+                                </p>
+                            )}
                         </VStack>
 
                         <div className='border-t border-border' />
@@ -232,6 +281,7 @@ export default function DrawFairnessProof(props: DrawFairnessProofProps) {
                     drawAddress: '0x0000000000000000000000000000000000000000',
                     randomNumberProviderAddress: '0x0000000000000000000000000000000000000000',
                     inputs: { requestId: 0n, seed: 0n, maxNumber: 0, totalNumbers: 0 },
+                    fulfillmentTxHash: null,
                     reproducedNumbers: [],
                     onChainNumbers: [],
                     matches: false,

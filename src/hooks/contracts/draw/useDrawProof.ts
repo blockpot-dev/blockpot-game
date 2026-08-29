@@ -3,6 +3,8 @@ import { useChainId } from 'wagmi'
 import { useQuery } from '@tanstack/react-query'
 import { randomNumberProviderAbi } from '@/abi/randomNumberProviderAbi'
 import { getContractAddress } from '@/constants/contract-addresses'
+import { LOG_LOOKUP_FROM_BLOCK, NetworkId } from '@/constants/network-details'
+import { findFulfillmentTx } from '@/utilities/draw/findFulfillmentTx'
 import useAvailablePublicClient from '@/hooks/web3/useAvailablePublicClient'
 import { reproduceDrawnNumbers } from '@/utilities/draw/reproduceDrawnNumbers'
 import { DrawProof } from '@/types/draw/drawProof'
@@ -47,9 +49,17 @@ export default function useDrawProof(selectedGame: GameType, roundIndex: number)
                 const onChainNumbers = roundData.draws.map((draw: { number: number }) => draw.number)
                 const matches = reproducedNumbers.length === onChainNumbers.length
                     && reproducedNumbers.every((n, i) => n === onChainNumbers[i])
+                const fulfillmentTxHash = await findFulfillmentTx(publicClient, {
+                    randomNumberProviderAddress,
+                    drawAddress,
+                    roundIndex,
+                    seed,
+                    fromBlock: LOG_LOOKUP_FROM_BLOCK[chainId as NetworkId],
+                })
                 return {
                     ...base,
                     inputs,
+                    fulfillmentTxHash,
                     reproducedNumbers,
                     onChainNumbers,
                     matches,
@@ -59,6 +69,7 @@ export default function useDrawProof(selectedGame: GameType, roundIndex: number)
                 return {
                     ...base,
                     inputs: { requestId: 0n, seed: 0n, maxNumber: 0, totalNumbers: 0 },
+                    fulfillmentTxHash: null,
                     reproducedNumbers: [],
                     onChainNumbers: [],
                     matches: false,

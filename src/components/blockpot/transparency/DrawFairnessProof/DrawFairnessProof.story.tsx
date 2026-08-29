@@ -18,6 +18,7 @@ const baseProof: DrawProof = {
         maxNumber: 99,
         totalNumbers: 5,
     },
+    fulfillmentTxHash: '0x9f2c1a7e5d3b4c6a8e0f1d2c3b4a5968778695a4b3c2d1e0f9a8b7c6d5e4f3a2',
     reproducedNumbers: [62, 83, 73, 68, 77],
     onChainNumbers: [62, 83, 73, 68, 77],
     matches: true,
@@ -54,4 +55,12 @@ export const Unavailable: Story = {
 
 export const Loading: Story = {
     args: { ...Unavailable.args, isLoading: true },
+}
+
+export const WithExplorer: Story = {
+    args: { proof: baseProof, chainId: 1 },
+}
+
+export const FulfillmentNotFound: Story = {
+    args: { proof: { ...baseProof, fulfillmentTxHash: null }, chainId: 31337 },
 }

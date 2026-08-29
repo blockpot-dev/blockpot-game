@@ -1,4 +1,4 @@
-import { Address } from 'viem'
+import { Address, Hash } from 'viem'
 
 export type DrawProofInputs = {
     /** Chainlink VRF requestId for (draw, roundIndex); 0n => unavailable */
@@ -20,6 +20,8 @@ export type DrawProof = {
     /** Derived on-chain via the draw contract’s randomNumberProvider() */
     randomNumberProviderAddress: Address
     inputs: DrawProofInputs
+    /** Transaction in which Chainlink VRF fulfilled `inputs.seed`; null when not found or the RPC refused the lookup */
+    fulfillmentTxHash: Hash | null
     /** Output of reproduceDrawnNumbers(inputs) */
     reproducedNumbers: readonly number[]
     /** From useRoundDraw()/getRoundData -> draws */

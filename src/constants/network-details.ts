@@ -49,3 +49,31 @@ export const CHAIN_DISPLAY_NAME: Partial<Record<NetworkId, string>> = {
     [NetworkId.POLYGON_TESTNET]: 'Polygon Mumbai',
     [NetworkId.BLOCK_POT_TESTNET]: 'Blockpot Testnet',
 }
+
+/**
+ * Block explorers a reader can open to inspect a transaction or contract. Chains without a public
+ * explorer (local anvil, the private Blockpot testnet) are absent; the UI then shows the hash with a
+ * copy control and says no explorer is available. Adding a Blockscout for the testnet is an infra
+ * task — once it exists, add its base URL here and nothing else changes.
+ */
+export const BLOCK_EXPLORER_URL: Partial<Record<NetworkId, string>> = {
+    [NetworkId.MAINNET]: 'https://etherscan.io',
+    [NetworkId.ARBITRUM_TESTNET]: 'https://goerli.arbiscan.io',
+    [NetworkId.POLYGON_TESTNET]: 'https://mumbai.polygonscan.com',
+}
+
+export function explorerTxUrl(chainId: number, txHash: string): string | undefined {
+    const base = BLOCK_EXPLORER_URL[chainId as NetworkId]
+    return base ? `${base}/tx/${txHash}` : undefined
+}
+
+export function explorerAddressUrl(chainId: number, address: string): string | undefined {
+    const base = BLOCK_EXPLORER_URL[chainId as NetworkId]
+    return base ? `${base}/address/${address}` : undefined
+}
+
+/**
+ * Earliest block to scan for protocol events on chains whose public RPCs cap `eth_getLogs` ranges.
+ * Absent => genesis (fine on anvil, the private testnet, and range-uncapped providers like Alchemy).
+ */
+export const LOG_LOOKUP_FROM_BLOCK: Partial<Record<NetworkId, bigint>> = {}
