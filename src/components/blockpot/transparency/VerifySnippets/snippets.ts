@@ -1,7 +1,7 @@
 import { Address } from 'viem'
 import type { CodeBlockAction } from '@blockpot-dev/blockpot-design-system'
 import jsSource from '@/utilities/draw/reproduceDrawnNumbers.ts?raw'
-import { CHAIN_DISPLAY_NAME, PUBLIC_RPC_URL } from '@/constants/network-details'
+import { CHAIN_DISPLAY_NAME, NetworkId, PUBLIC_RPC_URL } from '@/constants/network-details'
 
 export interface SnippetInputs {
     /** null => placeholder "0x…" (round pending / unavailable) */
@@ -82,7 +82,7 @@ function jsSnippet(inputs: SnippetInputs): string {
         body,
         '',
         `const numbers = reproduceDrawnNumbers({ seed: ${seed}, maxNumber: ${numOrPlaceholder(inputs.maxNumber, '/* maxNumber */ 0')}, totalNumbers: ${numOrPlaceholder(inputs.totalNumbers, '/* numbers drawn */ 0')} })`,
-        "console.log(numbers.join(', '))",
+        'console.log(numbers.join(\', \'))',
     ]
     if (inputs.expected) lines.push(`// expected: ${inputs.expected.join(', ')}`)
     lines.push('})()')
@@ -101,11 +101,11 @@ function pythonSnippet(inputs: SnippetInputs): string {
         '',
         'def abi_encode(seed: int, i: int, attempt: int) -> bytes:',
         '    # abi.encode(uint256 seed, uint8 i, uint256 attempt): three left-padded 32-byte words',
-        "    return seed.to_bytes(32, 'big') + i.to_bytes(32, 'big') + attempt.to_bytes(32, 'big')",
+        '    return seed.to_bytes(32, \'big\') + i.to_bytes(32, \'big\') + attempt.to_bytes(32, \'big\')',
         '',
         '',
         'def keccak256(data: bytes) -> int:',
-        "    return int.from_bytes(keccak.new(digest_bits=256, data=data).digest(), 'big')",
+        '    return int.from_bytes(keccak.new(digest_bits=256, data=data).digest(), \'big\')',
         '',
         '',
         'def uniform_below(seed: int, i: int, range_: int) -> int:',
@@ -117,7 +117,7 @@ function pythonSnippet(inputs: SnippetInputs): string {
         '        word = keccak256(abi_encode(seed, i, attempt))',
         '        if word >= reject_below:',
         '            return word % range_',
-        "    raise RuntimeError(f'rejection sampling failed for index {i}')",
+        '    raise RuntimeError(f\'rejection sampling failed for index {i}\')',
         '',
         '',
         'def reproduce(seed: int, max_number: int, total_numbers: int) -> list[int]:',
@@ -143,13 +143,13 @@ function pythonSnippet(inputs: SnippetInputs): string {
 function soliditySnippet(inputs: SnippetInputs): string {
     const expectedFn = inputs.expected
         ? [
-              '',
-              '    /// @notice The on-chain draw for this round. verify(...) with the inputs below must equal it.',
-              '    function expected() external pure returns (uint48[] memory out) {',
-              `        out = new uint48[](${inputs.expected.length});`,
-              ...inputs.expected.map((n, idx) => `        out[${idx}] = ${n};`),
-              '    }',
-          ]
+            '',
+            '    /// @notice The on-chain draw for this round. verify(...) with the inputs below must equal it.',
+            '    function expected() external pure returns (uint48[] memory out) {',
+            `        out = new uint48[](${inputs.expected.length});`,
+            ...inputs.expected.map((n, idx) => `        out[${idx}] = ${n};`),
+            '    }',
+        ]
         : []
     const inputsComment = [
         `    // Inputs for this round: seed = ${seedHex(inputs.seed)}, maxNumber = ${numOrPlaceholder(inputs.maxNumber, '?')}, totalNumbers = ${numOrPlaceholder(inputs.totalNumbers, '?')}`,
@@ -206,8 +206,8 @@ function soliditySnippet(inputs: SnippetInputs): string {
 }
 
 function fetchSeedSnippet(inputs: SnippetInputs): string {
-    const rpc = PUBLIC_RPC_URL[inputs.chainId] ?? '$RPC_URL'
-    const chain = CHAIN_DISPLAY_NAME[inputs.chainId] ?? `chain ${inputs.chainId}`
+    const rpc = PUBLIC_RPC_URL[inputs.chainId as NetworkId] ?? '$RPC_URL'
+    const chain = CHAIN_DISPLAY_NAME[inputs.chainId as NetworkId] ?? `chain ${inputs.chainId}`
     return [
         `# Read the VRF request id and seed straight from the chain (or any RPC for ${chain}).`,
         '# Foundry:',
@@ -216,15 +216,15 @@ function fetchSeedSnippet(inputs: SnippetInputs): string {
         `  ${inputs.drawAddress} ${inputs.roundIndex} --rpc-url ${rpc}`,
         '',
         '# viem (Node or browser):',
-        "import { createPublicClient, http, parseAbi } from 'viem'",
+        'import { createPublicClient, http, parseAbi } from \'viem\'',
         `const client = createPublicClient({ transport: http('${rpc}') })`,
         'const [requestId, seed, maxNumber, totalNumbers] = await client.readContract({',
         `  address: '${inputs.randomNumberProviderAddress}',`,
-        "  abi: parseAbi(['function getRandomNumberGeneratorInputsForGameAndRound(address game, uint32 roundIndex) view returns (uint256 requestId, uint256 seed, uint48 maxNumber, uint8 totalNumbers)']),",
-        "  functionName: 'getRandomNumberGeneratorInputsForGameAndRound',",
+        '  abi: parseAbi([\'function getRandomNumberGeneratorInputsForGameAndRound(address game, uint32 roundIndex) view returns (uint256 requestId, uint256 seed, uint48 maxNumber, uint8 totalNumbers)\']),',
+        '  functionName: \'getRandomNumberGeneratorInputsForGameAndRound\',',
         `  args: ['${inputs.drawAddress}', ${inputs.roundIndex}],`,
         '})',
-        "console.log({ requestId, seed: '0x' + seed.toString(16), maxNumber, totalNumbers })",
+        'console.log({ requestId, seed: \'0x\' + seed.toString(16), maxNumber, totalNumbers })',
     ].join('\n')
 }
 

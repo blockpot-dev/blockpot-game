@@ -28,9 +28,9 @@ function proof(overrides: Partial<DrawProof> = {}): DrawProof {
 
 describe('<_DrawFairnessProof>', () => {
     it('shows seed, requestId, both number rows, and a verified indicator', () => {
-        render(<_DrawFairnessProof proof={proof()} />)
+        render(<_DrawFairnessProof proof={proof()} chainId={31337} />)
 
-        expect(screen.getByText(new RegExp(SEED.toString(16), 'i'))).toBeInTheDocument()
+        expect(screen.getAllByText(new RegExp(SEED.toString(16), 'i')).length).toBeGreaterThan(0)
         expect(screen.getByText(new RegExp(REQUEST_ID.toString()))).toBeInTheDocument()
         expect(screen.getByTestId('reproduced-numbers')).toHaveTextContent('62 37 75 74 92')
         expect(screen.getByTestId('onchain-numbers')).toHaveTextContent('62 37 75 74 92')
@@ -45,6 +45,7 @@ describe('<_DrawFairnessProof>', () => {
                     matches: false,
                     status: 'mismatch',
                 })}
+                chainId={31337}
             />
         )
 
@@ -62,6 +63,7 @@ describe('<_DrawFairnessProof>', () => {
                     matches: false,
                     status: 'unavailable',
                 })}
+                chainId={31337}
             />
         )
 
@@ -70,21 +72,40 @@ describe('<_DrawFairnessProof>', () => {
     })
 
     it('links a documented Chainlink VRF proof verification path', () => {
-        render(<_DrawFairnessProof proof={proof()} />)
+        render(<_DrawFairnessProof proof={proof()} chainId={31337} />)
         const link = screen.getByRole('link', { name: /chainlink/i })
         expect(link).toHaveAttribute('href', expect.stringContaining('chain.link'))
     })
 
     it('exposes the derivation inputs: number space, numbers drawn, and algorithm', () => {
-        render(<_DrawFairnessProof proof={proof()} />)
+        render(<_DrawFairnessProof proof={proof()} chainId={31337} />)
         expect(screen.getByTestId('number-space')).toHaveTextContent('0 – 99')
         expect(screen.getByTestId('numbers-drawn')).toHaveTextContent('5')
         expect(screen.getByTestId('algorithm')).toHaveTextContent(DRAW_ALGORITHM_LABEL)
     })
 
     it('hides the derivation rows while the proof is unavailable', () => {
-        render(<_DrawFairnessProof proof={proof({ status: 'unavailable', reproducedNumbers: [], onChainNumbers: [] })} />)
+        render(<_DrawFairnessProof proof={proof({ status: 'unavailable', reproducedNumbers: [], onChainNumbers: [] })} chainId={31337} />)
         expect(screen.queryByTestId('number-space')).toBeNull()
         expect(screen.queryByTestId('algorithm')).toBeNull()
+    })
+
+    it('renders runnable verification snippets pre-filled with the round seed', () => {
+        render(<_DrawFairnessProof proof={proof()} chainId={31337} />)
+        expect(screen.getByRole('tablist', { name: /verification language/i })).toBeInTheDocument()
+        expect(screen.getByRole('tab', { name: 'JavaScript' })).toHaveAttribute('aria-selected', 'true')
+        expect(screen.getByRole('tabpanel')).toHaveTextContent(`seed: 0x${SEED.toString(16)}n`)
+        expect(screen.getByRole('tabpanel')).toHaveTextContent('// expected: 62, 37, 75, 74, 92')
+    })
+
+    it('shows placeholder snippets without expected output while the proof is unavailable', () => {
+        render(
+            <_DrawFairnessProof
+                proof={proof({ status: 'unavailable', reproducedNumbers: [], onChainNumbers: [] })}
+                chainId={31337}
+            />
+        )
+        expect(screen.getByRole('tabpanel')).toHaveTextContent('0x…')
+        expect(screen.getByRole('tabpanel')).not.toHaveTextContent('expected:')
     })
 })

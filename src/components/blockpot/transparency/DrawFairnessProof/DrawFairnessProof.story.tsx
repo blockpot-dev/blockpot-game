@@ -24,7 +24,7 @@ const baseProof: DrawProof = {
     status: 'verified',
 }
 
-export const Verified: Story = { args: { proof: baseProof } }
+export const Verified: Story = { args: { proof: baseProof, chainId: 31337 } }
 
 export const Mismatch: Story = {
     args: {
@@ -34,6 +34,7 @@ export const Mismatch: Story = {
             matches: false,
             status: 'mismatch',
         },
+        chainId: 31337,
     },
 }
 
@@ -47,5 +48,6 @@ export const Unavailable: Story = {
             matches: false,
             status: 'unavailable',
         },
+        chainId: 31337,
     },
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Container } from '@blockpot-dev/blockpot-design-system'
 import { CheckIcon, CopyIcon, ExternalLinkIcon } from 'lucide-react'
 import VStack from '@/components/core/VStack/VStack'
@@ -7,6 +7,9 @@ import useDrawProof from '@/hooks/contracts/draw/useDrawProof'
 import { DrawProof, DrawProofStatus } from '@/types/draw/drawProof'
 import { GameType } from '@/providers/SelectedGameProvider'
 import { DRAW_ALGORITHM_LABEL } from '@/constants/draw'
+import { useChainId } from 'wagmi'
+import VerifySnippets from '@/components/blockpot/transparency/VerifySnippets/VerifySnippets'
+import { SnippetInputs } from '@/components/blockpot/transparency/VerifySnippets/snippets'
 
 const CHAINLINK_VRF_DOCS_URL = 'https://docs.chain.link/vrf'
 
@@ -73,12 +76,28 @@ function ValueRow(props: { label: string; value: string; testId: string }) {
 
 export type _DrawFairnessProofProps = {
     proof: DrawProof
+    chainId: number
+}
+
+function toSnippetInputs(proof: DrawProof, chainId: number): SnippetInputs {
+    const hasProof = proof.status === 'verified' || proof.status === 'mismatch'
+    return {
+        seed: hasProof ? proof.inputs.seed : null,
+        maxNumber: hasProof ? proof.inputs.maxNumber : null,
+        totalNumbers: hasProof ? proof.inputs.totalNumbers : null,
+        expected: hasProof ? proof.onChainNumbers : null,
+        drawAddress: proof.drawAddress,
+        randomNumberProviderAddress: proof.randomNumberProviderAddress,
+        roundIndex: proof.roundIndex,
+        chainId,
+    }
 }
 
 export function _DrawFairnessProof(props: _DrawFairnessProofProps) {
-    const { proof } = props
+    const { proof, chainId } = props
     const status = statusStyles[proof.status]
     const hasProof = proof.status === 'verified' || proof.status === 'mismatch'
+    const snippetInputs = useMemo(() => toSnippetInputs(proof, chainId), [proof, chainId])
 
     return (
         <Container className='p-6' containerClassName='h-full'>
@@ -152,19 +171,15 @@ export function _DrawFairnessProof(props: _DrawFairnessProofProps) {
                 <VStack className='gap-2'>
                     <span className='text-sm font-medium text-foreground'>Verify it yourself</span>
                     <p className='text-xs text-muted-foreground'>
-                        Each draw&apos;s numbers are derived deterministically from a Chainlink VRF
-                        random word by a partial Fisher-Yates shuffle over the number space
-                        0 – maxNumber. For each step <span className='font-mono'>i</span>, the index to
-                        swap is <span className='font-mono'>i + (keccak256(abi.encode(seed, i, attempt)) mod (maxNumber + 1 − i))</span>,
-                        where hash words below <span className='font-mono'>2²⁵⁶ mod range</span> are
-                        rejected and <span className='font-mono'>attempt</span> increments, so every
-                        index is drawn with exactly zero modulo bias. Your browser recomputes the shuffle
-                        from the seed above and compares it with the on-chain draw. To independently
-                        verify the seed itself, look up the VRF request ID on the random-number provider
-                        contract and confirm the fulfillment transaction — the VRF coordinator verifies
-                        the cryptographic proof on-chain before the seed is accepted, as documented by
-                        Chainlink.
+                        Each draw&apos;s numbers are derived from the Chainlink VRF seed by a partial
+                        Fisher-Yates shuffle over 0 – maxNumber, with keccak256-based rejection sampling so
+                        every index is drawn with zero modulo bias. The code below is what your browser runs
+                        to recompute the draw — paste it anywhere and compare the output with the on-chain
+                        numbers. To avoid trusting this page for the seed itself, fetch it from the
+                        random-number provider contract; the VRF coordinator verifies the cryptographic proof
+                        on-chain before the seed is accepted, as documented by Chainlink.
                     </p>
+                    <VerifySnippets inputs={snippetInputs} />
                     <a
                         href={CHAINLINK_VRF_DOCS_URL}
                         target='_blank'
@@ -187,6 +202,7 @@ export type DrawFairnessProofProps = {
 
 export default function DrawFairnessProof(props: DrawFairnessProofProps) {
     const { game, roundIndex } = props
+    const chainId = useChainId()
     const { drawProof, isLoading } = useDrawProof(game, roundIndex)
 
     if (isLoading || !drawProof) {
@@ -202,9 +218,10 @@ export default function DrawFairnessProof(props: DrawFairnessProofProps) {
                     matches: false,
                     status: 'pending',
                 }}
+                chainId={chainId}
             />
         )
     }
 
-    return <_DrawFairnessProof proof={drawProof} />
+    return <_DrawFairnessProof proof={drawProof} chainId={chainId} />
 }
