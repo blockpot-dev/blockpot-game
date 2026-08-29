@@ -97,9 +97,9 @@ export default function TierThresholds() {
                     Each tier carries one shared set of verification gates and two directional
                     caps. The inflow cap bounds gross lifetime EUR entered — entries that would
                     push cumulative entries past it revert on-chain until the next tier&apos;s gates
-                    are passed. The outflow cap bounds gross lifetime EUR claimed — withdrawals
+                    are passed. The outflow cap bounds gross lifetime EUR claimed — claims
                     and direct payouts beyond it are held in escrow until verification. Both caps
-                    are gross per direction (wins never refund entry headroom, entries never
+                    are gross per direction (prizes never refund entry headroom, entries never
                     consume claim headroom), and a player&apos;s tier is decided by gates alone.
                     The KYCRegistry pulls both lifetime figures from the operator contract via the registered
                     IKYCActivityProvider; the Chainlink feeds above are used by the operator contract to convert

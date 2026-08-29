@@ -11,9 +11,9 @@ export function _BlockpotBalances() {
     const nativeCurrency = useNativeCurrency()
 
     const balances = [
-        { label: 'Current pot', amount: pot },
-        { label: 'Next pot', amount: nextPot },
-        { label: 'Parent game allocation', amount: parentGame },
+        { label: 'Current prize pool', amount: pot },
+        { label: 'Next prize pool', amount: nextPot },
+        { label: 'Main Game allocation', amount: parentGame },
     ]
 
     return (
@@ -63,9 +63,8 @@ export function _BlockpotBalances() {
                 <div className='border-t border-border' />
 
                 <p className='text-xs text-muted-foreground'>
-                    The contract balance should always be greater than or equal to the total allocations
-                    (the sum of the individual allocations). The funds manager is responsible for holding
-                    managing the allocations and disbursing funds when necessary.
+                    The contract balance must always cover the total allocations. The funds manager
+                    holds the prize pools and pays out when a draw settles.
                 </p>
             </VStack>
         </Container>

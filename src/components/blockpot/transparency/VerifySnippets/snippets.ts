@@ -251,8 +251,8 @@ export function buildSnippets(inputs: SnippetInputs): Snippet[] {
             title: 'Run with Python 3.9+',
             code: pythonSnippet(inputs),
             actions: [
-                { label: 'Open Replit', href: REPLIT_PYTHON_URL },
-                { label: 'Open Colab', href: COLAB_URL },
+                { label: 'Open in Replit', href: REPLIT_PYTHON_URL },
+                { label: 'Open in Colab', href: COLAB_URL },
             ],
         },
         {
@@ -263,12 +263,12 @@ export function buildSnippets(inputs: SnippetInputs): Snippet[] {
             code: solidity,
             actions: [
                 { label: 'Open in Remix', href: remixUrl(solidity) },
-                { label: 'Canonical source', href: CANONICAL_SOLIDITY_URL },
+                { label: 'View contract source', href: CANONICAL_SOLIDITY_URL },
             ],
         },
         {
             id: 'fetch-seed',
-            label: 'Fetch the seed',
+            label: 'Get the seed',
             language: 'Bash',
             title: 'Get the seed without trusting this page',
             code: fetchSeedSnippet(inputs),

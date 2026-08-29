@@ -11,9 +11,9 @@ export default function Transparency() {
                     <h1 className='heading-4xl text-foreground'>Transparency</h1>
 
                     <p className='text-sm text-secondary-foreground max-w-2xl'>
-                        Every draw, every payout, every pot allocation happens on-chain and is
-                        independently verifiable. This page surfaces the live contract state so
-                        you can check it for yourself.
+                        <span className='font-medium text-foreground'>Don&apos;t trust it. Check it.</span>{' '}
+                        Every draw, payout and prize-pool allocation is on-chain. This page shows the
+                        live contract state so you can verify it yourself.
                     </p>
 
                     <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>

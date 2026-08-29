@@ -108,4 +108,24 @@ describe('<_DrawFairnessProof>', () => {
         expect(screen.getByRole('tabpanel')).toHaveTextContent('0x…')
         expect(screen.getByRole('tabpanel')).not.toHaveTextContent('expected:')
     })
+
+    it('distinguishes loading, pending and unavailable states in copy', () => {
+        const empty = { inputs: { requestId: 0n, seed: 0n, maxNumber: 0, totalNumbers: 0 }, reproducedNumbers: [], onChainNumbers: [], matches: false }
+        const { unmount } = render(<_DrawFairnessProof proof={proof({ ...empty, status: 'pending' })} chainId={31337} isLoading />)
+        expect(screen.getByText(/checking/i)).toBeInTheDocument()
+        expect(screen.getByTestId('proof-loading')).toHaveTextContent('Loading round 7 from the chain')
+        unmount()
+
+        const r2 = render(<_DrawFairnessProof proof={proof({ ...empty, status: 'pending' })} chainId={31337} />)
+        expect(screen.getByTestId('proof-pending')).toHaveTextContent(/hasn.t been drawn yet/)
+        r2.unmount()
+
+        render(<_DrawFairnessProof proof={proof({ ...empty, status: 'unavailable' })} chainId={31337} />)
+        expect(screen.getByTestId('proof-unavailable')).toHaveTextContent('No proof for round 7')
+    })
+
+    it('tells the reader where to report a mismatch', () => {
+        render(<_DrawFairnessProof proof={proof({ reproducedNumbers: [1, 2, 3, 4, 5], matches: false, status: 'mismatch' })} chainId={31337} />)
+        expect(screen.getByRole('link', { name: /report it/i })).toHaveAttribute('href', expect.stringContaining('t.me'))
+    })
 })

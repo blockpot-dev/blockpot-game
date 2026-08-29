@@ -84,7 +84,7 @@ describe('buildSnippets — Solidity / Remix', () => {
         expect(remix.href).toBe(remixUrl(code))
         const encoded = new URL(remix.href).hash.match(/#code=([^&]+)/)![1]
         expect(decodeURIComponent(escape(atob(encoded)))).toBe(code)
-        expect(actions.map((a) => a.label)).toContain('Canonical source')
+        expect(actions.map((a) => a.label)).toContain('View contract source')
     })
 })
 

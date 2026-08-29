@@ -51,3 +51,7 @@ export const Unavailable: Story = {
         chainId: 31337,
     },
 }
+
+export const Loading: Story = {
+    args: { ...Unavailable.args, isLoading: true },
+}

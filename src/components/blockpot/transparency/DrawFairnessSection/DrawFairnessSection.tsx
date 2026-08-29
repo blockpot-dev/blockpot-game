@@ -134,7 +134,16 @@ export default function DrawFairnessSection() {
         setSelectedRound(undefined)
     }
 
-    if (latestRoundIndex === undefined) return null
+    if (latestRoundIndex === undefined) {
+        return (
+            <VStack className='gap-4'>
+                <h2 className='text-xl font-semibold'>Draw fairness</h2>
+                <p className='text-sm text-muted-foreground' data-testid='draw-fairness-empty'>
+                    No completed draws yet. The first proof appears after the first draw settles.
+                </p>
+            </VStack>
+        )
+    }
 
     const defaultRound = Math.max(latestRoundIndex - 1, 0)
     const roundIndex = clampRound(selectedRound ?? defaultRound, latestRoundIndex)

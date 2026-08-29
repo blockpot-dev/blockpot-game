@@ -12,11 +12,13 @@ import VerifySnippets from '@/components/blockpot/transparency/VerifySnippets/Ve
 import { SnippetInputs } from '@/components/blockpot/transparency/VerifySnippets/snippets'
 
 const CHAINLINK_VRF_DOCS_URL = 'https://docs.chain.link/vrf'
+const REPORT_URL = 'https://t.me/playblockpot'
 
-const statusStyles: Record<DrawProofStatus, { label: string; className: string }> = {
+const statusStyles: Record<DrawProofStatus | 'loading', { label: string; className: string }> = {
     verified: { label: 'Verified', className: 'bg-green-500/15 text-green-500' },
     mismatch: { label: 'Mismatch', className: 'bg-red-500/15 text-red-500' },
     pending: { label: 'Pending', className: 'bg-gray-500/15 text-muted-foreground' },
+    loading: { label: 'Checking…', className: 'bg-gray-500/15 text-muted-foreground' },
     unavailable: { label: 'Unavailable', className: 'bg-gray-500/15 text-muted-foreground' },
 }
 
@@ -77,6 +79,8 @@ function ValueRow(props: { label: string; value: string; testId: string }) {
 export type _DrawFairnessProofProps = {
     proof: DrawProof
     chainId: number
+    /** True while the proof is being read from the chain; shows a checking state instead of "pending". */
+    isLoading?: boolean
 }
 
 function toSnippetInputs(proof: DrawProof, chainId: number): SnippetInputs {
@@ -94,8 +98,8 @@ function toSnippetInputs(proof: DrawProof, chainId: number): SnippetInputs {
 }
 
 export function _DrawFairnessProof(props: _DrawFairnessProofProps) {
-    const { proof, chainId } = props
-    const status = statusStyles[proof.status]
+    const { proof, chainId, isLoading = false } = props
+    const status = statusStyles[isLoading ? 'loading' : proof.status]
     const hasProof = proof.status === 'verified' || proof.status === 'mismatch'
     const snippetInputs = useMemo(() => toSnippetInputs(proof, chainId), [proof, chainId])
 
@@ -111,11 +115,23 @@ export function _DrawFairnessProof(props: _DrawFairnessProofProps) {
 
                 <div className='border-t border-border' />
 
-                {!hasProof && (
-                    <p className='text-sm text-muted-foreground'>
-                        The fairness proof for round {proof.roundIndex} is not available yet. It
-                        appears once the round&apos;s Chainlink VRF request has been fulfilled and
-                        the numbers have been drawn.
+                {!hasProof && isLoading && (
+                    <p className='text-sm text-muted-foreground' data-testid='proof-loading'>
+                        Loading round {proof.roundIndex} from the chain…
+                    </p>
+                )}
+
+                {!hasProof && !isLoading && proof.status === 'pending' && (
+                    <p className='text-sm text-muted-foreground' data-testid='proof-pending'>
+                        Round {proof.roundIndex} hasn&apos;t been drawn yet. The proof appears once
+                        Chainlink VRF returns the seed and the numbers are drawn.
+                    </p>
+                )}
+
+                {!hasProof && !isLoading && proof.status === 'unavailable' && (
+                    <p className='text-sm text-muted-foreground' data-testid='proof-unavailable'>
+                        No proof for round {proof.roundIndex}. This round has no fulfilled VRF
+                        request on-chain.
                     </p>
                 )}
 
@@ -160,7 +176,11 @@ export function _DrawFairnessProof(props: _DrawFairnessProofProps) {
                         {proof.status === 'mismatch' && (
                             <p className='text-xs text-red-500'>
                                 The numbers recomputed in your browser do not equal the on-chain
-                                draw. This should never happen — please report it.
+                                draw. This should never happen. Copy the seed and round number and{' '}
+                                <a href={REPORT_URL} target='_blank' rel='noreferrer' className='underline'>
+                                    report it on Telegram
+                                </a>
+                                .
                             </p>
                         )}
                     </>
@@ -169,15 +189,14 @@ export function _DrawFairnessProof(props: _DrawFairnessProofProps) {
                 <div className='border-t border-border' />
 
                 <VStack className='gap-2'>
-                    <span className='text-sm font-medium text-foreground'>Verify it yourself</span>
+                    <span className='text-sm font-medium text-foreground'>Check the draw yourself</span>
                     <p className='text-xs text-muted-foreground'>
-                        Each draw&apos;s numbers are derived from the Chainlink VRF seed by a partial
-                        Fisher-Yates shuffle over 0 – maxNumber, with keccak256-based rejection sampling so
-                        every index is drawn with zero modulo bias. The code below is what your browser runs
-                        to recompute the draw — paste it anywhere and compare the output with the on-chain
-                        numbers. To avoid trusting this page for the seed itself, fetch it from the
-                        random-number provider contract; the VRF coordinator verifies the cryptographic proof
-                        on-chain before the seed is accepted, as documented by Chainlink.
+                        The code below is exactly what your browser ran to recompute the numbers —
+                        paste it anywhere and compare with the on-chain draw. It rebuilds the draw from
+                        the Chainlink VRF seed with a shuffle that makes every number equally likely
+                        (partial Fisher-Yates with rejection sampling). Don&apos;t want to trust this
+                        page for the seed? Get it from the contract in the last tab; the VRF coordinator
+                        verifies Chainlink&apos;s proof on-chain before the seed is accepted.
                     </p>
                     <VerifySnippets inputs={snippetInputs} />
                     <a
@@ -219,6 +238,7 @@ export default function DrawFairnessProof(props: DrawFairnessProofProps) {
                     status: 'pending',
                 }}
                 chainId={chainId}
+                isLoading
             />
         )
     }
