@@ -13,7 +13,8 @@ type VerifySearch = {
     returnTo?: string
 }
 
-const VALID_TIERS: KycTier[] = ['T0', 'T1', 'T2', 'T3', 'T4']
+// Tier 4 is out of scope for Phase 1 (see CLAUDE.md); T0 is never a target.
+const VALID_TIERS: KycTier[] = ['T1', 'T2', 'T3']
 // Whitelist for `returnTo` so a malicious referrer can't bounce the player to
 // an arbitrary URL after verification.
 const VALID_RETURN_TO = ['/play']
@@ -32,7 +33,7 @@ export const Route = createFileRoute('/verify')({
 
 function VerifyPage() {
     const { tier, returnTo } = Route.useSearch()
-    const targetTier: KycTier = tier && tier !== 'T0' ? tier : 'T1'
+    const targetTier: KycTier = tier ?? 'T1'
 
     return (
         <div className='@container w-full flex-1'>
@@ -41,9 +42,6 @@ function VerifyPage() {
                     <VStack className='gap-6'>
                         <div>
                             <h1 className='heading-4xl text-foreground'>Verify your account</h1>
-                            <p className='text-sm text-secondary-foreground mt-2'>
-                                Reach Tier {targetTier.slice(1)}.
-                            </p>
                             {returnTo && (
                                 <Link
                                     to={returnTo}

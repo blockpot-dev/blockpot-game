@@ -8,7 +8,6 @@ import usePlayerActivityState from '@/hooks/player-summary/usePlayerActivityStat
 import usePrizePoolContext from '@/hooks/player-summary/usePrizePoolContext'
 import { useBlockpotDraw } from '@/providers/BlockpotDrawProvider'
 import usePlayerKyc from '@/hooks/player/usePlayerKyc'
-import useActivePolicy from '@/hooks/contracts/kyc/useActivePolicy'
 import usePlayerBalances from '@/hooks/contracts/operator/usePlayerBalances'
 import useLifetimeSnapshot from '@/hooks/contracts/operator/useLifetimeSnapshot'
 import useIsCompliant from '@/hooks/contracts/kyc-registry/useIsCompliant'
@@ -37,7 +36,6 @@ export default function AccountDialog({ open, onOpenChange }: AccountDialogProps
     const { draw } = useBlockpotDraw()
     const { context: prizePoolContext } = usePrizePoolContext({ enabled: open && !draw })
     const { status: kycStatus } = usePlayerKyc()
-    const { policy } = useActivePolicy()
     const { eth, weth } = usePlayerBalances(address)
     const { snapshot } = useLifetimeSnapshot(address)
     const { isCompliant } = useIsCompliant(address)
@@ -65,13 +63,11 @@ export default function AccountDialog({ open, onOpenChange }: AccountDialogProps
 
     const handleVerify = () => {
         onOpenChange(false)
-        // Verification always targets the tier above the player's current
-        // gate-qualified tier; fall back to T1 when the policy isn't loaded
-        // or the player already sits at the top.
-        const targetTier = state?.nextTier?.tier ?? 'T1'
+        // /verify derives the verification step itself; the tier is never
+        // passed through the URL so it can't leak into player-facing copy.
         void navigate({
             to: '/verify',
-            search: { tier: targetTier, returnTo: '/play' },
+            search: { returnTo: '/play' },
         })
     }
 
@@ -145,7 +141,6 @@ export default function AccountDialog({ open, onOpenChange }: AccountDialogProps
             prizePoolContext={prizePoolContext}
             kycGates={kycStatus?.gates}
             onChainGates={onChainGates}
-            tiers={policy?.tiers ?? []}
             eth={eth}
             weth={weth}
             enteredEurMinor={enteredEurMinor}

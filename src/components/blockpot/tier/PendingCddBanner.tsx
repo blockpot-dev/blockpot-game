@@ -16,8 +16,7 @@ function formatEur(minor: number): string {
     }).format(major)
 }
 
-// Post-draw banner for winnings held while the player verifies toward the
-// next tier. The held amount is the slice of escrow beyond the player's
+// Post-draw banner for a prize held while the player verifies. The held amount is the slice of escrow beyond the player's
 // outflow-cap headroom — entering never lands the player here; only money
 // trying to leave the system does.
 //
@@ -37,7 +36,7 @@ export default function PendingCddBanner({ state, onVerify, className }: Pending
                 </Button>
             }
         >
-            {prizeEur} of your winnings is safe and waiting beyond your current claim allowance. Verify to release it.
+            {prizeEur} of your prize is safe and waiting. Verify your identity to claim it.
         </InfoBanner>
     )
 }

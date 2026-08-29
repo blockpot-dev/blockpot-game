@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react'
 import AccountDialogView, { AccountDialogViewProps } from './AccountDialogView'
 import type { PlayerActivityState, PlayerTier } from '@/hooks/player-summary/usePlayerActivityState'
-import type { TierPolicy } from '@/hooks/contracts/kyc/useActivePolicy'
 import type { GateRecord, GateType } from '@/hooks/player/usePlayerKyc'
 import type { ClaimDecision } from '@/hooks/claim/types'
 import { GATE_BIT_POSITION } from '@/lib/kyc/gateBitmask'
@@ -21,21 +20,9 @@ export default meta
 
 type Story = StoryObj<typeof AccountDialogView>
 
-const UINT256_MAX = (1n << 256n) - 1n
-
-// Mirrors the seeded gaming-service KYCPolicy after task 94: gates are shared
-// per tier; only the cap amounts split by direction. Each tier carries a gross
-// cumulative inflow cap (entries) and outflow cap (claims); the top tier sits
-// at the unlimited sentinel on both fields.
-const FOUR_TIER_POLICY: TierPolicy[] = [
-    { requiredGates: 0n, inflowCapEurMinor: 900_00n, outflowCapEurMinor: 500_00n },
-    { requiredGates: 1n << 1n, inflowCapEurMinor: 2_000_00n, outflowCapEurMinor: 2_000_00n },
-    { requiredGates: (1n << 1n) | (1n << 2n), inflowCapEurMinor: 10_000_00n, outflowCapEurMinor: 10_000_00n },
-    { requiredGates: (1n << 1n) | (1n << 2n) | (1n << 4n), inflowCapEurMinor: UINT256_MAX, outflowCapEurMinor: UINT256_MAX },
-]
-
-// Per-ordinal caps + the next tier's verification ask, kept in lockstep with
-// FOUR_TIER_POLICY above so story states read like real chain derivations.
+// Per-ordinal caps + the next tier's verification ask, mirroring the seeded
+// gaming-service KYCPolicy so story states read like real chain derivations.
+// None of this reaches the rendered dialog — the ladder is backend state.
 const TIER_LADDER: Record<PlayerTier, {
     inflowCap: number | null
     outflowCap: number | null
@@ -125,7 +112,6 @@ function baseArgs(over: Partial<AccountDialogViewProps>): AccountDialogViewProps
         prizePoolContext: undefined,
         kycGates: {},
         onChainGates: 0n,
-        tiers: FOUR_TIER_POLICY,
         eth: 0n,
         weth: 0n,
         enteredEurMinor: 0n,
@@ -207,9 +193,8 @@ export const AllClaimable_T1: Story = {
     }),
 }
 
-// T0 with claimable balance AND held winnings — the cap-split branch surfaces
-// both "Available now" and "Held until verification" (claim-side ID + address
-// verification, never SoF/SoW).
+// T0 with claimable balance AND a held prize — the split branch surfaces
+// "Available to claim" plus a "Verify to claim the rest" CTA (no held figure).
 export const CapSplit_T0: Story = {
     args: baseArgs({
         state: state({
@@ -229,8 +214,8 @@ export const CapSplit_T0: Story = {
     }),
 }
 
-// T1 holding back winnings — the post-T1 release branch shows a single Release
-// button instead of the cap-split pair.
+// T1 with a held prize now claimable — a single Claim button instead of the
+// split pair.
 export const PostT1Release: Story = {
     args: baseArgs({
         state: state({
@@ -253,7 +238,7 @@ export const PostT1Release: Story = {
 
 const KYC_UPGRADE_DECISION: ClaimDecision = {
     allow: false,
-    reason: 'Tier 0 cap exceeded',
+    reason: 'Verification required',
     requiredAction: 'KYC_UPGRADE',
 }
 
@@ -295,5 +280,24 @@ export const PendingClaimOnly: Story = {
         eth: 0n,
         weth: 0n,
         isCompliant: false,
+    }),
+}
+
+// T2 at 95% of cumulative entries — the single dismissible proximity nudge on
+// the Verification tab. The only place cap proximity is ever surfaced.
+export const ProximityNudge_T2: Story = {
+    args: baseArgs({
+        state: state({
+            currentTier: 'T2',
+            entered: 9_500_00,
+            won: 0,
+            largestSingleWin: 0,
+        }),
+        kycGates: T2_GATES,
+        onChainGates: T2_BITMAP,
+        enteredEurMinor: 9_500_00n,
+        wonEurMinor: 0n,
+        profitEurMinor: 0n,
+        isCompliant: true,
     }),
 }

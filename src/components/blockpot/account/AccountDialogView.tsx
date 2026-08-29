@@ -1,6 +1,5 @@
 import { Button, Dialog, DialogContent, DialogHeader, DialogTitle } from '@blockpot-dev/blockpot-design-system'
 import { XIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
 import HStack from '@/components/core/HStack/HStack'
 import VStack from '@/components/core/VStack/VStack'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -8,7 +7,6 @@ import { ClaimDecision } from '@/hooks/claim/types'
 import { GateRecord, GateType } from '@/hooks/player/usePlayerKyc'
 import { PrizePoolContext } from '@/hooks/player-summary/usePrizePoolContext'
 import { PlayerActivityState } from '@/hooks/player-summary/usePlayerActivityState'
-import { TierPolicy } from '@/hooks/contracts/kyc/useActivePolicy'
 import AccountDialogWalletSection from './AccountDialogWalletSection'
 import AccountDialogWalletTab from './AccountDialogWalletTab'
 import AccountDialogVerificationTab from './AccountDialogVerificationTab'
@@ -22,7 +20,6 @@ export type AccountDialogViewProps = {
     prizePoolContext: PrizePoolContext | undefined
     kycGates: Partial<Record<GateType, GateRecord>> | undefined
     onChainGates: bigint
-    tiers: readonly TierPolicy[]
 
     eth: bigint
     weth: bigint
@@ -48,31 +45,12 @@ export type AccountDialogViewProps = {
 export default function AccountDialogView(props: AccountDialogViewProps) {
     const {
         open, onOpenChange,
-        state, draw, prizePoolContext, kycGates, onChainGates, tiers,
+        state, draw, prizePoolContext, kycGates, onChainGates,
         eth, weth, enteredEurMinor, wonEurMinor, profitEurMinor, isCompliant,
         blockedUntil,
         decision, isClaiming, claimRequestPending, opStatus, opError,
         onClaim, onReleasePending, onVerify, onClearDecision,
     } = props
-
-    const summaryCurrentTier = state?.currentTier ?? 'T0'
-
-    // Lift the tier-tab selection so we can decide whether the
-    // claim-allowance banner should render: it duplicates TierBreakdown's
-    // inline "Start verification" CTA when the user is browsing a future
-    // tier, so we only show the banner while the current tier is selected.
-    const tierCount = tiers.length
-    const parsedCurrentIdx = parseInt(summaryCurrentTier.slice(1), 10)
-    const currentTierIdx = tierCount === 0
-        ? 0
-        : Math.min(Math.max(parsedCurrentIdx, 0), tierCount - 1)
-    const [selectedTierIdx, setSelectedTierIdx] = useState<number>(currentTierIdx)
-    // Snap back when the canonical current tier changes upstream (e.g. the
-    // chain emits PlayerGatesSet / TierOverrideSet while the dialog is open).
-    useEffect(() => {
-        setSelectedTierIdx(currentTierIdx)
-    }, [currentTierIdx])
-    const isViewingCurrentTier = selectedTierIdx === currentTierIdx
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -126,10 +104,6 @@ export default function AccountDialogView(props: AccountDialogViewProps) {
                                         state={state}
                                         kycGates={kycGates}
                                         onChainGates={onChainGates}
-                                        tiers={tiers}
-                                        selectedTierIdx={selectedTierIdx}
-                                        onSelectedTierChange={setSelectedTierIdx}
-                                        isViewingCurrentTier={isViewingCurrentTier}
                                         onVerify={onVerify}
                                     />
                                 </TabsContent>

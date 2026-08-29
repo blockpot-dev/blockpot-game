@@ -1,9 +1,8 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import AccountDialogView from './AccountDialogView'
 import type { PlayerActivityState } from '@/hooks/player-summary/usePlayerActivityState'
-import type { TierPolicy } from '@/hooks/contracts/kyc/useActivePolicy'
 
 // Mocking wagmi at the hook boundary keeps the wallet-card subtree alive
 // without dragging the wagmi/Web3 providers into this dialog-level test —
@@ -30,13 +29,59 @@ vi.mock('wagmi', () => ({
     useChainId: () => 1,
 }))
 
-const UINT256_MAX = (1n << 256n) - 1n
+const T0_STATE: PlayerActivityState = {
+    currentTier: 'T0',
+    cumEnteredEurMinor: 200_00,
+    cumWonEurMinor: 1_500_00,
+    cumClaimsEurMinor: 0,
+    largestSingleWinEurMinor: 1_500_00,
+    inflow: {
+        capEurMinor: 900_00,
+        usedEurMinor: 200_00,
+        headroomEurMinor: 700_00,
+        ratio: 200_00 / 900_00,
+    },
+    outflow: {
+        capEurMinor: 500_00,
+        usedEurMinor: 0,
+        headroomEurMinor: 500_00,
+        ratio: 0,
+    },
+    nextTier: {
+        tier: 'T1',
+        missingGates: 1n << 1n,
+        inflowCapEurMinor: 2_000_00,
+        outflowCapEurMinor: 2_000_00,
+    },
+    pendingClaimEurMinor: 600_00,
+}
 
-const TIERS: TierPolicy[] = [
-    { requiredGates: 0n, inflowCapEurMinor: 900_00n, outflowCapEurMinor: 500_00n },
-    { requiredGates: 0n, inflowCapEurMinor: 9_000_00n, outflowCapEurMinor: 2_000_00n },
-    { requiredGates: 0n, inflowCapEurMinor: UINT256_MAX, outflowCapEurMinor: UINT256_MAX },
-]
+const T2_STATE: PlayerActivityState = {
+    currentTier: 'T2',
+    cumEnteredEurMinor: 9_500_00,
+    cumWonEurMinor: 0,
+    cumClaimsEurMinor: 0,
+    largestSingleWinEurMinor: 0,
+    inflow: {
+        capEurMinor: 10_000_00,
+        usedEurMinor: 9_500_00,
+        headroomEurMinor: 500_00,
+        ratio: 0.95,
+    },
+    outflow: {
+        capEurMinor: 10_000_00,
+        usedEurMinor: 0,
+        headroomEurMinor: 10_000_00,
+        ratio: 0,
+    },
+    nextTier: {
+        tier: 'T3',
+        missingGates: 1n << 4n,
+        inflowCapEurMinor: null,
+        outflowCapEurMinor: null,
+    },
+    pendingClaimEurMinor: 0,
+}
 
 const T1_STATE: PlayerActivityState = {
     currentTier: 'T1',
@@ -74,7 +119,6 @@ function makeProps(over: Partial<React.ComponentProps<typeof AccountDialogView>>
         prizePoolContext: undefined,
         kycGates: {},
         onChainGates: 0n,
-        tiers: TIERS,
         eth: 0n,
         weth: 0n,
         enteredEurMinor: 100_00n,
@@ -95,13 +139,12 @@ function makeProps(over: Partial<React.ComponentProps<typeof AccountDialogView>>
 }
 
 describe('<AccountDialogView> — Wallet / Verification tabs', () => {
-    it('renders the Wallet tab by default with lifetime stats and no flow card', () => {
+    it('renders the Wallet tab by default with lifetime stats', () => {
         render(<AccountDialogView {...makeProps()} />)
 
         expect(screen.getByText(/entered/i)).toBeInTheDocument()
         expect(screen.getByText(/won/i)).toBeInTheDocument()
         expect(screen.getByText(/profit/i)).toBeInTheDocument()
-        expect(screen.queryByRole('group', { name: /net flow/i })).not.toBeInTheDocument()
     })
 
     it('switching to the Verification tab swaps the panel content', async () => {
@@ -110,7 +153,7 @@ describe('<AccountDialogView> — Wallet / Verification tabs', () => {
 
         await user.click(screen.getByRole('tab', { name: /verification/i }))
 
-        expect(screen.getByRole('group', { name: /net flow/i })).toBeInTheDocument()
+        expect(screen.getByText(/some prizes need identity verification/i)).toBeInTheDocument()
         expect(screen.queryByText(/profit/i)).not.toBeInTheDocument()
     })
 
@@ -141,5 +184,57 @@ describe('<AccountDialogView> — Wallet / Verification tabs', () => {
         expect(screen.queryByRole('tab', { name: /verification/i })).not.toBeInTheDocument()
         expect(screen.queryByText(/entered/i)).not.toBeInTheDocument()
         expect(screen.queryByText(/net entry headroom/i)).not.toBeInTheDocument()
+    })
+})
+
+// B-VIS-1/2: the tier ladder is invisible to players in Phase 1. Nothing in
+// either tab may name a tier, a cap, an allowance, headroom, or a limit figure.
+const LADDER_COPY = /Tier \d|T[0-4]\b|allowance|cap\b|headroom|limit €/
+
+describe('<AccountDialogView> — no tier ladder on any player surface', () => {
+    beforeEach(() => {
+        window.sessionStorage.clear()
+    })
+
+    it.each([
+        ['T0', T0_STATE, 150_000_000_000_000_000n],
+        ['T2', T2_STATE, 0n],
+    ] as const)('renders no tier, cap, allowance, headroom or limit copy for a %s player', async (_label, state, eth) => {
+        const user = userEvent.setup()
+        const { container } = render(<AccountDialogView {...makeProps({ state, eth, isCompliant: false })} />)
+
+        expect(container.textContent).not.toMatch(LADDER_COPY)
+
+        await user.click(screen.getByRole('tab', { name: /verification/i }))
+        expect(container.textContent).not.toMatch(LADDER_COPY)
+    })
+
+    it('shows the gates still missing and a single Verify now CTA on the Verification tab', async () => {
+        const user = userEvent.setup()
+        const onVerify = vi.fn()
+        // No held prize and under the 90% nudge, so the only Verify now is the checklist's.
+        render(<AccountDialogView {...makeProps({ state: { ...T0_STATE, pendingClaimEurMinor: 0 }, onVerify })} />)
+
+        await user.click(screen.getByRole('tab', { name: /verification/i }))
+        expect(screen.getByText('Identity')).toBeInTheDocument()
+        expect(screen.queryByRole('tab', { name: /tier/i })).not.toBeInTheDocument()
+
+        const ctas = screen.getAllByRole('button', { name: /^verify now$/i })
+        expect(ctas).toHaveLength(1)
+        await user.click(ctas[0])
+        expect(onVerify).toHaveBeenCalledOnce()
+    })
+
+    it('shows exactly one dismissible proximity nudge at 90% and remembers the dismissal', async () => {
+        const user = userEvent.setup()
+        render(<AccountDialogView {...makeProps({ state: T2_STATE })} />)
+
+        await user.click(screen.getByRole('tab', { name: /verification/i }))
+        const nudge = screen.getByText(/you're close to a limit that needs verification/i)
+        expect(nudge).toBeInTheDocument()
+
+        await user.click(screen.getByRole('button', { name: /dismiss/i }))
+        expect(screen.queryByText(/you're close to a limit that needs verification/i)).not.toBeInTheDocument()
+        expect(window.sessionStorage.getItem('blockpot.proximityNudgeDismissed')).toBe('1')
     })
 })

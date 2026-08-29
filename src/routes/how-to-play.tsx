@@ -13,7 +13,7 @@ const SECTIONS: SectionMeta[] = [
     { number: 2, id: 's2', title: 'How draws work' },
     { number: 3, id: 's3', title: 'How payouts work' },
     { number: 4, id: 's4', title: 'Getting started' },
-    { number: 5, id: 's5', title: 'Verification and tiers' },
+    { number: 5, id: 's5', title: 'Verification' },
     { number: 6, id: 's6', title: 'Responsible gaming' },
     { number: 7, id: 's7', title: 'Refunds' },
 ]
@@ -137,28 +137,24 @@ function HowToPlayPage() {
                                     play is legal where you reside.
                                 </li>
                                 <li>
-                                    Start playing on a Tier 0 starter account. Verify your
-                                    identity via{' '}
+                                    Start playing straight away. Identity verification is only
+                                    asked for when a prize needs it — see{' '}
                                     <Link to='/verify' className='text-accent-foreground hover:underline'>
                                         Verify your account
-                                    </Link>{' '}
-                                    to raise your claim cap.
+                                    </Link>.
                                 </li>
                             </ol>
                         </NumberedSection>
 
-                        <NumberedSection number={5} id='s5' title='Verification and tiers'>
+                        <NumberedSection number={5} id='s5' title='Verification'>
                             <p>
-                                Blockpot uses a tiered KYC model. <strong>Tier 0</strong> is the
-                                starter account — no verification, but claims of larger
-                                winnings are capped. <strong>Tier 1 and above</strong> require
-                                identity verification (and address verification past Tier 1)
-                                and progressively raise the cap on what you can claim from a
-                                single round. See{' '}
+                                Identity verification is required before larger prizes can be
+                                claimed. When a prize needs it, we tell you at the point of
+                                claiming; your prize stays safe and waiting until verification
+                                completes. You can also start early at{' '}
                                 <Link to='/verify' className='text-accent-foreground hover:underline'>
                                     Verify your account
-                                </Link>{' '}
-                                to upgrade.
+                                </Link>.
                             </p>
                         </NumberedSection>
 

@@ -32,7 +32,6 @@ function makeProps(): React.ComponentProps<typeof AccountDialogView> {
         prizePoolContext: undefined,
         kycGates: undefined,
         onChainGates: 0n,
-        tiers: [],
         eth: 0n,
         weth: 0n,
         enteredEurMinor: 0n,

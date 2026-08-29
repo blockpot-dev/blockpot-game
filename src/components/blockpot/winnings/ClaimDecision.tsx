@@ -1,6 +1,7 @@
 import { Button, ConsentDialog, InfoBanner } from '@blockpot-dev/blockpot-design-system'
 import { PretxRequiredAction } from '@/hooks/player/usePretxDeposit'
 import { ClaimDecision } from '@/hooks/claim/types'
+import HStack from '@/components/core/HStack/HStack'
 
 export type ClaimDecisionProps = {
     decision: ClaimDecision
@@ -11,18 +12,11 @@ export type ClaimDecisionProps = {
 
 const TRANSIENT: PretxRequiredAction[] = ['SEQUENCER_DOWN']
 
-function formatEur(minor: number): string {
-    return new Intl.NumberFormat('en-IE', {
-        style: 'currency',
-        currency: 'EUR',
-        maximumFractionDigits: 2,
-    }).format(minor / 100)
-}
-
 // Renders a non-Allow pretx decision into the matching surface — the
-// full-screen ConsentDialog for the Tier 0 → Tier 1 escalation, an inline
-// banner for cap violations, neutral copy for sanctions hits, and a retry
-// banner for transient feed errors.
+// full-screen ConsentDialog when verification is needed to claim, an inline
+// banner for headroom decisions, neutral copy for sanctions hits, and a retry
+// banner for transient feed errors. Never names a tier, cap, allowance or
+// headroom figure (KB `blockpot/story-map` B-VIS-1/2).
 export default function ClaimDecisionView({ decision, onClose, onVerify, onRetry }: ClaimDecisionProps) {
     if (decision.allow) return null
 
@@ -31,21 +25,15 @@ export default function ClaimDecisionView({ decision, onClose, onVerify, onRetry
             <ConsentDialog
                 open={true}
                 onOpenChange={(open) => { if (!open) onClose() }}
-                title='Verify to continue'
+                title='Verify to claim'
                 body={
                     <span>
-                        Tier 0 accounts can only claim up to your starter cap. Verify your
-                        identity to unlock larger claims.
+                        Verification needed to claim this amount. It takes a few minutes.
                     </span>
                 }
-                required={[
-                    {
-                        id: 'understood',
-                        label: 'I understand verification is required to continue this claim.',
-                    },
-                ]}
+                required={[]}
                 confirmLabel='Verify now'
-                cancelLabel='Cancel'
+                cancelLabel='Not now'
                 onConfirm={onVerify}
                 onCancel={onClose}
             />
@@ -53,22 +41,23 @@ export default function ClaimDecisionView({ decision, onClose, onVerify, onRetry
     }
 
     if (decision.requiredAction === 'HEADROOM_EXCEEDED' || decision.requiredAction === 'LIMIT_EXCEEDED') {
-        // Partial-claim suggestion: the service sends the remaining outflow
-        // headroom on HEADROOM_EXCEEDED; whatever escrow fits inside it is
-        // claimable right now.
-        const suggestionEurMinor = decision.headroomEurMinor ?? 0
+        // The service also sends `headroomEurMinor` here; it is deliberately
+        // not rendered — the remaining headroom is ladder information.
         return (
             <InfoBanner
                 tone='warn'
                 action={
-                    <Button size='sm' variant='default' onClick={onVerify}>
-                        Verify to raise cap
-                    </Button>
+                    <HStack className='gap-2'>
+                        <Button size='sm' variant='secondary' onClick={onClose}>
+                            Not now
+                        </Button>
+                        <Button size='sm' variant='default' onClick={onVerify}>
+                            Verify now
+                        </Button>
+                    </HStack>
                 }
             >
-                {suggestionEurMinor > 0
-                    ? `This amount exceeds your current claim allowance. You can claim up to ${formatEur(suggestionEurMinor)} right now — verify to release the rest.`
-                    : 'This amount exceeds your current claim allowance. Verify to raise the cap.'}
+                Verification needed to claim this amount. It takes a few minutes.
             </InfoBanner>
         )
     }

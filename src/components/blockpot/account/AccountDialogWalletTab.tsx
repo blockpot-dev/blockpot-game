@@ -104,17 +104,13 @@ export default function AccountDialogWalletTab(props: AccountDialogWalletTabProp
                 {capSplit && (
                     <VStack className='gap-3'>
                         <VStack className='gap-1'>
-                            <span className='text-xs uppercase text-secondary-foreground'>Available now</span>
+                            <span className='text-xs uppercase text-secondary-foreground'>Available to claim</span>
                             <span className='text-sm font-semibold'>
                                 {formatEtherMaxDecimals(eth, 4)} <span className='text-secondary-foreground font-normal'>ETH</span>
                                 {weth > 0n && (
                                     <> + {formatEtherMaxDecimals(weth, 4)} <span className='text-secondary-foreground font-normal'>WETH</span></>
                                 )}
                             </span>
-                        </VStack>
-                        <VStack className='gap-1'>
-                            <span className='text-xs uppercase text-secondary-foreground'>Held until verification</span>
-                            <span className='text-sm font-semibold'>{formatEur(pendingClaimEurMinor)}</span>
                         </VStack>
                         <HStack className='gap-2 flex-wrap'>
                             <Button
@@ -124,7 +120,7 @@ export default function AccountDialogWalletTab(props: AccountDialogWalletTabProp
                                 {isClaiming || claimRequestPending ? 'CLAIMING…' : 'CLAIM AVAILABLE'}
                             </Button>
                             <Button variant='secondary' onClick={onVerify}>
-                                Verify to unlock {formatEur(pendingClaimEurMinor)}
+                                Verify to claim the rest
                             </Button>
                         </HStack>
                     </VStack>
@@ -133,14 +129,14 @@ export default function AccountDialogWalletTab(props: AccountDialogWalletTabProp
                 {postT1Release && (
                     <VStack className='gap-3'>
                         <VStack className='gap-1'>
-                            <span className='text-xs uppercase text-secondary-foreground'>Available to release</span>
+                            <span className='text-xs uppercase text-secondary-foreground'>Available to claim</span>
                             <span className='text-sm font-semibold'>{formatEur(pendingClaimEurMinor)}</span>
                         </VStack>
                         <Button
                             onClick={onReleasePending}
                             disabled={isClaiming || claimRequestPending || opPending || (eth === 0n && weth === 0n)}
                         >
-                            {isClaiming || claimRequestPending ? 'RELEASING…' : `Release ${formatEur(pendingClaimEurMinor)}`}
+                            {isClaiming || claimRequestPending ? 'CLAIMING…' : 'CLAIM'}
                         </Button>
                     </VStack>
                 )}

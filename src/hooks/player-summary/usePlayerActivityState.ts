@@ -19,8 +19,7 @@ export type PlayerTier = 'T0' | 'T1' | 'T2' | 'T3' | 'T4'
 // (cumEntered − cumClaims) consumes the inflow cap while positive and the
 // outflow cap while negative, so only one cap is being eaten into at any
 // moment. These fields stay gross totals for the existing consumers
-// (TierUpgradePrompt, PrizePoolPreCommitBanner, entry/claim guards);
-// NetFlowCard derives the signed net position itself from the cum counters.
+// (TierUpgradePrompt, PrizePoolPreCommitBanner, entry/claim guards).
 export type DirectionalFlow = {
     capEurMinor: number | null // null = unlimited (uint256.max)
     usedEurMinor: number

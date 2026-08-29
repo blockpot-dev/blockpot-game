@@ -21,9 +21,9 @@ function formatEur(minor: number): string {
 // Spec-named component (see `kyc-implementation-requirements.md` §7.7).
 // Renders above the entry form on /play whenever a win of the prize pool's size
 // would not fit inside the player's remaining outflow-cap headroom: the
-// overflow slice would be paid into escrow and held until the next tier's
-// gates pass. The held figure is approximate — it is priced at today's
-// EUR rate and headroom may move before the draw settles.
+// overflow slice would be paid into escrow and held until verification. The
+// held figure is never shown — it is derived from cap headroom, which is
+// ladder information the player must not see (B-VIS-1/2).
 //
 // Hidden while the whole prize pool fits in headroom (including the unlimited
 // top tier, whose headroom is effectively infinite).
@@ -36,7 +36,6 @@ export default function PrizePoolPreCommitBanner(props: PrizePoolPreCommitBanner
     if (heldEurMinor <= 0) return null
 
     const prizeEur = formatEur(context.currentPrizePoolEurMinor)
-    const heldEur = formatEur(heldEurMinor)
 
     return (
         <InfoBanner
@@ -48,7 +47,7 @@ export default function PrizePoolPreCommitBanner(props: PrizePoolPreCommitBanner
                 </Button>
             }
         >
-            A win in this draw could be worth {prizeEur}. ≈ {heldEur} of a prize this size would be held until verification — verify now to claim it in full.
+            The top prize is currently {prizeEur}. Verify your identity before the draw so any prize is yours to claim in full.
         </InfoBanner>
     )
 }

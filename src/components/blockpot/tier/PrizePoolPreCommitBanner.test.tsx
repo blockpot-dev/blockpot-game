@@ -35,8 +35,8 @@ function makeState(outflow: Partial<DirectionalFlow> = {}): PlayerActivityState 
 const noop = () => { /* test */ }
 
 describe('<PrizePoolPreCommitBanner>', () => {
-    it('surfaces the slice of the prize pool beyond outflow headroom', () => {
-        // €5,000 prize pool against €500 of outflow headroom → ≈ €4,500 held.
+    it('prompts to verify when the prize pool exceeds outflow headroom, without the held figure', () => {
+        // €5,000 prize pool against €500 of outflow headroom → banner shows, figure hidden.
         render(
             <PrizePoolPreCommitBanner
                 state={makeState()}
@@ -45,8 +45,9 @@ describe('<PrizePoolPreCommitBanner>', () => {
             />,
         )
 
-        expect(screen.getByText(/could be worth €5,000/)).toBeInTheDocument()
-        expect(screen.getByText(/≈ €4,500 of a prize this size would be held/)).toBeInTheDocument()
+        expect(screen.getByText(/the top prize is currently €5,000/i)).toBeInTheDocument()
+        expect(screen.queryByText(/€4,500/)).not.toBeInTheDocument()
+        expect(screen.queryByText(/held|headroom|cap\b|Tier \d/i)).not.toBeInTheDocument()
     })
 
     it('renders nothing when the prize pool fits inside outflow headroom', () => {

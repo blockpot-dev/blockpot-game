@@ -4,36 +4,24 @@ import { Button } from '@blockpot-dev/blockpot-design-system'
 import { Wallet } from 'lucide-react'
 import { formatAccountAddress } from '@/utilities/formatters'
 import { useWalletOptionsDialogOpen } from '@/providers/ModalOpenStateProvider'
-import usePlayerActivityState, { PlayerActivityState, PlayerTier } from '@/hooks/player-summary/usePlayerActivityState'
-import usePrizePoolContext, { PrizePoolContext } from '@/hooks/player-summary/usePrizePoolContext'
-import { useBlockpotDraw } from '@/providers/BlockpotDrawProvider'
+import usePlayerActivityState, { PlayerActivityState } from '@/hooks/player-summary/usePlayerActivityState'
 import useAccountAddress from '@/hooks/utilities/useAccountAddress'
 import usePlayerBalances from '@/hooks/contracts/operator/usePlayerBalances'
 import AccountDialog from '@/components/blockpot/account/AccountDialog'
 import { cn } from '@/lib/utils'
 
-const TIER_ORDER: PlayerTier[] = ['T0', 'T1', 'T2', 'T3', 'T4']
-const TIER_WARN_RATIO = 0.8
-
-function tierIndex(tier: PlayerTier): number {
-    return TIER_ORDER.indexOf(tier)
-}
-
+// The attention dot means one thing only: there is a prize to claim
+// (claimable balance or a held prize). It never fires on cap proximity —
+// that would be a persistent ladder indicator (KB compliance-kyc
+// "The proximity nudge": no persistent indicator).
 function needsAttention(
     state: PlayerActivityState | undefined,
-    prizePoolContext: PrizePoolContext | undefined,
-    drawActive: boolean,
     eth: bigint | undefined,
     weth: bigint | undefined,
 ): boolean {
     if ((eth ?? 0n) > 0n || (weth ?? 0n) > 0n) return true
     if (!state) return false
-    if (Math.max(state.inflow.ratio, state.outflow.ratio) >= TIER_WARN_RATIO) return true
-    if (state.pendingClaimEurMinor > 0) return true
-    if (!drawActive && prizePoolContext && tierIndex(prizePoolContext.tierRequiredToFullyClaim) > tierIndex(state.currentTier)) {
-        return true
-    }
-    return false
+    return state.pendingClaimEurMinor > 0
 }
 
 export default function WalletButton() {
@@ -46,8 +34,6 @@ export default function WalletButton() {
     const { data: ensAvatar } = useEnsAvatar({ name: ensName!, chainId: 1, query: ensQueryOptions })
 
     const { state } = usePlayerActivityState()
-    const { draw } = useBlockpotDraw()
-    const { context: prizePoolContext } = usePrizePoolContext({ enabled: isConnected && !draw })
     const playerAddress = useAccountAddress()
     const { eth, weth } = usePlayerBalances(playerAddress)
 
@@ -63,7 +49,7 @@ export default function WalletButton() {
         )
     }
 
-    const attention = needsAttention(state, prizePoolContext, !!draw, eth, weth)
+    const attention = needsAttention(state, eth, weth)
     const label = ensName ?? (address ? formatAccountAddress(address.toUpperCase()) : '')
 
     return (
@@ -86,6 +72,7 @@ export default function WalletButton() {
                         attention ? 'opacity-100' : 'opacity-0',
                     )}
                 />
+                {attention && <span className='sr-only'>You have a prize to claim</span>}
             </Button>
             <AccountDialog open={open} onOpenChange={setOpen} />
         </>

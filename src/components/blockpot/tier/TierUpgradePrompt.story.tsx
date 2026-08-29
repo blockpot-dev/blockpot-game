@@ -10,9 +10,9 @@ export default meta
 
 type Story = StoryObj<typeof TierUpgradePrompt>
 
-// T0 Phase 1 caps: €900 in / €500 out.
-const T0_INFLOW_CAP = 900_00
-const T0_OUTFLOW_CAP = 500_00
+// Phase 1 default caps: €900 in / €500 out. Never rendered — inputs only.
+const INFLOW_CAP = 900_00
+const OUTFLOW_CAP = 500_00
 
 function flow(used: number, cap: number) {
     return {
@@ -32,8 +32,8 @@ function state(opts: { entered?: number, claimed?: number }): PlayerActivityStat
         cumWonEurMinor: 0,
         cumClaimsEurMinor: claimed,
         largestSingleWinEurMinor: 0,
-        inflow: flow(entered, T0_INFLOW_CAP),
-        outflow: flow(claimed, T0_OUTFLOW_CAP),
+        inflow: flow(entered, INFLOW_CAP),
+        outflow: flow(claimed, OUTFLOW_CAP),
         nextTier: {
             tier: 'T1',
             missingGates: 1n << 1n,
@@ -46,23 +46,19 @@ function state(opts: { entered?: number, claimed?: number }): PlayerActivityStat
 
 const noop = () => { /* storybook */ }
 
+// Below 90% on both directions — nothing renders.
 export const NotYet: Story = {
-    args: { state: state({ entered: 200_00, claimed: 100_00 }), onVerify: noop },
-}
-export const InflowEightyPercent: Story = {
-    args: { state: state({ entered: 720_00 }), onVerify: noop },
-}
-export const InflowNinetyFivePercent: Story = {
-    args: { state: state({ entered: 860_00 }), onVerify: noop },
-}
-export const OutflowEightyPercent: Story = {
-    args: { state: state({ claimed: 400_00 }), onVerify: noop },
-}
-export const OutflowNinetyFivePercent: Story = {
-    args: { state: state({ claimed: 480_00 }), onVerify: noop },
-}
-// Both directions past warn — renders one banner per direction so the player
-// sees a distinct "keep playing" prompt and a "keep claiming" prompt.
-export const BothDirectionsWarn: Story = {
     args: { state: state({ entered: 720_00, claimed: 400_00 }), onVerify: noop },
+}
+// 90% of cumulative entries — the single dismissible nudge.
+export const EntriesAtNinetyPercent: Story = {
+    args: { state: state({ entered: 810_00 }), onVerify: noop },
+}
+// 90% of cumulative claims — same banner, same copy.
+export const ClaimsAtNinetyPercent: Story = {
+    args: { state: state({ claimed: 450_00 }), onVerify: noop },
+}
+// Both directions past 90% — still exactly one banner.
+export const BothDirections: Story = {
+    args: { state: state({ entered: 880_00, claimed: 490_00 }), onVerify: noop },
 }

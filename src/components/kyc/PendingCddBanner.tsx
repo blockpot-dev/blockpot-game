@@ -14,14 +14,14 @@ function formatEur(minor: number): string {
     }).format(minor / 100)
 }
 
-// Shown inside /verify while winnings are held pending CDD. Copy must never
+// Shown inside /verify while a prize is held pending CDD. Copy must never
 // say "locked" — §2 mandates the "safe and waiting" framing.
 export default function PendingCddBanner({ status, className }: PendingCddBannerProps) {
     const pending = status?.pendingCddEurMinor
     if (!Number.isFinite(pending) || (pending as number) <= 0) return null
     return (
         <InfoBanner tone='warn' className={className}>
-            Your prize of {formatEur(pending as number)} is safe. Complete verification to release it.
+            {formatEur(pending as number)} of your prize is safe and waiting. Verify your identity to claim it.
         </InfoBanner>
     )
 }
