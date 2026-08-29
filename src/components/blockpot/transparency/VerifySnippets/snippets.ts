@@ -269,7 +269,7 @@ export function buildSnippets(inputs: SnippetInputs): Snippet[] {
         {
             id: 'fetch-seed',
             label: 'Fetch the seed',
-            language: 'Bash / JS',
+            language: 'Bash',
             title: 'Get the seed without trusting this page',
             code: fetchSeedSnippet(inputs),
             actions: [],
