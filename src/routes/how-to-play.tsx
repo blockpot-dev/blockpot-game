@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Container } from '@blockpot-dev/blockpot-design-system'
 import VStack from '@/components/core/VStack/VStack'
+import useEntryQuote from '@/hooks/contracts/operator/useEntryQuote'
+import { BASIS_POINTS_DIVISOR, CF_BASIS_POINTS, PEA_PER_ENTRY_WEI } from '@/constants/protocol'
+import { formatEtherMaxDecimalsGreedy } from '@/utilities/formatters'
 
 export const Route = createFileRoute('/how-to-play')({
     component: HowToPlayPage,
@@ -18,6 +21,8 @@ const SECTIONS: SectionMeta[] = [
     { number: 7, id: 's7', title: 'Refunds' },
 ]
 
+const LINK_CLASS = 'text-accent-foreground hover:underline'
+
 function NumberedSection({ number, id, title, children }: SectionMeta & { children: React.ReactNode }) {
     return (
         <section id={id} className='flex flex-col gap-3'>
@@ -31,7 +36,7 @@ function TableOfContents() {
     return (
         <nav aria-label='On this page' className='flex flex-col gap-1'>
             {SECTIONS.map((s) => (
-                <a key={s.id} href={`#${s.id}`} className='text-sm text-accent-foreground hover:underline'>
+                <a key={s.id} href={`#${s.id}`} className={`text-sm ${LINK_CLASS}`}>
                     {s.number}. {s.title}
                 </a>
             ))}
@@ -39,7 +44,39 @@ function TableOfContents() {
     )
 }
 
-function HowToPlayPage() {
+// Percent of the entry amount, from wei figures. One decimal, trailing zero
+// dropped ("2%", "2.5%").
+function percentOf(part: bigint, whole: bigint): string {
+    if (whole === 0n) return '—'
+    const tenths = (part * 1000n + whole / 2n) / whole
+    const s = (Number(tenths) / 10).toFixed(1).replace(/\.0$/, '')
+    return `${s}%`
+}
+
+// Fee figures come from the operator's on-chain `entryQuote` for one entry.
+// Until the quote resolves (or when no contract is configured for the current
+// chain) the entry amount and protocol fee fall back to the constants the Draw
+// core contract hardcodes (src/constants/protocol.ts); the operator fee is
+// operator-set and has no static mirror, so it stays blank until it arrives.
+function EntryFeeBreakdown() {
+    const { quote } = useEntryQuote(1n)
+    const live = quote.pea > 0n
+    const pea = live ? quote.pea : PEA_PER_ENTRY_WEI
+    const cfPercent = live
+        ? percentOf(quote.cf, quote.pea)
+        : percentOf(CF_BASIS_POINTS, BASIS_POINTS_DIVISOR)
+    const opPercent = live ? percentOf(quote.opFee, quote.pea) : '—'
+
+    return (
+        <ul className='list-disc pl-6 space-y-1'>
+            <li><strong>Entry amount</strong> — {formatEtherMaxDecimalsGreedy(pea, 6)} ETH, goes to the prize pool.</li>
+            <li><strong>Protocol fee</strong> — {cfPercent} of the entry amount, paid to Unipot Protocol.</li>
+            <li><strong>Operator fee</strong> — {opPercent} of the entry amount, paid to Blockpot, the operator that runs this site.</li>
+        </ul>
+    )
+}
+
+export function HowToPlayPage() {
     return (
         <div className='@container w-full flex-1'>
             <div className='@min-xs:max-w-[820px] mx-auto my-8 px-4'>
@@ -48,66 +85,59 @@ function HowToPlayPage() {
                         <div>
                             <h1 className='heading-4xl text-foreground'>How to play</h1>
                             <p className='text-sm text-secondary-foreground mt-2'>
-                                Blockpot is a licensed prize draw operator, powered by Unipot Protocol — every entry is recorded on-chain, draws use verifiable Chainlink VRF randomness, and prizes settle to the wallet you played from.
+                                Enter a draw. Check the result yourself. Every entry, draw
+                                and payout is on-chain —{' '}
+                                <Link to='/transparency' className={LINK_CLASS}>see the proof</Link>.
+                                Prizes are escrowed to the wallet you entered from and you
+                                claim them. Blockpot is an operator powered by Unipot Protocol.
                             </p>
                         </div>
 
                         <TableOfContents />
 
-                        {/* PEA / CF mirrored from src/constants/protocol.ts; OF default mirrored from src/constants/operator.ts (VITE_OPERATOR_FEE_BPS). */}
                         <NumberedSection number={1} id='s1' title='What is an entry?'>
                             <p>
-                                Each entry is one chance at a prize in the current
-                                draw. Every entry costs a fixed amount:
+                                Each entry is one chance at a prize in the current draw.
+                                Every entry costs a fixed amount, made up of three parts:
                             </p>
-                            <ul className='list-disc pl-6 space-y-1'>
-                                <li><strong>Entry amount</strong> — 0.001 ETH, goes to the prize pool.</li>
-                                <li><strong>Protocol fee</strong> — 2% of the entry amount, routed to the protocol contributor on-chain.</li>
-                                <li><strong>Operator fee</strong> — 5% of the entry amount, collected by the licensed operator that runs this site.</li>
-                            </ul>
+                            <EntryFeeBreakdown />
                             <p>
-                                These are charged as two separate on-chain transactions; the
-                                entry panel shows the totals before you confirm.
+                                All three are paid in one on-chain transaction and split by
+                                the contract. If you pay with WETH, your wallet may first ask
+                                you to approve the amount. The entry panel shows the total
+                                before you confirm.
                             </p>
                         </NumberedSection>
 
                         <NumberedSection number={2} id='s2' title='How draws work'>
                             <p>
-                                When the draw timer reaches zero and enough entries have been
-                                made, a draw is triggered. Random numbers are produced on-chain
-                                using Chainlink VRF, which means no one — not the operator, not
-                                any player, not the protocol — can influence the outcome.
+                                When the timer hits zero and the minimum entries are in, the
+                                draw runs. If the minimum is not met by the timer, the draw
+                                extends until it is. The random number comes from Chainlink
+                                VRF and is recorded on-chain — nobody, including Blockpot,
+                                can influence it.{' '}
+                                <Link to='/transparency' className={LINK_CLASS}>Check any draw</Link>.
                             </p>
                             <p>
-                                Each drawn number maps back to a specific entry. If one of your
-                                entries is drawn, you take the prize associated with that
-                                draw slot.
-                            </p>
-                            <p>
-                                A draw only fires once both conditions are met: the draw timer
-                                has reached zero <em>and</em> the draw has reached its minimum
-                                entry threshold. If the minimum is not met by the timer, the
-                                draw extends until it is.
+                                Each drawn number maps back to a specific entry. If one of
+                                your entries is drawn, the prize for that draw slot is yours.
                             </p>
                         </NumberedSection>
 
-                        {/* Claim semantics mirror src/hooks/claim/useClaimRequest.ts and src/components/blockpot/winnings/ClaimDecision.tsx. Per project memory and spec §7.6 / task 34, self-exclusion is not a control point on claims of already-earned winnings; sanctions/Sybil branches are intentionally not surfaced per spec §16. */}
+                        {/* Claim semantics mirror src/hooks/claim/useClaimRequest.ts and the claim decision component. Self-exclusion and other responsible-gaming controls are never a control point on claims. */}
                         <NumberedSection number={3} id='s3' title='How payouts work'>
                             <p>
-                                When the draw finalizes on-chain, your prize is escrowed
-                                against your wallet. Claim it from the Account screen — claims
-                                are usually processed within seconds, but may be paused if your
-                                KYC tier does not yet cover the amount, or if your current
-                                region is not supported. See{' '}
-                                <Link to='/verify' className='text-accent-foreground hover:underline'>
-                                    Verify your account
-                                </Link>{' '}
-                                to lift verification holds.
+                                When the draw finalises on-chain, your prize is escrowed to
+                                your wallet. Claim it from your Account. Some claims need
+                                identity verification first —{' '}
+                                <Link to='/verify' className={LINK_CLASS}>verify your account</Link>{' '}
+                                to release them.
                             </p>
                             <p>
                                 If a prize transfer fails for any reason (for example, a
-                                contract address that cannot receive ETH), the prize is held in
-                                an on-chain recovery contract and can be retrieved later.
+                                contract address that cannot receive ETH), the prize stays
+                                escrowed on-chain and you can claim it later from your
+                                Account.
                             </p>
                         </NumberedSection>
 
@@ -127,55 +157,51 @@ function HowToPlayPage() {
                                     no password, no transaction or gas required.
                                 </li>
                                 <li>
-                                    Confirm your jurisdiction is supported. The region check is
-                                    automatic; if you are in an unsupported region, entries and
-                                    claims will be blocked.
+                                    Confirm your region is supported. The check is automatic;
+                                    if you are in an unsupported region, entries and claims
+                                    are not available.
                                 </li>
                                 <li>
-                                    Accept the Terms of Service attestation on your first
-                                    entry — confirms you are of legal gambling age and that
-                                    play is legal where you reside.
+                                    Accept the Terms of Service on your first entry — this
+                                    confirms you are old enough to enter and that entering is
+                                    legal where you live.
                                 </li>
                                 <li>
-                                    Start playing straight away. Identity verification is only
-                                    asked for when a prize needs it — see{' '}
-                                    <Link to='/verify' className='text-accent-foreground hover:underline'>
-                                        Verify your account
-                                    </Link>.
+                                    Enter straight away. Identity verification is only asked
+                                    for when a prize needs it — see{' '}
+                                    <Link to='/verify' className={LINK_CLASS}>Verify your account</Link>.
                                 </li>
                             </ol>
                         </NumberedSection>
 
                         <NumberedSection number={5} id='s5' title='Verification'>
                             <p>
-                                Identity verification is required before larger prizes can be
+                                Some prizes need identity verification before they can be
                                 claimed. When a prize needs it, we tell you at the point of
-                                claiming; your prize stays safe and waiting until verification
-                                completes. You can also start early at{' '}
-                                <Link to='/verify' className='text-accent-foreground hover:underline'>
-                                    Verify your account
-                                </Link>.
+                                claiming; your prize stays escrowed and waiting until
+                                verification completes. You can also start early at{' '}
+                                <Link to='/verify' className={LINK_CLASS}>Verify your account</Link>.
                             </p>
                         </NumberedSection>
 
                         <NumberedSection number={6} id='s6' title='Responsible gaming'>
                             <p>
-                                Blockpot supports loss / stake limits and self-exclusion. Limits
-                                are enforced before every entry; self-exclusion blocks new
-                                entries for the period you choose but never blocks claims of
-                                prizes you are already owed. Manage your settings on the{' '}
-                                <Link to='/responsible-gaming' className='text-accent-foreground hover:underline'>
-                                    Responsible gaming
-                                </Link>{' '}
+                                Blockpot supports loss limits and self-exclusion. Limits are
+                                checked before every entry; self-exclusion blocks new entries
+                                for the period you choose but never blocks claiming prizes
+                                you&apos;ve been awarded. Manage your settings on the{' '}
+                                <Link to='/responsible-gaming' className={LINK_CLASS}>Responsible gaming</Link>{' '}
                                 page.
                             </p>
                         </NumberedSection>
 
                         <NumberedSection number={7} id='s7' title='Refunds'>
                             <p>
-                                Entries are final once the on-chain transaction confirms. The
-                                protocol does not support refunds — please review the entry
-                                breakdown before you confirm any transaction in your wallet.
+                                Entries are final once confirmed on-chain. Blockpot does not
+                                offer refunds on entries. If an account is closed for
+                                compliance reasons, you&apos;re returned to a net-zero position
+                                as described in our{' '}
+                                <Link to='/terms' className={LINK_CLASS}>terms</Link>.
                             </p>
                         </NumberedSection>
                     </VStack>

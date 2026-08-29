@@ -37,7 +37,7 @@ function TermsOfServicePage() {
                         <p className='italic text-secondary-foreground'>To be supplied by legal.</p>
                     </Section>
 
-                    <Section title='Responsible play'>
+                    <Section title='Responsible gaming'>
                         <p className='italic text-secondary-foreground'>To be supplied by legal.</p>
                     </Section>
 
