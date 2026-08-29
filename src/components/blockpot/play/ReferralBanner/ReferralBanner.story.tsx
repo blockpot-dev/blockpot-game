@@ -27,6 +27,10 @@ export const UnboundExpanded: Story = {
     args: { referrer: null, code: '', onCodeChange: noop, checkStatus: 'idle', defaultOpen: true },
 }
 
+export const CheckingCode: Story = {
+    args: { referrer: null, code: 'CRYPTOJOE', onCodeChange: noop, checkStatus: 'checking' },
+}
+
 export const ValidCode: Story = {
     args: { referrer: null, code: 'CRYPTOJOE', onCodeChange: noop, checkStatus: 'valid' },
 }

@@ -20,7 +20,7 @@ export default function Drawing(props: DrawingProps) {
     const { stagedDraw } = props
 
     if (stagedDraw.drawnNumbers.length === 0) {
-        return null
+        return <span className='text-foreground heading-5xl uppercase animate-pulse text-center'>First number coming up…</span>
     }
 
     const number = stagedDraw.drawnNumbers.length > 0 ? stagedDraw.drawnNumbers[stagedDraw.drawnNumbers.length - 1].number : 0

@@ -95,8 +95,8 @@ export function _PreviousRound(props: _PreviousRoundProps) {
                         </HStack>
                     </VStack>
                 ) : (
-                    <div>
-                        <span>Loading...</span>
+                    <div className='flex items-center min-h-[88px]'>
+                        <span className='text-sm text-secondary-foreground'>Loading draw…</span>
                     </div>
                 )
             }

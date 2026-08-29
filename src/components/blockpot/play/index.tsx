@@ -13,7 +13,7 @@ import useAccountAddress from '@/hooks/utilities/useAccountAddress'
 import useFiatConverter, { FiatConverter } from '@/hooks/utilities/useFiatConverter'
 import { useDraw } from '@/providers/BlockpotProvider'
 import { useBlockpotDraw } from '@/providers/BlockpotDrawProvider'
-import { usePreviousRoundsPanelOpen } from '@/providers/ModalOpenStateProvider'
+import { useDrawSummaryDialogOpen, usePreviousRoundsPanelOpen } from '@/providers/ModalOpenStateProvider'
 import { formatEtherMaxDecimalsGreedy } from '@/utilities/formatters'
 import { Container } from '@blockpot-dev/blockpot-design-system'
 import { memo } from 'react'
@@ -123,8 +123,12 @@ function Play() {
         : undefined
 
     const { isConnected } = useAccount()
-    const { currentRound, pots } = useDraw()
+    const { currentRound, pots, roundIndex: drawStateRoundIndex } = useDraw()
+    // useDrawState returns undefined until the first read resolves; the provider
+    // substitutes DEFAULT_DRAW (roundIndex -1) in the meantime.
+    const isDrawStateLoading = drawStateRoundIndex === -1
     const { draw, advanceDraw } = useBlockpotDraw()
+    const drawSummaryDialogOpen = useDrawSummaryDialogOpen()
     let roundIndexForTickets: number
     if (draw) {
         if (draw.drawStage.type === 'waiting') {
@@ -149,7 +153,8 @@ function Play() {
     }
     const prizePool = {
         nativeAmount: prizePoolAmount,
-        fiatAmountFormatted: fiatConverter(prizePoolAmount).formattedValue
+        fiatAmountFormatted: fiatConverter(prizePoolAmount).formattedValue,
+        isLoading: isDrawStateLoading
     }
 
     const drawRoundInfoSource = (draw && draw.drawStage.type !== 'waiting') ? draw.drawStage.drawnRound : currentRound
@@ -218,6 +223,7 @@ function Play() {
                                     draw={draw}
                                     roundInfo={roundInfo}
                                     accountAddress={accountAddress}
+                                    onSeeResults={() => drawSummaryDialogOpen.update(true)}
                                 />
                                 :
                                 <CurrentRound
@@ -231,6 +237,7 @@ function Play() {
                     <InfoPanel
                         purchases={Object.values(roundPurchaseData.purchases)}
                         isConnected={isConnected}
+                        isLoading={roundPurchaseData.isLoading}
                     />
                 </HStack>
             </Container_Deprecated>

@@ -62,11 +62,13 @@ export type DrawnNumberTicketProps = {
     drawnNumber: DisplayDrawnNumberData | 'placeholder'
     animate?: boolean
     isLastTicket?: boolean
+    /** 1-based slot index, used for the "Waiting for number N…" placeholder copy. */
+    placeholderOrdinal?: number
     advanceDraw: () => void
 };
 
 export default function DrawnNumberTicket(props: DrawnNumberTicketProps) {
-    const { drawnNumber, animate = true, isLastTicket = false, advanceDraw } = props
+    const { drawnNumber, animate = true, isLastTicket = false, placeholderOrdinal, advanceDraw } = props
     const animatedElementRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
@@ -90,6 +92,15 @@ export default function DrawnNumberTicket(props: DrawnNumberTicketProps) {
                 alt='Info'
                 className={'absolute top-0 left-0 z-0 w-[252px] h-[119px]'}
             />
+            {
+                drawnNumber === 'placeholder' && placeholderOrdinal !== undefined && (
+                    <div className='relative z-1 flex items-center justify-center h-full'>
+                        <span className='uppercase text-secondary-foreground text-center text-sm'>
+                            Waiting for number {placeholderOrdinal}…
+                        </span>
+                    </div>
+                )
+            }
             {
                 drawnNumber !== 'placeholder' && (
                     <div ref={animatedElementRef} className={cn('relative z-1', animate && 'animate-grow-in')}>

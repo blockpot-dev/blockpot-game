@@ -135,6 +135,7 @@ function Template(props: RoundDrawProps) {
             <RoundDraw
                 draw={draw}
                 accountAddress={accountAddress}
+                onSeeResults={() => {}}
                 roundInfo={{
                     potIndex: 5,
                     currentRound: 3,

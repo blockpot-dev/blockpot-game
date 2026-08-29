@@ -2,12 +2,13 @@ import { BlockpotDraw } from '@/providers/BlockpotDrawProvider'
 import DrawRoundInfo, { DrawRoundInfoProps } from './DrawRoundInfo/DrawRoundInfo'
 import Waiting from './DrawStages/Waiting/Waiting'
 import Drawing from './DrawStages/Drawing/Drawing'
+import Complete from './DrawStages/Complete/Complete'
 import { Address } from 'viem'
 import { memo } from 'react'
 import { Container, Vortex } from '@blockpot-dev/blockpot-design-system'
 
-function RenderDrawStage(props: { draw: BlockpotDraw, accountAddress: Address }) {
-    const { draw, accountAddress } = props
+function RenderDrawStage(props: { draw: BlockpotDraw, accountAddress: Address, onSeeResults: () => void }) {
+    const { draw, accountAddress, onSeeResults } = props
     switch (draw.drawStage.type) {
     case 'waiting':
         return <Waiting />
@@ -17,7 +18,7 @@ function RenderDrawStage(props: { draw: BlockpotDraw, accountAddress: Address })
             accountAddress={accountAddress}
         />
     case 'complete':
-        return <></>
+        return <Complete onSeeResults={onSeeResults} />
     }
 }
 
@@ -25,10 +26,12 @@ export type RoundDrawProps = {
     accountAddress: Address
     draw: BlockpotDraw
     roundInfo: DrawRoundInfoProps
+    /** Reopens the draw summary after the draw has completed. */
+    onSeeResults: () => void
 }
 
 function RoundDraw(props: RoundDrawProps) {
-    const { accountAddress, draw } = props
+    const { accountAddress, draw, onSeeResults } = props
 
     return <div className='flex flex-col flex-1 gap-6 p-6 min-h-[720px]'>
         <DrawRoundInfo {...props.roundInfo} />
@@ -52,7 +55,7 @@ function RoundDraw(props: RoundDrawProps) {
                 </svg>
             </div>
             <div className='z-3 absolute top-0 left-0 w-full h-full flex items-center justify-center '>
-                <RenderDrawStage draw={draw} accountAddress={accountAddress} />
+                <RenderDrawStage draw={draw} accountAddress={accountAddress} onSeeResults={onSeeResults} />
             </div>
         </Container>
     </div>

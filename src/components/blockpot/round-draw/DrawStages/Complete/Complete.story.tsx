@@ -16,6 +16,6 @@ export default meta
 
 type Story = StoryObj<typeof Complete>
 export const Basic: Story = {
-    args: {},
+    args: { onSeeResults: () => {} },
     render: (props: CompleteProps) => <Template {...props} />
 }

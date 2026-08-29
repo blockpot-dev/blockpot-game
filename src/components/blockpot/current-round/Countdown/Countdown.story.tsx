@@ -25,5 +25,10 @@ export default meta
 type Story = StoryObj<typeof Countdown>
 export const Basic: Story = {
     render: (props: CountdownProps) => <Template {...props} />,
-    
+}
+
+/** Draw time has passed: the countdown fades out and the waiting copy pulses. */
+export const WaitingForDraw: Story = {
+    args: { nextDrawTime: Math.floor(Date.now() / 1000) - 10 },
+    render: (props: CountdownProps) => <Template {...props} />,
 }

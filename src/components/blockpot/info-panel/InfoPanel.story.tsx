@@ -54,6 +54,17 @@ export const Basic: Story = {
     }
 }
 
+/** Connected, entries still being read — loading copy, not the empty state. */
+export const LoadingEntries: Story = {
+    render: renderStory,
+    args: {
+        isConnected: true,
+        isLoading: true,
+        purchases: [],
+        accountAddress: defaultAddress
+    }
+}
+
 export const SingleEntry: Story = {
     render: renderStory,
     args: {

@@ -24,6 +24,11 @@ export function _Prizes(props: _PrizesProps) {
                 </HStack>
             </button>
         </HStack>
+        {
+            prizes.length === 0 && (
+                <p className='text-sm text-secondary-foreground px-2 py-4'>Prizes appear once the draw is funded.</p>
+            )
+        }
         <table className="w-auto border-collapse">
             <tbody>
                 {

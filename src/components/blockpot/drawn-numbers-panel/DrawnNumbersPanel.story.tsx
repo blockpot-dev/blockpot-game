@@ -42,3 +42,12 @@ export const Basic: Story = {
     />,
 
 }
+
+/** Draw just started: counter reads "0 of 5 drawn" and every slot carries waiting copy. */
+export const WaitingForFirstNumber: Story = {
+    render: () => <Template
+        stagedDraw={{ drawnNumbers: [] }}
+        totalDrawnNumbers={5}
+        advanceDraw={() => {}}
+    />,
+}

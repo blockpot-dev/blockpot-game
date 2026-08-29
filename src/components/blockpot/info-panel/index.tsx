@@ -19,10 +19,12 @@ export type _InfoPanelProps = {
     lastPurchaseId: number | null
     draw?: BlockpotDraw
     accountAddress: Address
+    /** True while the player's entries for this round are still being read. */
+    isLoading?: boolean
 }
 
 export function _InfoPanel(props: _InfoPanelProps) {
-    const { isConnected, purchases, setAnimationsEnabled, animationsEnabled, setLastPurchaseId, lastPurchaseId, draw, accountAddress } = props
+    const { isConnected, purchases, setAnimationsEnabled, animationsEnabled, setLastPurchaseId, lastPurchaseId, draw, accountAddress, isLoading = false } = props
     const previousPurchases = usePrevious(purchases)
     const scrollContainerRef = useRef<HTMLDivElement | null>(null)
     const purchasesWithPlaceholders: (PurchaseData | 'placeholder')[] = [...purchases]
@@ -70,6 +72,7 @@ export function _InfoPanel(props: _InfoPanelProps) {
                                 purchase={purchase}
                                 isFirst={index === 0}
                                 isConnected={isConnected}
+                                isLoading={isLoading}
                                 animationsEnabled={(lastPurchaseId === (purchase === 'placeholder' ? -1 : purchase.id)) && animationsEnabled}
                                 draw={draw}
                                 accountAddress={accountAddress}
@@ -86,10 +89,11 @@ export function _InfoPanel(props: _InfoPanelProps) {
 export type InfoPanelProps = {
     isConnected: boolean
     purchases: PurchaseData[]
+    isLoading?: boolean
 };
 
 function InfoPanel(props: InfoPanelProps) {
-    const { purchases, isConnected } = props
+    const { purchases, isConnected, isLoading } = props
     const { draw } = useBlockpotDraw()
     const accountAddress = useAccountAddress()
     const [animationsEnabled, setAnimationsEnabled] = useState(false)
@@ -99,6 +103,7 @@ function InfoPanel(props: InfoPanelProps) {
         <_InfoPanel
             isConnected={isConnected}
             purchases={purchases}
+            isLoading={isLoading}
             setAnimationsEnabled={setAnimationsEnabled}
             animationsEnabled={animationsEnabled}
             setLastPurchaseId={setLastPurchaseId}

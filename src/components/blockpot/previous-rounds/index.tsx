@@ -59,7 +59,7 @@ export default function PreviousRounds(props: PreviousRoundsProps) {
         return () => element.removeEventListener('transitionend', onEnd)
     }, [isVisible])
 
-    const { items, loadMore, hasMore } = usePreviousRoundsList({ filter })
+    const { items, loadMore, hasMore, isInitialLoading } = usePreviousRoundsList({ filter })
 
     // eslint-disable-next-line react-hooks/incompatible-library
     const virtualizer = useVirtualizer({
@@ -133,6 +133,13 @@ export default function PreviousRounds(props: PreviousRoundsProps) {
                     />
                 </VStack>
                 <div ref={scrollRef} className='flex-1 overflow-y-auto px-6 pb-6'>
+                    {
+                        items.length === 0 && (
+                            <p className='text-sm text-secondary-foreground text-center py-8' role='status'>
+                                {isInitialLoading ? 'Loading draws…' : 'No draws yet for this filter.'}
+                            </p>
+                        )
+                    }
                     <div style={{ height: virtualizer.getTotalSize(), width: '100%', position: 'relative' }}>
                         {
                             virtualItems.map((virtualItem) => {

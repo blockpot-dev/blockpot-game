@@ -36,7 +36,7 @@ function DrawnNumbersPanel(props: DrawnNumbersPanelProps) {
             <VStack className='gap-4'>
                 <VStack className='gap-4'>
                     <ContainerHeading trailing={
-                        <span className='body-lg font-bold leading-none'>{`${stagedDraw.drawnNumbers.length.toFixed(0)}/${totalDrawnNumbers.toFixed(0)}`}</span>
+                        <span className='body-lg font-bold leading-none'>{`${stagedDraw.drawnNumbers.length.toFixed(0)} of ${totalDrawnNumbers.toFixed(0)} drawn`}</span>
                     }>
                         Drawn Numbers
                     </ContainerHeading>
@@ -53,6 +53,7 @@ function DrawnNumbersPanel(props: DrawnNumbersPanelProps) {
                                     key={drawnNumber === 'placeholder' ? `p-${index}` : drawnNumber.number}
                                     drawnNumber={drawnNumber}
                                     isLastTicket={isLastTicket}
+                                    placeholderOrdinal={index + 1}
                                     advanceDraw={advanceDraw}
                                 />
                             )

@@ -50,6 +50,8 @@ export type PurchaseProps = {
     purchase: PurchaseData | 'placeholder'
     isFirst: boolean
     isConnected: boolean
+    /** Entries are still being read; show loading copy instead of the empty state. */
+    isLoading?: boolean
     animationsEnabled: boolean
     draw?: BlockpotDraw
     accountAddress?: Address
@@ -166,7 +168,7 @@ function getPurchaseTicketMatch(
 }
 
 function Purchase(props: PurchaseProps) {
-    const { purchase, isFirst, isConnected, animationsEnabled, draw, accountAddress } = props
+    const { purchase, isFirst, isConnected, isLoading = false, animationsEnabled, draw, accountAddress } = props
 
     let totalTickets: number
     if (purchase === 'placeholder') {
@@ -208,7 +210,11 @@ function Purchase(props: PurchaseProps) {
                     <div className='z-1 flex items-center justify-center h-full'>
                         <span className='uppercase text-secondary-foreground text-center text-sm'>
                             {
-                                isConnected ? (
+                                isConnected && isLoading ? (
+                                    <>
+                                        Loading your entries…
+                                    </>
+                                ) : isConnected ? (
                                     <>
                                         No entries yet.{' '}<br />Enter the draw on the left.
                                     </>

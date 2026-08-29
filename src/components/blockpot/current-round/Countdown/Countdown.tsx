@@ -34,7 +34,7 @@ export default function Countdown(props: CountdownProps) {
                     <CountdownTime timeRemaining={timeRemaining} />
                 </div>
                 <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${showWaitingText ? 'opacity-100' : 'opacity-0'}`}>
-                    <span className='text-foreground heading-5xl uppercase animate-pulse'>Waiting to draw...</span>
+                    <span className='text-foreground heading-5xl uppercase animate-pulse'>Draw starting soon…</span>
                 </div>
             </div>
         </Container>

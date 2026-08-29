@@ -41,7 +41,7 @@ export default function useRoundPurchases(roundIndex: number) {
     const { address } = useAccount()
     const client = useQueryClient()
 
-    const { data } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ['roundPurchases', selectedGame, address ?? ZERO_ADDRESS, roundIndex.toString()],
         queryFn: async () => {
             const purchases: PurchaseData[] = await Promise.all(roundEntryIndexes.map(async (purchaseIndex: number) => {
@@ -72,8 +72,8 @@ export default function useRoundPurchases(roundIndex: number) {
         enabled: !!address && roundIndex !== -1 
     })
 
-    return data ?? {
-        purchases: {},
-        totalTickets: 0
+    return {
+        ...(data ?? { purchases: {}, totalTickets: 0 }),
+        isLoading
     }
 }

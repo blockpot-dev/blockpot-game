@@ -58,6 +58,11 @@ export function ReferralBannerView({ referrer, code, onCodeChange, checkStatus, 
                         value={code}
                         onChange={(e) => onCodeChange(e.target.value)}
                     />
+                    {checkStatus === 'checking' && (
+                        <p className='text-xs text-secondary-foreground leading-snug' role='status'>
+                            Checking code…
+                        </p>
+                    )}
                     {checkStatus === 'valid' && (
                         <p className='text-xs text-secondary-foreground leading-snug'>
                             Your entries will support <span className='font-mono text-foreground'>{code.toUpperCase()}</span> —

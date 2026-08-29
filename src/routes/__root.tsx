@@ -73,8 +73,9 @@ export const Route = createRootRoute({
                                                                                     />
                                                                                 </div>
                                                                                 <Suspense fallback={
-                                                                                    <div className="flex flex-1 items-center justify-center">
-                                                                                        <Loader2 className="animate-spin h-8 w-8" />
+                                                                                    <div className="flex flex-1 items-center justify-center" role="status">
+                                                                                        <Loader2 className="animate-spin h-8 w-8" aria-hidden="true" />
+                                                                                        <span className="sr-only">Loading…</span>
                                                                                     </div>
                                                                                 }>
                                                                                     <Outlet />
