@@ -2,6 +2,7 @@ import { Button, ConsentDialog, InfoBanner } from '@blockpot-dev/blockpot-design
 import { PretxRequiredAction } from '@/hooks/player/usePretxDeposit'
 import { ClaimDecision } from '@/hooks/claim/types'
 import HStack from '@/components/core/HStack/HStack'
+import { SUPPORT_LINK_LABEL, SUPPORT_URL } from '@/constants/support'
 
 export type ClaimDecisionProps = {
     decision: ClaimDecision
@@ -17,8 +18,27 @@ const TRANSIENT: PretxRequiredAction[] = ['SEQUENCER_DOWN']
 // banner for headroom decisions, neutral copy for sanctions hits, and a retry
 // banner for transient feed errors. Never names a tier, cap, allowance or
 // headroom figure (KB `blockpot/story-map` B-VIS-1/2).
+const supportLink = (
+    <a href={SUPPORT_URL} target='_blank' rel='noopener noreferrer' className='underline underline-offset-2'>
+        {SUPPORT_LINK_LABEL}
+    </a>
+)
+
 export default function ClaimDecisionView({ decision, onClose, onVerify, onRetry }: ClaimDecisionProps) {
     if (decision.allow) return null
+
+    if (decision.requiredAction === 'SELF_EXCLUDED') {
+        // Doctrine: claims are NEVER blocked by responsible-gaming controls
+        // (CLAUDE.md "Withdraw means claim"). The service must not return this
+        // reason for a claim — see BLO-760 (blockpot-service). If it still
+        // does, surface it as a fault, not as a paused claim.
+        console.error('[claim] service returned SELF_EXCLUDED for a claim decision; claims are never paused by self-exclusion (BLO-760)', decision)
+        return (
+            <InfoBanner tone='warn'>
+                Something&apos;s wrong — claims aren&apos;t paused by self-exclusion. {supportLink}.
+            </InfoBanner>
+        )
+    }
 
     if (decision.requiredAction === 'KYC_UPGRADE') {
         return (
@@ -66,7 +86,7 @@ export default function ClaimDecisionView({ decision, onClose, onVerify, onRetry
         // Spec §16: never reveal sanctions detail to the user. Neutral copy only.
         return (
             <InfoBanner tone='block'>
-                We&apos;re unable to process this claim; our compliance team will be in touch.
+                We can&apos;t complete this claim yet. Our compliance team will contact you. {supportLink}.
             </InfoBanner>
         )
     }
@@ -75,7 +95,7 @@ export default function ClaimDecisionView({ decision, onClose, onVerify, onRetry
         // Sybil clustering verdict — same neutrality rule as sanctions.
         return (
             <InfoBanner tone='block'>
-                We&apos;re unable to process this claim; our compliance team will review.
+                We can&apos;t complete this claim yet. Our compliance team is reviewing it. {supportLink}.
             </InfoBanner>
         )
     }
@@ -95,18 +115,10 @@ export default function ClaimDecisionView({ decision, onClose, onVerify, onRetry
         )
     }
 
-    if (decision.requiredAction === 'SELF_EXCLUDED') {
-        return (
-            <InfoBanner tone='block'>
-                Claims are paused while a self-exclusion is active on your account.
-            </InfoBanner>
-        )
-    }
-
     if (decision.requiredAction === 'GEO_BLOCK') {
         return (
             <InfoBanner tone='block'>
-                Claims to your current region are not supported.
+                Claims aren&apos;t available from your current region. {supportLink}.
             </InfoBanner>
         )
     }
@@ -120,7 +132,7 @@ export default function ClaimDecisionView({ decision, onClose, onVerify, onRetry
                 </Button>
             }
         >
-            We could not process this claim right now. Please try again shortly.
+            We couldn&apos;t complete this claim right now. Retry in a moment, or {supportLink}.
         </InfoBanner>
     )
 }

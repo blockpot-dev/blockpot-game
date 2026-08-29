@@ -78,7 +78,7 @@ describe('<AccountDialogView> — Wallet section', () => {
         expect(screen.getAllByText(/ETH/).length).toBeGreaterThan(0)
 
         // (e) Disconnect button triggers useDisconnect().disconnect
-        const disconnectBtn = screen.getByRole('button', { name: /disconnect/i })
+        const disconnectBtn = screen.getByRole('button', { name: /^disconnect wallet$/i })
         fireEvent.click(disconnectBtn)
         expect(disconnectMock).toHaveBeenCalledTimes(1)
     })

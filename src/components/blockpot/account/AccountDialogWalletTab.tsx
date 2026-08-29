@@ -9,6 +9,7 @@ import LifetimeStatsRow from '@/components/blockpot/winnings/LifetimeStatsRow'
 import ClaimDecisionView from '@/components/blockpot/winnings/ClaimDecision'
 import PrizePoolPreCommitBanner from '@/components/blockpot/tier/PrizePoolPreCommitBanner'
 import CoolOffStatusBanner from '@/components/responsible-gaming/CoolOffStatusBanner'
+import { SUPPORT_LINK_LABEL, SUPPORT_URL } from '@/constants/support'
 import AccountDialogWalletSection from './AccountDialogWalletSection'
 import ReferralEarningsSection from './ReferralEarningsSection'
 
@@ -60,9 +61,16 @@ export default function AccountDialogWalletTab(props: AccountDialogWalletTabProp
     const summaryCurrentTier = state.currentTier ?? 'T0'
     const hasPendingClaim = pendingClaimEurMinor > 0
 
-    const allClaimable = !hasPendingClaim && (eth > 0n || weth > 0n) && isCompliant
+    const hasBalance = eth > 0n || weth > 0n
+    const allClaimable = !hasPendingClaim && hasBalance && isCompliant
+    const needsVerification = !hasPendingClaim && hasBalance && !isCompliant
+    const nothingToClaim = !hasPendingClaim && !hasBalance
+    const inFlight = isClaiming || claimRequestPending
     const capSplit = hasPendingClaim && summaryCurrentTier === 'T0'
     const postT1Release = hasPendingClaim && summaryCurrentTier !== 'T0'
+
+    // `opError` is a backend string: logged for diagnosis, never rendered.
+    if (opError) console.error('[claim] operation failed', opStatus, opError)
 
     const opPending = !!opStatus && !['CONFIRMED', 'REVERTED', 'FAILED'].includes(opStatus)
     const opTerminal = !!opStatus && ['CONFIRMED', 'REVERTED', 'FAILED'].includes(opStatus)
@@ -96,9 +104,24 @@ export default function AccountDialogWalletTab(props: AccountDialogWalletTabProp
                             onClick={onClaim}
                             disabled={isClaiming || claimRequestPending || opPending}
                         >
-                            {isClaiming || claimRequestPending ? 'CLAIMING…' : 'CLAIM'}
+                            {inFlight ? 'Claiming…' : 'Claim prize'}
                         </Button>
                     </VStack>
+                )}
+
+                {needsVerification && (
+                    <VStack className='gap-3'>
+                        <p className='text-sm text-secondary-foreground'>
+                            Verification is needed before you can claim.
+                        </p>
+                        <Button onClick={onVerify}>Verify now</Button>
+                    </VStack>
+                )}
+
+                {nothingToClaim && (
+                    <p className='text-sm text-secondary-foreground'>
+                        Nothing to claim yet. Prizes appear here after a draw.
+                    </p>
                 )}
 
                 {capSplit && (
@@ -117,7 +140,7 @@ export default function AccountDialogWalletTab(props: AccountDialogWalletTabProp
                                 onClick={onClaim}
                                 disabled={isClaiming || claimRequestPending || opPending || (eth === 0n && weth === 0n)}
                             >
-                                {isClaiming || claimRequestPending ? 'CLAIMING…' : 'CLAIM AVAILABLE'}
+                                {inFlight ? 'Claiming…' : `Claim ${formatEur(pendingClaimEurMinor)} now`}
                             </Button>
                             <Button variant='secondary' onClick={onVerify}>
                                 Verify to claim the rest
@@ -136,7 +159,7 @@ export default function AccountDialogWalletTab(props: AccountDialogWalletTabProp
                             onClick={onReleasePending}
                             disabled={isClaiming || claimRequestPending || opPending || (eth === 0n && weth === 0n)}
                         >
-                            {isClaiming || claimRequestPending ? 'CLAIMING…' : 'CLAIM'}
+                            {inFlight ? 'Claiming…' : `Claim ${formatEur(pendingClaimEurMinor)}`}
                         </Button>
                     </VStack>
                 )}
@@ -153,17 +176,27 @@ export default function AccountDialogWalletTab(props: AccountDialogWalletTabProp
                 {(opPending || opTerminal) && (
                     <div className='border-t border-border pt-3'>
                         {opPending && (
-                            <p className='text-xs text-secondary-foreground'>
-                                Operation in progress: {opStatus ?? 'PENDING'}
+                            <p className='text-xs text-secondary-foreground' aria-live='polite'>
+                                Claim in progress — this can take a minute.
                             </p>
                         )}
                         {opStatus === 'CONFIRMED' && (
                             <p className='text-xs text-positive'>Claim confirmed.</p>
                         )}
                         {opTerminal && (opStatus === 'REVERTED' || opStatus === 'FAILED') && (
-                            <p className='text-xs text-destructive'>
-                                Claim failed{opError ? `: ${opError}` : '.'}
-                            </p>
+                            <VStack className='gap-2'>
+                                <p className='text-xs text-destructive' role='alert'>
+                                    Claim didn&apos;t go through. Retry, or contact support if it keeps failing.
+                                </p>
+                                <HStack className='gap-3 items-center'>
+                                    <Button size='sm' onClick={onClaim} disabled={inFlight}>
+                                        Retry claim
+                                    </Button>
+                                    <a href={SUPPORT_URL} target='_blank' rel='noopener noreferrer' className='text-xs underline underline-offset-2'>
+                                        {SUPPORT_LINK_LABEL}
+                                    </a>
+                                </HStack>
+                            </VStack>
                         )}
                     </div>
                 )}

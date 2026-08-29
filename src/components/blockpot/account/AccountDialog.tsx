@@ -3,6 +3,7 @@ import { useAccount, useChainId } from 'wagmi'
 import { useNavigate } from '@tanstack/react-router'
 import { Address } from 'viem'
 import { toast } from 'sonner'
+import { useQueryClient } from '@tanstack/react-query'
 import useAccountAddress from '@/hooks/utilities/useAccountAddress'
 import usePlayerActivityState from '@/hooks/player-summary/usePlayerActivityState'
 import usePrizePoolContext from '@/hooks/player-summary/usePrizePoolContext'
@@ -29,10 +30,11 @@ export default function AccountDialog({ open, onOpenChange }: AccountDialogProps
     const { isConnected } = useAccount()
     const navigate = useNavigate()
     const chainId = useChainId()
+    const queryClient = useQueryClient()
     const address = useAccountAddress()
     const { blockedUntil } = useEntryBlockedUntil(address as `0x${string}`)
 
-    const { state } = usePlayerActivityState()
+    const { state, isLoading: stateLoading } = usePlayerActivityState()
     const { draw } = useBlockpotDraw()
     const { context: prizePoolContext } = usePrizePoolContext({ enabled: open && !draw })
     const { status: kycStatus } = usePlayerKyc()
@@ -82,8 +84,9 @@ export default function AccountDialog({ open, onOpenChange }: AccountDialogProps
                 inWeth,
             })
         } catch (e) {
-            const msg = e instanceof ApiError ? e.message : 'Could not contact the claim service. Please retry.'
-            toast.error(msg)
+            // Never surface the raw ApiError message to the player.
+            console.error('[claim] request failed', e instanceof ApiError ? e.message : e)
+            toast.error('Claim didn\'t start', { description: 'We couldn\'t reach Blockpot. Check your connection and retry.' })
             return null
         }
     }
@@ -137,6 +140,8 @@ export default function AccountDialog({ open, onOpenChange }: AccountDialogProps
             open={open}
             onOpenChange={onOpenChange}
             state={state}
+            stateLoading={stateLoading}
+            onRetryState={() => { void queryClient.invalidateQueries() }}
             draw={!!draw}
             prizePoolContext={prizePoolContext}
             kycGates={kycStatus?.gates}

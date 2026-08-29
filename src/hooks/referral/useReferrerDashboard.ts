@@ -26,7 +26,7 @@ export default function useReferrerDashboard() {
     const manager = getContractAddress(chainId, ContractName.REFERRAL_MANAGER)
     const rm = useReferralManagerRead().read
 
-    const { data, isLoading, refetch } = useQuery({
+    const { data, isLoading, isError, refetch } = useQuery({
         queryKey: ['referrerDashboard', chainId, account],
         queryFn: async (): Promise<ReferrerDashboardRecord | null> => {
             const [statusIndex, , , accrued, lifetimeEarned, lifetimeClaimed] = await rm.referrers([account])
@@ -58,6 +58,8 @@ export default function useReferrerDashboard() {
     return {
         record: data ?? null,
         isLoading,
+        isError,
+        refetch,
         claim,
         isClaiming: Boolean(claimWrite.isLoading),
     }

@@ -74,7 +74,9 @@ export const SequencerDown: Story = {
     },
 }
 
-export const SelfExcluded: Story = {
+// Doctrine breach surfaced as a fault (BLO-755 / BLO-760): the service must
+// never return SELF_EXCLUDED for a claim.
+export const SelfExcludedServiceFault: Story = {
     args: {
         decision: decision({ requiredAction: 'SELF_EXCLUDED' }),
         onClose: noop,

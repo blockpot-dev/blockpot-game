@@ -60,6 +60,7 @@ export default function AccountDialogWalletSection({ onAfterDisconnect }: Accoun
                         {copied ? <Check className='size-4' /> : <Copy className='size-4' />}
                     </Button>
                 </HStack>
+                <span className='sr-only' aria-live='polite'>{copied ? 'Address copied' : ''}</span>
                 {(chainName || connectorName) && (
                     <span className='text-xs text-secondary-foreground'>
                         {[chainName, connectorName].filter(Boolean).join(' · ')}
@@ -70,7 +71,7 @@ export default function AccountDialogWalletSection({ onAfterDisconnect }: Accoun
                 )}
             </VStack>
             <Button variant='outline' size='sm' onClick={handleDisconnect}>
-                Disconnect
+                Disconnect wallet
             </Button>
         </HStack>
     )

@@ -16,6 +16,10 @@ export type AccountDialogViewProps = {
     onOpenChange: (open: boolean) => void
 
     state: PlayerActivityState | undefined
+    /** True while the activity state is still being read. */
+    stateLoading?: boolean
+    /** Refetches the account state after a failed load. */
+    onRetryState?: () => void
     draw: boolean
     prizePoolContext: PrizePoolContext | undefined
     kycGates: Partial<Record<GateType, GateRecord>> | undefined
@@ -45,7 +49,7 @@ export type AccountDialogViewProps = {
 export default function AccountDialogView(props: AccountDialogViewProps) {
     const {
         open, onOpenChange,
-        state, draw, prizePoolContext, kycGates, onChainGates,
+        state, stateLoading, onRetryState, draw, prizePoolContext, kycGates, onChainGates,
         eth, weth, enteredEurMinor, wonEurMinor, profitEurMinor, isCompliant,
         blockedUntil,
         decision, isClaiming, claimRequestPending, opStatus, opError,
@@ -112,9 +116,24 @@ export default function AccountDialogView(props: AccountDialogViewProps) {
                         : (
                             <>
                                 <AccountDialogWalletSection onAfterDisconnect={() => onOpenChange(false)} />
-                                <span className='text-sm text-secondary-foreground'>
-                                    Player status will appear once your wallet is connected.
-                                </span>
+                                {stateLoading
+                                    ? (
+                                        <span className='text-sm text-secondary-foreground' aria-live='polite'>
+                                            Loading your account…
+                                        </span>
+                                    )
+                                    : (
+                                        <HStack className='gap-3 items-center flex-wrap'>
+                                            <span className='text-sm text-secondary-foreground' role='alert'>
+                                                We couldn&apos;t load your account.
+                                            </span>
+                                            {onRetryState && (
+                                                <Button size='sm' variant='secondary' onClick={onRetryState}>
+                                                    Retry
+                                                </Button>
+                                            )}
+                                        </HStack>
+                                    )}
                             </>
                         )}
                 </VStack>

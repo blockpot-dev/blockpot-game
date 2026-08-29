@@ -3,11 +3,15 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import type { ReferrerDashboardRecord } from '@/hooks/referral/useReferrerDashboard'
 
 const claim = vi.fn()
+const refetch = vi.fn()
 const dashboardState: {
     record: ReferrerDashboardRecord | null
+    isLoading: boolean
+    isError: boolean
+    refetch: typeof refetch
     claim: typeof claim
     isClaiming: boolean
-} = { record: null, claim, isClaiming: false }
+} = { record: null, isLoading: false, isError: false, refetch, claim, isClaiming: false }
 vi.mock('@/hooks/referral/useReferrerDashboard', () => ({
     default: () => dashboardState
 }))
@@ -36,7 +40,7 @@ describe('ReferralEarningsSection', () => {
         dashboardState.record = record()
         render(<ReferralEarningsSection />)
         expect(screen.getByText(/0\.1/)).toBeInTheDocument()
-        const button = screen.getByRole('button', { name: /claim/i })
+        const button = screen.getByRole('button', { name: /^claim rewards$/i })
         expect(button).toBeEnabled()
         fireEvent.click(button)
         expect(claim).toHaveBeenCalled()
@@ -51,14 +55,33 @@ describe('ReferralEarningsSection', () => {
     it('disables claim and explains when suspended', () => {
         dashboardState.record = record({ status: 'suspended' })
         render(<ReferralEarningsSection />)
-        expect(screen.getByText(/suspended/i)).toBeInTheDocument()
+        expect(screen.getByText(/referral rewards are paused/i)).toBeInTheDocument()
+        expect(screen.getByRole('link', { name: /contact support/i })).toBeInTheDocument()
         expect(screen.getByRole('button', { name: /claim/i })).toBeDisabled()
     })
 
     it('disables claim and explains when terminated', () => {
         dashboardState.record = record({ status: 'terminated' })
         render(<ReferralEarningsSection />)
-        expect(screen.getByText(/terminated/i)).toBeInTheDocument()
+        expect(screen.getByText(/referral rewards have ended/i)).toBeInTheDocument()
         expect(screen.getByRole('button', { name: /claim/i })).toBeDisabled()
+    })
+
+    it('renders a loading state while the record is being read', () => {
+        dashboardState.record = null
+        dashboardState.isLoading = true
+        render(<ReferralEarningsSection />)
+        expect(screen.getByText(/loading referral rewards/i)).toBeInTheDocument()
+        dashboardState.isLoading = false
+    })
+
+    it('renders an error state with Retry when the read fails', () => {
+        dashboardState.record = null
+        dashboardState.isError = true
+        render(<ReferralEarningsSection />)
+        expect(screen.getByText(/couldn't load your referral rewards/i)).toBeInTheDocument()
+        fireEvent.click(screen.getByRole('button', { name: /^retry$/i }))
+        expect(refetch).toHaveBeenCalled()
+        dashboardState.isError = false
     })
 })

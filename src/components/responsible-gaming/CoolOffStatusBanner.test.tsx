@@ -46,5 +46,7 @@ describe('<CoolOffStatusBanner>', () => {
         expect(screen.getByText(new RegExp('Entries reopen'))).toBeInTheDocument()
         expect(screen.getByText(new RegExp(endLabel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))).toBeInTheDocument()
         expect(screen.getByText(/in 3 hours/)).toBeInTheDocument()
+        expect(screen.getByText(/you've set a cool-off/i)).toBeInTheDocument()
+        expect(screen.getByText(/you can still claim prizes/i)).toBeInTheDocument()
     })
 })

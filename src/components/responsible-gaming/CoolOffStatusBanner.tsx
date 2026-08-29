@@ -15,7 +15,7 @@ export default function CoolOffStatusBanner({ blockedUntil, className }: CoolOff
     if (!status.isCoolingOff) return null
     return (
         <InfoBanner tone='warn' className={className}>
-            Entries are paused on your account. Entries reopen {status.endLabel} ({status.remainingLabel}).
+            You&apos;ve set a cool-off. Entries reopen {status.endLabel} ({status.remainingLabel}). You can still claim prizes.
         </InfoBanner>
     )
 }

@@ -87,3 +87,6 @@ export const Claiming: Story = {
         isClaiming: true,
     },
 }
+
+// Loading and error states live in the hook-connected default export;
+// see ReferralEarningsSection.test.tsx for their assertions.

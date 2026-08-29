@@ -4,12 +4,18 @@ import VStack from '@/components/core/VStack/VStack'
 import HStack from '@/components/core/HStack/HStack'
 import useReferrerDashboard, { ReferrerDashboardRecord } from '@/hooks/referral/useReferrerDashboard'
 
+import { SUPPORT_LINK_LABEL, SUPPORT_URL } from '@/constants/support'
+
 const STATUS_COPY: Record<'suspended' | 'terminated', string> = {
-    suspended:
-        'Your referrer account is suspended — accrual and claims are paused until the operator reactivates it.',
-    terminated:
-        'Your referrer account is terminated — accrual and claims are permanently closed.',
+    suspended: 'Your referral rewards are paused.',
+    terminated: 'Your referral rewards have ended.',
 }
+
+const supportLink = (
+    <a href={SUPPORT_URL} target='_blank' rel='noopener noreferrer' className='underline underline-offset-2'>
+        {SUPPORT_LINK_LABEL}
+    </a>
+)
 
 export type ReferralEarningsViewProps = {
     record: ReferrerDashboardRecord
@@ -33,10 +39,10 @@ export function ReferralEarningsView({ record, onClaim, isClaiming }: ReferralEa
                 </span>
             </HStack>
             {record.status !== 'active' && (
-                <p className="text-xs text-amber-600">{STATUS_COPY[record.status]}</p>
+                <p className="text-xs text-amber-600">{STATUS_COPY[record.status]} {supportLink} if you have questions.</p>
             )}
             <Button disabled={!canClaim} onClick={onClaim}>
-                {isClaiming ? 'Claiming…' : 'Claim'}
+                {isClaiming ? 'Claiming…' : 'Claim rewards'}
             </Button>
         </VStack>
     )
@@ -48,7 +54,20 @@ export function ReferralEarningsView({ record, onClaim, isClaiming }: ReferralEa
  * sanctions screen on-chain; contract rejections surface through the tracked-write toasts.
  */
 export default function ReferralEarningsSection() {
-    const { record, claim, isClaiming } = useReferrerDashboard()
+    const { record, isLoading, isError, refetch, claim, isClaiming } = useReferrerDashboard()
+    if (isLoading) {
+        return (
+            <p className='text-xs text-secondary-foreground' aria-live='polite'>Loading referral rewards…</p>
+        )
+    }
+    if (isError) {
+        return (
+            <HStack className='gap-3 items-center rounded-md border border-border p-3'>
+                <span className='text-xs text-destructive' role='alert'>We couldn&apos;t load your referral rewards.</span>
+                <Button size='sm' variant='secondary' onClick={() => { void refetch() }}>Retry</Button>
+            </HStack>
+        )
+    }
     if (!record) return null
     return <ReferralEarningsView record={record} onClaim={() => void claim()} isClaiming={isClaiming} />
 }

@@ -17,7 +17,7 @@ const useAccountMock = vi.fn(() => ({
 // The wallet tab renders the referral earnings section; mock it at its hook boundary
 // (it is null for non-referrer wallets, which is the state these tests exercise).
 vi.mock('@/hooks/referral/useReferrerDashboard', () => ({
-    default: () => ({ record: null, claim: vi.fn(), isClaiming: false }),
+    default: () => ({ record: null, isLoading: false, isError: false, refetch: vi.fn(), claim: vi.fn(), isClaiming: false }),
 }))
 
 vi.mock('wagmi', () => ({
@@ -143,7 +143,7 @@ describe('<AccountDialogView> — Wallet / Verification tabs', () => {
         render(<AccountDialogView {...makeProps()} />)
 
         expect(screen.getByText(/entered/i)).toBeInTheDocument()
-        expect(screen.getByText(/prizes/i)).toBeInTheDocument()
+        expect(screen.getByText(/^prizes$/i)).toBeInTheDocument()
         expect(screen.getByText(/^net$/i)).toBeInTheDocument()
     })
 
@@ -176,14 +176,24 @@ describe('<AccountDialogView> — Wallet / Verification tabs', () => {
         expect(screen.getByRole('button', { name: /disconnect/i })).toBeInTheDocument()
     })
 
-    it('with state === undefined renders the fallback copy and no tab UI', () => {
-        render(<AccountDialogView {...makeProps({ state: undefined })} />)
+    it('with state === undefined and loading renders the loading copy and no tab UI', () => {
+        render(<AccountDialogView {...makeProps({ state: undefined, stateLoading: true })} />)
 
-        expect(screen.getByText(/player status will appear once your wallet is connected/i)).toBeInTheDocument()
+        expect(screen.getByText(/loading your account…/i)).toBeInTheDocument()
         expect(screen.queryByRole('tab', { name: /wallet/i })).not.toBeInTheDocument()
         expect(screen.queryByRole('tab', { name: /verification/i })).not.toBeInTheDocument()
         expect(screen.queryByText(/entered/i)).not.toBeInTheDocument()
         expect(screen.queryByText(/net entry headroom/i)).not.toBeInTheDocument()
+    })
+
+    it('with state === undefined and not loading renders the error copy with Retry', async () => {
+        const user = userEvent.setup()
+        const onRetryState = vi.fn()
+        render(<AccountDialogView {...makeProps({ state: undefined, stateLoading: false, onRetryState })} />)
+
+        expect(screen.getByText(/we couldn't load your account/i)).toBeInTheDocument()
+        await user.click(screen.getByRole('button', { name: /^retry$/i }))
+        expect(onRetryState).toHaveBeenCalledOnce()
     })
 })
 
