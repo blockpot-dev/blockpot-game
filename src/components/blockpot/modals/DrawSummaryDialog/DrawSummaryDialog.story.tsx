@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { useEffect, useState } from 'react'
 import { Address, isAddressEqual } from 'viem'
-import { _DrawSummaryDialog, type _DrawSummaryDialogProps } from './DrawSummaryDialog'
+import { _DrawSummaryDialog, DrawSummaryLoadingDialog, type _DrawSummaryDialogProps } from './DrawSummaryDialog'
 import { DrawEntry } from '@/types/draw'
 import { resolvePlayerEntries } from '@/utilities/draw/resolve-player-entries'
 
@@ -221,4 +221,20 @@ export const QuickGame: Story = {
             }
         ]}
     />,
+}
+
+export const NoEntries: Story = {
+    render: (props: _DrawSummaryDialogProps) => <Template
+        {...props}
+        displayDrawnNumberData={[]}
+        roundId={{ potIndex: 1, roundIndex: 1, maxRoundsPerPot: 10 }}
+        formattedChance={'10.00%'}
+        formattedDate={''}
+        purchases={[]}
+        onReplayDraw={() => {}}
+    />,
+}
+
+export const Loading: Story = {
+    render: () => <DrawSummaryLoadingDialog open onClose={() => {}} />,
 }

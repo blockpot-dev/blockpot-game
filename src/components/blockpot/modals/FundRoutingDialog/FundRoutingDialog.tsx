@@ -67,8 +67,8 @@ export function _FundRoutingDialog(props: _FundRoutingDialogProps) {
         <DialogContent className='lg:min-w-[576px]' showCloseButton={false} containerContentClassName='p-6'>
             <DialogHeader className='flex flex-row justify-between'>
                 <HStack className='gap-4 items-center justify-between w-full'>
-                    <DialogTitle className='uppercase heading-xl font-normal h-auto'>Where your funds go</DialogTitle>
-                    <Button variant='ghost' size='icon' className='size-6 p-0' onClick={onClose}>
+                    <DialogTitle className='uppercase heading-xl font-normal h-auto'>Where your entry goes</DialogTitle>
+                    <Button variant='ghost' size='icon' className='size-6 p-0' onClick={onClose} aria-label='Close'>
                         <XIcon className='size-6' />
                     </Button>
                 </HStack>
@@ -76,7 +76,7 @@ export function _FundRoutingDialog(props: _FundRoutingDialogProps) {
             <VStack className='pt-6 gap-6'>
                 <p className='text-foreground/80'>
                     Your entry funds the prize pool — but not all of it lands in the top prize. Here&apos;s exactly where this
-                    entry&apos;s <strong>{formatEtherMaxDecimalsGreedy(pea, 6)} ETH</strong> is routed.
+                    entry&apos;s <strong>{formatEtherMaxDecimalsGreedy(pea, 6)} ETH</strong> goes.
                 </p>
 
                 <VStack className='gap-2'>

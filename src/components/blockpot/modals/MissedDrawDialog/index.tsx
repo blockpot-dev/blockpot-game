@@ -1,7 +1,7 @@
 import { drawOfLabel, prizePoolLabel } from '@/constants/copy'
 import { Dialog, DialogContent, DialogTopSection, Button } from '@blockpot-dev/blockpot-design-system'
 import { ElevatedIcon } from '@blockpot-dev/blockpot-design-system'
-import { XIcon } from 'lucide-react'
+import { PlayIcon, XIcon } from 'lucide-react'
 import useDrawRound from '@/hooks/contracts/draw/useDrawRound'
 import { useMissedDraw } from '@/providers/MissedDrawProvider'
 import { useBlockpotDraw } from '@/providers/BlockpotDrawProvider'
@@ -20,8 +20,6 @@ export default function MissedDrawDialog(props: MissedDrawDialogProps) {
     const { replayDraw } = useBlockpotDraw()
     const missedDrawDialogOpen = useMissedDrawDialogOpen()
 
-    if (!round) return null
-
     const handleClose = () => {
         markRoundAsSeen(roundIndex)
         missedDrawDialogOpen.update(false)
@@ -33,9 +31,11 @@ export default function MissedDrawDialog(props: MissedDrawDialogProps) {
         missedDrawDialogOpen.update(false)
     }
 
-    const potNumber = round.potIndex.toString()
-    const roundNumber = (round.roundIndexInPot + 1).toString()
-    const drawLabel = gameType === 'quick' ? prizePoolLabel(potNumber) : `${prizePoolLabel(potNumber)} - ${drawOfLabel(roundNumber, round.maxRoundsInPot)}`
+    const drawLabel = round
+        ? (gameType === 'quick'
+            ? prizePoolLabel(round.potIndex.toString())
+            : `${prizePoolLabel(round.potIndex.toString())} - ${drawOfLabel((round.roundIndexInPot + 1).toString(), round.maxRoundsInPot)}`)
+        : null
 
     return (
         <Dialog open={missedDrawDialogOpen.value} onOpenChange={handleClose}>
@@ -45,15 +45,22 @@ export default function MissedDrawDialog(props: MissedDrawDialogProps) {
                     title='A draw ran while you were away'
                 />
                 <div className='px-4 pb-4'>
-                    <p className='text-base text-secondary-foreground text-center'>
-                        {'The draw for '}<span className='font-bold text-foreground'>{drawLabel}</span>{' has already taken place. Replay it or check the result on-chain.'}
-                    </p>
+                    {drawLabel === null && (
+                        <p className='text-base text-secondary-foreground text-center' role='status'>Loading draw…</p>
+                    )}
+                    {drawLabel !== null && (
+                        <p className='text-base text-secondary-foreground text-center'>
+                            {'The draw for '}<span className='font-bold text-foreground'>{drawLabel}</span>{' has already taken place. Replay it or check the result on-chain.'}
+                        </p>
+                    )}
                     <div className='flex justify-center pt-6'>
                         <Button
                             onClick={handleWatchDraw}
+                            disabled={drawLabel === null}
                             className='uppercase font-bold'
                         >
-                            WATCH THE DRAW
+                            <PlayIcon size={20} />
+                            Replay draw
                         </Button>
                     </div>
                 </div>
@@ -62,6 +69,7 @@ export default function MissedDrawDialog(props: MissedDrawDialogProps) {
                     size='icon'
                     className='absolute top-4 right-4 size-6 p-0'
                     onClick={handleClose}
+                    aria-label='Close'
                 >
                     <XIcon className='size-6' />
                 </Button>

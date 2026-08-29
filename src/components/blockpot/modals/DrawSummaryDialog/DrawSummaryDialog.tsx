@@ -1,8 +1,8 @@
-import { TERM } from '@/constants/copy'
+import { TERM, TERM_TOP_PRIZE_ODDS, topPrizeOddsDescription } from '@/constants/copy'
 import VStack from '@/components/core/VStack/VStack'
 import { Button, Container, Dialog, DialogContent, DialogHeader, DialogTitle } from '@blockpot-dev/blockpot-design-system'
 import DrawnNumberTicket from '../../common/DrawnNumberTicket/DrawnNumberTicket'
-import { PlayIcon, ShareIcon, ShieldCheckIcon } from 'lucide-react'
+import { PlayIcon, ShieldCheckIcon } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import HStack from '@/components/core/HStack/HStack'
 import { Table, TableRow, TableHeader, TableHead, TableBody, TableCell } from '@/components/ui/table'
@@ -58,7 +58,7 @@ export function _DrawSummaryDialog(props: _DrawSummaryDialogProps) {
     return <Dialog open={open} onOpenChange={onClose}>
         <DialogContent className='lg:min-w-[576px]'>
             <DialogHeader className='flex flex-row justify-between pr-4'>
-                <DialogTitle className='uppercase'>Draw Summary</DialogTitle>
+                <DialogTitle className='uppercase'>Draw summary</DialogTitle>
                 <span className='text-sm text-secondary-foreground'>{formattedDate}</span>
             </DialogHeader>
             <VStack className='pt-6 gap-6 overflow-y-auto min-h-0 pr-2'>
@@ -72,11 +72,11 @@ export function _DrawSummaryDialog(props: _DrawSummaryDialogProps) {
                             </>
                         )}
                         <HighlightDivider direction='vertical' />
-                        <RoundInfoStat label='Chance' value={formattedChance} />
+                        <RoundInfoStat label={TERM_TOP_PRIZE_ODDS} value={formattedChance} description={topPrizeOddsDescription(formattedChance)} />
                     </HStack>
                 </Container>
                 <VStack className='gap-6'>
-                    <span className='text-sm'>Drawn Numbers:</span>
+                    <span className='text-sm'>Drawn numbers</span>
                     <div className='grid grid-cols-2 gap-6'>
                         {
                             displayDrawnNumberData.map((drawnNumber) => (
@@ -90,14 +90,10 @@ export function _DrawSummaryDialog(props: _DrawSummaryDialogProps) {
                         <PlayIcon size={24} />
                         <span>Replay draw</span>
                     </Button>
-                    <Button variant='outline' className='flex-1'>
-                        <ShareIcon size={24} />
-                        <span>Share</span>
-                    </Button>
                     <Link to='/transparency' search={{ game: gameType, round: proofRoundIndex }} className='flex-1' onClick={onClose}>
                         <Button variant='outline' className='w-full'>
                             <ShieldCheckIcon size={24} />
-                            <span>Fairness proof</span>
+                            <span>Check the proof</span>
                         </Button>
                     </Link>
                 </HStack>
@@ -109,7 +105,10 @@ export function _DrawSummaryDialog(props: _DrawSummaryDialogProps) {
                             <span className='font-bold text-foreground'>{totalTickets}</span>
                         </span>
                     </HStack>
-                    <Table className='after:content-[""] after:absolute after:inset-0 after:border after:border-gray-700 after:rounded-lg'>
+                    {purchases.length === 0 && (
+                        <p className='text-sm text-secondary-foreground py-4'>You had no entries in this draw.</p>
+                    )}
+                    {purchases.length > 0 && <Table className='after:content-[""] after:absolute after:inset-0 after:border after:border-gray-700 after:rounded-lg'>
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="pl-4">Entry</TableHead>
@@ -125,9 +124,23 @@ export function _DrawSummaryDialog(props: _DrawSummaryDialogProps) {
                                 ))
                             }
                         </TableBody>
-                    </Table>
+                    </Table>}
                 </VStack>
             </VStack>
+        </DialogContent>
+    </Dialog>
+}
+
+// Rendered while the round is still being fetched so the dialog never opens
+// onto nothing (CLAUDE.md "Every state has copy").
+export function DrawSummaryLoadingDialog(props: { open: boolean, onClose: () => void }) {
+    const { open, onClose } = props
+    return <Dialog open={open} onOpenChange={onClose}>
+        <DialogContent className='lg:min-w-[576px]'>
+            <DialogHeader className='flex flex-row justify-between pr-4'>
+                <DialogTitle className='uppercase'>Draw summary</DialogTitle>
+            </DialogHeader>
+            <p className='pt-6 text-sm text-secondary-foreground' role='status'>Loading draw…</p>
         </DialogContent>
     </Dialog>
 }
@@ -148,12 +161,9 @@ export default function DrawSummaryDialog(props: DrawSummaryDialogProps) {
     const fiatConverter = useFiatConverter()
     const playerEntries = usePlayerEntries(Number(roundIndex), gameType)
 
-    if (!round) return null
+    if (!round) return <DrawSummaryLoadingDialog open={open} onClose={onClose} />
 
-    let formattedDate = ''
-    if (round) {
-        formattedDate = formatDateWithTime(new Date(round.drawTime))
-    }
+    const formattedDate = formatDateWithTime(new Date(round.drawTime))
 
     return <_DrawSummaryDialog
         open={open}

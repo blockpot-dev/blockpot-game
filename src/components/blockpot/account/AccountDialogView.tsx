@@ -58,7 +58,7 @@ export default function AccountDialogView(props: AccountDialogViewProps) {
                 <DialogHeader className='flex flex-row justify-between'>
                     <HStack className='gap-4 items-center justify-between w-full'>
                         <DialogTitle className='uppercase heading-xl font-normal h-auto'>Your Account</DialogTitle>
-                        <Button variant='ghost' size='icon' className='size-6 p-0' onClick={() => onOpenChange(false)}>
+                        <Button variant='ghost' size='icon' className='size-6 p-0' onClick={() => onOpenChange(false)} aria-label='Close'>
                             <XIcon className='size-6' />
                         </Button>
                     </HStack>

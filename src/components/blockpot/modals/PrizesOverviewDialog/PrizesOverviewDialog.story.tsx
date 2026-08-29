@@ -29,3 +29,8 @@ export const Default: Story = {
         />
     }
 }
+
+export const Loading: Story = {
+    args: {},
+    render: () => <_PrizesOverviewDialog open onClose={() => {}} pots={[]} isLoading fiatConverter={() => ({ value: 0n, formattedValue: '$0' })} />
+}

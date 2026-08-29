@@ -47,12 +47,13 @@ function createPrizesData(pots: readonly bigint[], fiatConverter: FiatConverter,
 export type _PrizesOverviewDialogProps = {
     open: boolean
     onClose: () => void
+    isLoading?: boolean
     fiatConverter: FiatConverter
     pots: readonly bigint[]
 }
 
 export function _PrizesOverviewDialog(props: _PrizesOverviewDialogProps) {
-    const { open, onClose, pots, fiatConverter } = props
+    const { open, onClose, pots, fiatConverter, isLoading = false } = props
 
     const totalPrizePool = pots.reduce((acc, pot) => acc + pot, 0n)
     const prizes = createPrizesData(pots, fiatConverter, totalPrizePool)
@@ -65,19 +66,20 @@ export function _PrizesOverviewDialog(props: _PrizesOverviewDialogProps) {
         <DialogContent className='lg:min-w-[576px]' showCloseButton={false} containerContentClassName='p-6'>
             <DialogHeader className='flex flex-row justify-between'>
                 <HStack className='gap-4 items-center justify-between w-full'>
-                    <DialogTitle className='uppercase heading-xl font-normal h-auto'>Prizes Overview</DialogTitle>
+                    <DialogTitle className='uppercase heading-xl font-normal h-auto'>Prizes</DialogTitle>
                     <HStack className='items-center gap-6'>
                         <Link to='/how-to-play' className='text-sm underline text-foreground' onClick={() => onClose()}>How to Play</Link>
-                        <Button variant='ghost' size='icon' className='size-6 p-0' onClick={onClose}>
+                        <Button variant='ghost' size='icon' className='size-6 p-0' onClick={onClose} aria-label='Close'>
                             <XIcon className='size-6' />
                         </Button>
                     </HStack>
                 </HStack>
             </DialogHeader>
-            <VStack className='pt-6 gap-6'>
-                {/* Total Prize Pool */}
+            {isLoading && <p className='pt-6 text-sm text-secondary-foreground' role='status'>Loading prizes…</p>}
+            {!isLoading && <VStack className='pt-6 gap-6'>
+                {/* Total prize pool */}
                 <LabeledBalance
-                    label='Total Prize Pool'
+                    label='Total prize pool'
                     balance={
                         <HStack>
                             <div className='font-bold'>{totalPrizePoolFormatted}</div>
@@ -88,21 +90,21 @@ export function _PrizesOverviewDialog(props: _PrizesOverviewDialogProps) {
                     imageAlt='ETH'
                 />
                 
-                {/* Potential Prize Breakdown */}
+                {/* Prize breakdown */}
                 <VStack className='gap-6'>
                     <div>
-                        <h3 className='font-bold mb-2'>Potential Prize Breakdown</h3>
+                        <h3 className='font-bold mb-2'>Prize breakdown</h3>
                         <p className='text-foreground/80'>
-                            {'We\'re drawing '}<strong>{drawnNumbersCount}</strong>{' numbers this round, each with a corresponding prize.'}
+                            {'We\'re drawing '}<strong>{drawnNumbersCount}</strong>{' numbers this draw, each with a corresponding prize.'}
                         </p>
                     </div>
                     
                     <Table className='after:content-[""] after:absolute after:inset-0 after:border after:border-gray-700 after:rounded-lg [&_tr]:border-gray-700'>
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="pl-4">Drawn Number</TableHead>
-                                <TableHead>Percentage</TableHead>
-                                <TableHead className="pr-4">Prize</TableHead>
+                                <TableHead className="pl-4">Prize</TableHead>
+                                <TableHead>Share</TableHead>
+                                <TableHead className="pr-4">Amount</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -133,7 +135,7 @@ export function _PrizesOverviewDialog(props: _PrizesOverviewDialogProps) {
                         If one of your entries matches the <strong>n<sup>th</sup></strong> number drawn, it takes the <strong>n<sup>th</sup></strong> prize. Payouts go to your wallet; you can check each one on-chain.
                     </p>
                 </VStack>
-            </VStack>
+            </VStack>}
         </DialogContent>
     </Dialog>
 }
@@ -148,7 +150,9 @@ export default function PrizesOverviewDialog(props: PrizesOverviewDialogProps) {
     const { currentRound, pots } = useDraw()
     const fiatConverter = useFiatConverter({ maxDecimals: 0 })
 
-    if (!currentRound || !pots) return null
+    if (!currentRound || !pots) {
+        return <_PrizesOverviewDialog open={open} onClose={onClose} pots={[]} fiatConverter={fiatConverter} isLoading />
+    }
 
     return <_PrizesOverviewDialog
         open={open}

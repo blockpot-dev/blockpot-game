@@ -94,7 +94,7 @@ export function OperatorStatusIndicator() {
             <TooltipTrigger asChild>
                 <button
                     type='button'
-                    aria-label={styles.tooltip}
+                    aria-label={`Status: ${styles.label}`}
                     className='flex items-center gap-2 h-[40px] px-2 rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-ring'
                 >
                     <span
