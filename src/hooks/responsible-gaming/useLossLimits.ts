@@ -96,6 +96,7 @@ export default function useLossLimits() {
     return {
         state: query.data,
         isLoading: query.isLoading,
+        isError: query.isError,
         error: query.error,
         refetch: query.refetch,
     }

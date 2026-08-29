@@ -32,7 +32,7 @@ export function LossLimitWarningView({ state, className }: LossLimitWarningViewP
     return (
         <InfoBanner tone='warn' className={className}>
             <div className='flex flex-col gap-1'>
-                <strong>This stake would breach your loss limit.</strong>
+                <strong>This entry would take you over your loss limit.</strong>
                 {limits.length > 0 ? (
                     <span className='text-xs'>
                         Active limits:{' '}
@@ -41,7 +41,7 @@ export function LossLimitWarningView({ state, className }: LossLimitWarningViewP
                             .join(' · ')}
                     </span>
                 ) : (
-                    <span className='text-xs'>You currently have a loss limit configured for this period.</span>
+                    <span className='text-xs'>We couldn't load your limits right now.</span>
                 )}
                 <span className='text-xs'>
                     Prizes you receive count back against your limit.{' '}

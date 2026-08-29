@@ -9,7 +9,7 @@ export type RealityCheckDialogProps = {
     netSpendLabel: string
     onContinue: () => void
     onStop: () => void
-    /** Optional: renders a "Get help" link routing to problem-gambling resources. */
+    /** Optional: renders a "Support and resources" link routing to the support page. */
     onGetHelp?: () => void
 }
 
@@ -37,7 +37,7 @@ export default function RealityCheckDialog({
                         <span className='text-sm font-semibold text-right'>{sessionDurationLabel}</span>
                     </div>
                     <div className='flex items-baseline justify-between gap-4'>
-                        <span className='text-sm text-secondary-foreground'>This session has cost you</span>
+                        <span className='text-sm text-secondary-foreground'>Net spend this session</span>
                         <span className='text-sm font-semibold text-right'>{netSpendLabel}</span>
                     </div>
                 </div>
@@ -47,7 +47,7 @@ export default function RealityCheckDialog({
                         onClick={onGetHelp}
                         className='self-start text-sm underline underline-offset-2 text-secondary-foreground hover:text-foreground mb-4'
                     >
-                        Get help with your gambling
+                        Support and resources
                     </button>
                 )}
                 <DialogFooter>

@@ -22,8 +22,8 @@ export default function ResponsibleGamingPanel({ className }: ResponsibleGamingP
                         <div>
                             <h1 className='heading-4xl text-foreground'>Responsible gaming</h1>
                             <p className='text-sm text-secondary-foreground mt-2 max-w-2xl'>
-                                Tools and resources to help you stay in control. Self-exclusion and
-                                loss limits are checked before every entry.
+                                Set limits that suit you. Any limit you set applies before every entry,
+                                and you can always claim prizes.
                             </p>
                         </div>
 
@@ -53,19 +53,19 @@ function GatedSettings() {
     if (address === ZERO_ADDRESS) {
         return (
             <p className='text-sm text-secondary-foreground'>
-                Connect your wallet to manage your responsible-gaming settings.
+                Connect your wallet to manage your responsible gaming settings.
             </p>
         )
     }
 
     if (!session) {
         const errorMessage = siwe.isError
-            ? siwe.error instanceof Error ? siwe.error.message : 'Sign-in failed.'
+            ? 'We couldn\'t sign you in. Check your wallet and try again.'
             : null
         return (
             <VStack className='gap-3 items-start'>
                 <p className='text-sm text-secondary-foreground'>
-                    Sign in with your wallet to manage your responsible-gaming
+                    Sign in with your wallet to manage your responsible gaming
                     settings. Your wallet will prompt you to sign a short message —
                     no transaction or gas required.
                 </p>
@@ -101,8 +101,8 @@ function PrivacyAndDataNotice() {
         <VStack className='gap-2'>
             <h2 className='heading-xl text-foreground'>Privacy &amp; data we collect</h2>
             <p className='text-sm text-secondary-foreground'>
-                To meet our anti-money-laundering and fraud-prevention obligations, Blockpot
-                collects technical signals about the device and network you use to play —
+                To keep Blockpot fair and meet our legal obligations, we collect technical
+                signals about the device and network you use to play —
                 including a hashed device fingerprint (browser, screen, fonts, hardware
                 characteristics), your IP address, and basic interaction signals. These
                 are used solely to detect duplicate accounts, sanctions exposure, and

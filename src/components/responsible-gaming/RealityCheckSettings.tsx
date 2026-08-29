@@ -23,15 +23,27 @@ export function RealityCheckSettingsView({
     onSetEnabled,
 }: RealityCheckSettingsViewProps) {
     const [draft, setDraft] = useState(String(config.intervalMinutes))
+    const [rangeError, setRangeError] = useState(false)
     useEffect(() => {
         setDraft(String(config.intervalMinutes))
+        setRangeError(false)
     }, [config.intervalMinutes])
+
+    const save = () => {
+        const minutes = Number(draft)
+        if (!Number.isInteger(minutes) || minutes < REALITY_CHECK_MIN_MINUTES || minutes > REALITY_CHECK_MAX_MINUTES) {
+            setRangeError(true)
+            return
+        }
+        setRangeError(false)
+        onSetInterval(minutes)
+    }
 
     if (!walletConnected) {
         return (
             <Section>
                 <p className='text-sm text-secondary-foreground'>
-                    Connect your wallet to configure your reality check.
+                    Connect your wallet and sign in to set your reality check.
                 </p>
             </Section>
         )
@@ -40,14 +52,14 @@ export function RealityCheckSettingsView({
     return (
         <Section>
             <p className='text-sm text-secondary-foreground'>
-                While you play, we periodically show how long your session has lasted and what
-                it has cost you. The reminder is stored on this device only and never blocks
-                your entries.
+                While you play, we show how long your session has lasted and your net spend at
+                the interval you choose. The reminder is stored on this device only and never
+                blocks your entries.
             </p>
             <HStack className='gap-3 items-end flex-wrap'>
                 <VStack className='gap-1'>
                     <label htmlFor='reality-check-interval' className='text-xs text-secondary-foreground'>
-                        Remind me every (minutes, {REALITY_CHECK_MIN_MINUTES}–{REALITY_CHECK_MAX_MINUTES})
+                        Remind me every … minutes ({REALITY_CHECK_MIN_MINUTES} to {REALITY_CHECK_MAX_MINUTES})
                     </label>
                     <Input
                         id='reality-check-interval'
@@ -56,27 +68,34 @@ export function RealityCheckSettingsView({
                         max={REALITY_CHECK_MAX_MINUTES}
                         value={draft}
                         disabled={!config.enabled}
-                        onChange={(e) => setDraft(e.target.value)}
+                        onChange={(e) => { setDraft(e.target.value); setRangeError(false) }}
+                        aria-invalid={rangeError || undefined}
+                        aria-describedby={rangeError ? 'reality-check-interval-error' : undefined}
                         className='w-40'
                     />
                 </VStack>
                 <Button
                     variant='outline'
                     disabled={!config.enabled || Number(draft) === config.intervalMinutes}
-                    onClick={() => onSetInterval(Number(draft))}
+                    onClick={save}
                 >
-                    Save
+                    SAVE REMINDER
                 </Button>
                 <Button
                     variant={config.enabled ? 'outline' : 'default'}
                     onClick={() => onSetEnabled(!config.enabled)}
                 >
-                    {config.enabled ? 'Turn off' : 'Turn on'}
+                    {config.enabled ? 'TURN REMINDER OFF' : 'TURN REMINDER ON'}
                 </Button>
             </HStack>
+            {rangeError && (
+                <p id='reality-check-interval-error' className='text-xs text-destructive font-body'>
+                    Choose between {REALITY_CHECK_MIN_MINUTES} and {REALITY_CHECK_MAX_MINUTES} minutes.
+                </p>
+            )}
             {!config.enabled && (
                 <p className='text-xs text-secondary-foreground font-body'>
-                    Reality check is off. We recommend keeping it on while you play.
+                    Your reminder is off. We recommend keeping it on while you play.
                 </p>
             )}
         </Section>

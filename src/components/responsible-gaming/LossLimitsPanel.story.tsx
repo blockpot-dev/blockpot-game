@@ -85,11 +85,32 @@ export const PendingIncrease: Story = {
     },
 }
 
+export const QueryError: Story = {
+    args: {
+        walletConnected: true,
+        state: undefined,
+        queryError: true,
+        onRetry: noop,
+        onSet: noop,
+        onCancelPending: noop,
+    },
+}
+
+export const Saved: Story = {
+    args: {
+        walletConnected: true,
+        state: configured,
+        successMessage: 'Daily limit saved.',
+        onSet: noop,
+        onCancelPending: noop,
+    },
+}
+
 export const SaveError: Story = {
     args: {
         walletConnected: true,
         state: configured,
-        submitError: 'Service unavailable. Please retry.',
+        submitError: 'We couldn\'t save your limit. Please try again.',
         onSet: noop,
         onCancelPending: noop,
     },

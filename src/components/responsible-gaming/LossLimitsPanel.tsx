@@ -3,7 +3,6 @@ import { Loader2, X } from 'lucide-react'
 import { Button, InfoBanner, Input } from '@blockpot-dev/blockpot-design-system'
 import VStack from '@/components/core/VStack/VStack'
 import HStack from '@/components/core/HStack/HStack'
-import { ApiError } from '@/api/gamingServiceClient'
 import useLossLimits, {
     LossLimit,
     LossLimitPeriod,
@@ -23,10 +22,19 @@ import {
     PERIODS,
 } from './lossLimitCopy'
 
+// Mirrors the service-side cool-down for increases; the server's effective_at
+// is authoritative once the change is submitted.
+const INCREASE_COOL_DOWN_MS = 24 * 60 * 60 * 1000
+
 export type LossLimitsPanelViewProps = {
     walletConnected: boolean
     state: LossLimitsState | undefined
     isLoading?: boolean
+    /** The limits query failed; renders retry copy instead of the form. */
+    queryError?: boolean
+    onRetry?: () => void
+    /** Inline confirmation after a successful save or cancel. */
+    successMessage?: string
     onSet: (payload: SetLossLimitPayload) => void
     onCancelPending: (id: string) => void
     submitting?: boolean
@@ -39,6 +47,9 @@ export function LossLimitsPanelView({
     walletConnected,
     state,
     isLoading = false,
+    queryError = false,
+    onRetry,
+    successMessage,
     onSet,
     onCancelPending,
     submitting = false,
@@ -55,23 +66,36 @@ export function LossLimitsPanelView({
             </Section>
         )
     }
+    if (queryError) {
+        return (
+            <Section>
+                <InfoBanner tone='block'>
+                    <div className='flex flex-col gap-2 items-start'>
+                        <span>We couldn't load your loss limits. Check your connection and try again.</span>
+                        {onRetry && (
+                            <Button variant='outline' size='sm' onClick={onRetry}>TRY AGAIN</Button>
+                        )}
+                    </div>
+                </InfoBanner>
+            </Section>
+        )
+    }
     if (isLoading || !state) {
         return (
             <Section>
-                <p className='text-sm text-secondary-foreground'>Loading…</p>
+                <p className='text-sm text-secondary-foreground' role='status'>Loading your loss limits…</p>
             </Section>
         )
     }
     return (
         <Section>
             <p className='text-sm text-secondary-foreground'>
-                Your loss limit caps the difference between what you stake and the prizes you
-                receive over the period. Prizes you receive count back against your limit.
-                Limits reset at 00:00 UTC.
+                A loss limit caps how much you can lose over a day, week or month. Prizes you
+                receive count back against it. Limits reset at midnight UTC.
             </p>
             <p className='text-xs text-secondary-foreground font-body'>
-                <strong>Decreases and first-time limits</strong> take effect immediately.{' '}
-                <strong>Increases</strong> require a 24-hour cool-down before they apply.
+                Lowering a limit or setting your first one applies straight away. Raising a
+                limit takes effect after 24 hours — you can cancel it any time before then.
             </p>
             <VStack className='gap-3 mt-2'>
                 {PERIODS.map((period) => (
@@ -86,6 +110,9 @@ export function LossLimitsPanelView({
                 ))}
             </VStack>
 
+            {successMessage && (
+                <p role='status' className='text-sm text-foreground'>{successMessage}</p>
+            )}
             {submitError && (
                 <InfoBanner tone='block'>{submitError}</InfoBanner>
             )}
@@ -115,24 +142,17 @@ export type LossLimitsPanelProps = {
 }
 
 export default function LossLimitsPanel({ walletConnected }: LossLimitsPanelProps) {
-    const { state, isLoading } = useLossLimits()
+    const { state, isLoading, isError, refetch } = useLossLimits()
     const setLimit = useSetLossLimit()
     const cancel = useCancelPendingLossLimit()
+    const [successMessage, setSuccessMessage] = useState<string | undefined>()
 
+    // Raw ApiError / Error text never reaches the player (CLAUDE.md copy rules).
     const submitError = setLimit.isError
-        ? setLimit.error instanceof ApiError
-            ? setLimit.error.message
-            : setLimit.error instanceof Error
-                ? setLimit.error.message
-                : 'Could not save loss limit'
+        ? 'We couldn\'t save your limit. Please try again.'
         : undefined
-
     const cancelError = cancel.isError
-        ? cancel.error instanceof ApiError
-            ? cancel.error.message
-            : cancel.error instanceof Error
-                ? cancel.error.message
-                : 'Could not cancel pending change'
+        ? 'We couldn\'t cancel that change. Please try again.'
         : undefined
 
     return (
@@ -140,12 +160,35 @@ export default function LossLimitsPanel({ walletConnected }: LossLimitsPanelProp
             walletConnected={walletConnected}
             state={state}
             isLoading={isLoading}
+            queryError={isError}
+            onRetry={() => void refetch()}
+            successMessage={successMessage}
             submitting={setLimit.isPending}
             submitError={submitError}
             cancellingId={cancel.isPending ? cancel.variables ?? null : null}
             cancelError={cancelError}
-            onSet={(payload) => setLimit.mutate(payload, { onSuccess: () => setLimit.reset() })}
-            onCancelPending={(id) => cancel.mutate(id, { onSuccess: () => cancel.reset() })}
+            onSet={(payload) => {
+                setSuccessMessage(undefined)
+                setLimit.mutate(payload, {
+                    onSuccess: (result) => {
+                        setLimit.reset()
+                        setSuccessMessage(
+                            result.direction === 'pending'
+                                ? `${PERIOD_LABELS[payload.period]} limit saved. It takes effect ${formatEffectiveAt(result.effectiveAt)}.`
+                                : `${PERIOD_LABELS[payload.period]} limit saved.`,
+                        )
+                    },
+                })
+            }}
+            onCancelPending={(id) => {
+                setSuccessMessage(undefined)
+                cancel.mutate(id, {
+                    onSuccess: () => {
+                        cancel.reset()
+                        setSuccessMessage('Increase cancelled. Your current limit stays in place.')
+                    },
+                })
+            }}
         />
     )
 }
@@ -188,15 +231,14 @@ function PeriodRow({
     const isInvalid = attempted && direction === 'invalid'
     const helperCopy = (() => {
         if (direction === 'invalid') {
-            return isInvalid ? 'Enter a valid amount in EUR (e.g. 100.00).' : null
+            return isInvalid ? 'Enter an amount in euros, e.g. 100.00.' : null
         }
         if (direction === 'unchanged') return null
         if (direction === 'immediate') {
-            return currentMinor === undefined
-                ? 'Will apply immediately.'
-                : `Decrease — applies immediately. New cap ${formatEurMinor(newAmountMinor as number)}.`
+            return `Applies straight away. Your ${PERIOD_LABELS[period].toLowerCase()} limit will be ${formatEurMinor(newAmountMinor as number)}.`
         }
-        return 'Increase — takes effect 24 hours after submission.'
+        const effectiveAt = new Date(Date.now() + INCREASE_COOL_DOWN_MS).toISOString()
+        return `Increase to ${formatEurMinor(newAmountMinor as number)} takes effect ${formatEffectiveAt(effectiveAt)}. You can cancel before then.`
     })()
 
     const submit = () => {
@@ -223,8 +265,8 @@ function PeriodRow({
 
             {pending && (
                 <div className='mt-2 text-xs text-secondary-foreground'>
-                    Pending change to {formatEurMinor(pending.newAmountEurMinor)} —
-                    {' '}effective {formatEffectiveAt(pending.effectiveAt)}.
+                    Pending: {pending.direction} to {formatEurMinor(pending.newAmountEurMinor)} ·
+                    {' '}takes effect {formatEffectiveAt(pending.effectiveAt)}.
                 </div>
             )}
 
@@ -242,6 +284,7 @@ function PeriodRow({
                         value={draft}
                         onChange={(e) => setDraft(e.target.value)}
                         placeholder='e.g. 100.00'
+                        aria-label={`New ${PERIOD_LABELS[period].toLowerCase()} limit in euros`}
                         className='mt-1.5'
                     />
                 </div>
@@ -251,7 +294,7 @@ function PeriodRow({
                 >
                     {submitting
                         ? <><Loader2 className='mr-2 h-4 w-4 animate-spin' /><span>SAVING…</span></>
-                        : 'SAVE'}
+                        : 'SAVE LIMIT'}
                 </Button>
             </HStack>
             {helperCopy && (
@@ -276,11 +319,8 @@ function PendingRow({
         <HStack className='items-center justify-between gap-2 rounded-md border border-border bg-background/40 px-3 py-2'>
             <div className='flex flex-col'>
                 <span className='text-sm text-foreground'>
-                    {PERIOD_LABELS[pending.period]} → {formatEurMinor(pending.newAmountEurMinor)}{' '}
-                    <span className='text-xs text-secondary-foreground'>({pending.direction})</span>
-                </span>
-                <span className='text-xs text-secondary-foreground font-body'>
-                    Effective {formatEffectiveAt(pending.effectiveAt)}
+                    {PERIOD_LABELS[pending.period]} limit: {pending.direction} to{' '}
+                    {formatEurMinor(pending.newAmountEurMinor)} · takes effect {formatEffectiveAt(pending.effectiveAt)}
                 </span>
             </div>
             <Button
@@ -288,11 +328,10 @@ function PendingRow({
                 size='sm'
                 onClick={onCancel}
                 disabled={cancelling}
-                aria-label='Cancel pending change'
             >
                 {cancelling
                     ? <Loader2 className='h-4 w-4 animate-spin' />
-                    : <><X className='h-4 w-4 mr-1' /><span>CANCEL</span></>}
+                    : <><X className='h-4 w-4 mr-1' /><span>{pending.direction === 'increase' ? 'CANCEL INCREASE' : 'CANCEL CHANGE'}</span></>}
             </Button>
         </HStack>
     )
