@@ -88,7 +88,7 @@ export function SelfExclusionPanelView({
             <p className='text-sm text-secondary-foreground'>
                 Take a break from Blockpot. Self-exclusion is enforced by our pre-transaction
                 gate — you cannot enter draws until it ends. You can still claim any
-                escrowed winnings during this period.
+                prizes you&apos;re owed during this period.
             </p>
 
             <VStack className='gap-3 mt-2'>
@@ -266,7 +266,7 @@ function ActiveExclusion({ record }: { record: SelfExclusionRecord }) {
             </InfoBanner>
             <p className='text-sm text-secondary-foreground font-body'>
                 You cannot enter draws while this exclusion is active. You can still
-                claim any escrowed winnings. Need to talk to someone? See the resources below.
+                claim any prizes you&apos;re owed. Need to talk to someone? See the resources below.
             </p>
         </Section>
     )

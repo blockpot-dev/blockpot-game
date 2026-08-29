@@ -65,8 +65,8 @@ export function LossLimitsPanelView({
     return (
         <Section>
             <p className='text-sm text-secondary-foreground'>
-                Your loss limit caps the difference between what you stake and what you win
-                back over the period. Wins reduce the consumed amount within the same window.
+                Your loss limit caps the difference between what you stake and the prizes you
+                receive over the period. Prizes you receive count back against your limit.
                 Limits reset at 00:00 UTC.
             </p>
             <p className='text-xs text-secondary-foreground font-body'>

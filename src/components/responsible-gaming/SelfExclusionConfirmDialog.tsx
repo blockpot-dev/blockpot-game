@@ -52,7 +52,7 @@ export default function SelfExclusionConfirmDialog({
                     <p className='text-sm text-secondary-foreground font-body'>
                         While the exclusion is active, the platform will refuse new draw
                         entries and surface a banner on every page. You can still claim any
-                        escrowed winnings during this period.
+                        prizes you&apos;re owed during this period.
                     </p>
                 </VStack>
 

@@ -51,7 +51,7 @@ export function _FundRoutingDialog(props: _FundRoutingDialogProps) {
         extras.push({
             entry: routing.nextPot,
             label: routing.nextPot.label,
-            caption: 'Held back to seed the next prize pool once this one is won.',
+            caption: 'Held back to seed the next prize pool after this one pays out.',
         })
     }
     if (routing.parentGame) {

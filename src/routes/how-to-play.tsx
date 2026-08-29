@@ -57,7 +57,7 @@ function HowToPlayPage() {
                         {/* PEA / CF mirrored from src/constants/protocol.ts; OF default mirrored from src/constants/operator.ts (VITE_OPERATOR_FEE_BPS). */}
                         <NumberedSection number={1} id='s1' title='What is an entry?'>
                             <p>
-                                Each entry gives you one chance to win prizes in the current
+                                Each entry is one chance at a prize in the current
                                 draw. Every entry costs a fixed amount:
                             </p>
                             <ul className='list-disc pl-6 space-y-1'>
@@ -80,7 +80,7 @@ function HowToPlayPage() {
                             </p>
                             <p>
                                 Each drawn number maps back to a specific entry. If one of your
-                                entries is drawn, you win the prize tier associated with that
+                                entries is drawn, you take the prize associated with that
                                 draw slot.
                             </p>
                             <p>
@@ -118,7 +118,7 @@ function HowToPlayPage() {
                             <ol className='list-decimal pl-6 space-y-1'>
                                 <li>
                                     Connect an EVM-compatible wallet from the top right —
-                                    your entries and winnings live at your wallet address, with
+                                    your entries and prizes live at your wallet address, with
                                     no account to create and no password to remember.
                                 </li>
                                 <li>
@@ -163,7 +163,7 @@ function HowToPlayPage() {
                                 Blockpot supports loss / stake limits and self-exclusion. Limits
                                 are enforced before every entry; self-exclusion blocks new
                                 entries for the period you choose but never blocks claims of
-                                winnings you have already earned. Manage your settings on the{' '}
+                                prizes you are already owed. Manage your settings on the{' '}
                                 <Link to='/responsible-gaming' className='text-accent-foreground hover:underline'>
                                     Responsible gaming
                                 </Link>{' '}

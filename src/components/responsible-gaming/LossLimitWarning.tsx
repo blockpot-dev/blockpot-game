@@ -44,7 +44,7 @@ export function LossLimitWarningView({ state, className }: LossLimitWarningViewP
                     <span className='text-xs'>You currently have a loss limit configured for this period.</span>
                 )}
                 <span className='text-xs'>
-                    Wins reduce the consumed amount within the same window.{' '}
+                    Prizes you receive count back against your limit.{' '}
                     <Link to='/responsible-gaming' className='underline'>Review your limits</Link>.
                 </span>
             </div>

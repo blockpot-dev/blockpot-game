@@ -17,14 +17,14 @@ function extractBadgeData(round: DrawRound | null, accountAddress: Address) {
     if (!round) return ['', -1] as const
     const playerTierIndex = round.draws.findIndex((draw) => isPlayerWinner(draw.winner, accountAddress))
     if (playerTierIndex !== -1) {
-        return ['You Won', playerTierIndex + 1] as const
+        return ['Your prize', playerTierIndex + 1] as const
     }
     if (!isAddressEqual(round.draws[0].winner, ZERO_ADDRESS)) {
-        return ['Top prize', 1] as const
+        return ['Top prize paid', 1] as const
     }
     const anyWinnerTierIndex = round.draws.findIndex((draw) => !isAddressEqual(draw.winner, ZERO_ADDRESS))
     if (anyWinnerTierIndex !== -1) {
-        return ['Player Won', anyWinnerTierIndex + 1] as const
+        return ['Prize paid', anyWinnerTierIndex + 1] as const
     }
     return ['', -1] as const
 }

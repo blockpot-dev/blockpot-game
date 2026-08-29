@@ -143,8 +143,8 @@ describe('<AccountDialogView> — Wallet / Verification tabs', () => {
         render(<AccountDialogView {...makeProps()} />)
 
         expect(screen.getByText(/entered/i)).toBeInTheDocument()
-        expect(screen.getByText(/won/i)).toBeInTheDocument()
-        expect(screen.getByText(/profit/i)).toBeInTheDocument()
+        expect(screen.getByText(/prizes/i)).toBeInTheDocument()
+        expect(screen.getByText(/^net$/i)).toBeInTheDocument()
     })
 
     it('switching to the Verification tab swaps the panel content', async () => {

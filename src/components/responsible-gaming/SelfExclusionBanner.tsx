@@ -30,7 +30,7 @@ export function SelfExclusionBannerView({
         >
             <strong className='mr-2'>Self-exclusion active:</strong>
             {summary}
-            {hasClaimableWinnings && ' You can still claim any escrowed winnings during this period.'}
+            {hasClaimableWinnings && ' You can still claim any prizes you\'re owed during this period.'}
             {' '}See the Responsible gaming page for details.
         </div>
     )

@@ -10,9 +10,9 @@ import { getDrawnNumberImage, getTicketVariant, ticketContentVariants } from '@/
 
 function formatWinner(address: Address, isPlayerWinner: boolean) {
     if (isPlayerWinner) {
-        return 'You Won!'
+        return 'Your prize'
     } else if (address === ZERO_ADDRESS) {
-        return 'No Winner'
+        return 'No match'
     } else {
         return formatAccountAddress(address)
     }

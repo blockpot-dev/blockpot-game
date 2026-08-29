@@ -53,7 +53,7 @@ export function _DrawSummaryDialog(props: _DrawSummaryDialogProps) {
 
     const totalTickets = purchases.reduce((acc, purchase) => acc + (purchase.amount), 0)
 
-    // TODO: Add 'You Won' badge for matches
+    // TODO: Add 'Your prize' badge for matches
     const { open, onClose } = props
     return <Dialog open={open} onOpenChange={onClose}>
         <DialogContent className='lg:min-w-[576px]'>

@@ -93,7 +93,7 @@ export function _PrizesOverviewDialog(props: _PrizesOverviewDialogProps) {
                     <div>
                         <h3 className='font-bold mb-2'>Potential Prize Breakdown</h3>
                         <p className='text-foreground/80'>
-                            {'Feeling lucky? We\'re drawing '}<strong>{drawnNumbersCount}</strong>{' numbers this round, each with a corresponding prize.'}
+                            {'We\'re drawing '}<strong>{drawnNumbersCount}</strong>{' numbers this round, each with a corresponding prize.'}
                         </p>
                     </div>
                     
@@ -126,11 +126,11 @@ export function _PrizesOverviewDialog(props: _PrizesOverviewDialogProps) {
                     </Table>
                 </VStack>
                 
-                {/* How to Win Section */}
+                {/* How prizes are paid */}
                 <VStack className='gap-2 mb-2'>
-                    <h3 className='font-bold'>How do I win?</h3>
+                    <h3 className='font-bold'>How prizes are paid</h3>
                     <p className='text-sm text-secondary-foreground'>
-                        If any of your entries have numbers matching the <strong>n<sup>th</sup></strong> number drawn, that entry wins the corresponding <strong>n<sup>th</sup></strong> prize, paid automatically to your wallet.
+                        If one of your entries matches the <strong>n<sup>th</sup></strong> number drawn, it takes the <strong>n<sup>th</sup></strong> prize. Payouts go to your wallet; you can check each one on-chain.
                     </p>
                 </VStack>
             </VStack>

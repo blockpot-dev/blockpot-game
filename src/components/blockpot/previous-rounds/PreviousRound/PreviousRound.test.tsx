@@ -36,7 +36,7 @@ function makeRound(draws: DrawnNumber[]): DrawRound {
 }
 
 describe('<_PreviousRound> badge', () => {
-    it('disconnected viewer never sees "You Won" when no draw has a winner', () => {
+    it('disconnected viewer never sees "Your prize" when no draw has a winner', () => {
         const round = makeRound([
             makeDraw(ZERO_ADDRESS, 1),
             makeDraw(ZERO_ADDRESS, 2),
@@ -50,10 +50,10 @@ describe('<_PreviousRound> badge', () => {
                 viewRoundSummary={vi.fn()}
             />,
         )
-        expect(screen.queryByText('You Won')).not.toBeInTheDocument()
+        expect(screen.queryByText('Your prize')).not.toBeInTheDocument()
     })
 
-    it('disconnected viewer sees "Top prize" when draws[0] has a real winner', () => {
+    it('disconnected viewer sees "Top prize paid" when draws[0] has a real winner', () => {
         const round = makeRound([
             makeDraw(WINNER_A, 1),
             makeDraw(ZERO_ADDRESS, 2),
@@ -67,11 +67,11 @@ describe('<_PreviousRound> badge', () => {
                 viewRoundSummary={vi.fn()}
             />,
         )
-        expect(screen.getByText('Top prize')).toBeInTheDocument()
-        expect(screen.queryByText('You Won')).not.toBeInTheDocument()
+        expect(screen.getByText('Top prize paid')).toBeInTheDocument()
+        expect(screen.queryByText('Your prize')).not.toBeInTheDocument()
     })
 
-    it('connected viewer who actually won sees "You Won" with the right ordinal', () => {
+    it('connected viewer who actually won sees "Your prize" with the right ordinal', () => {
         const round = makeRound([
             makeDraw(WINNER_A, 1),
             makeDraw(WINNER_B, 2),
@@ -85,7 +85,7 @@ describe('<_PreviousRound> badge', () => {
                 viewRoundSummary={vi.fn()}
             />,
         )
-        expect(screen.getByText('You Won')).toBeInTheDocument()
+        expect(screen.getByText('Your prize')).toBeInTheDocument()
         expect(container.querySelector('[data-ordinal="2"]')).not.toBeNull()
     })
 

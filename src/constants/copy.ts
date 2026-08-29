@@ -18,3 +18,12 @@ export function drawOfLabel(n: number | string, m: number | string): string {
 export function prizePoolLabel(n: number | string | bigint): string {
     return `${TERM.prizePool} #${n}`
 }
+
+// "Any Winner" replacement (BLO-750). `chanceBps` is the contract's
+// `DrawRound.chance` / `chanceOfWinner`: the probability, in basis points,
+// that a drawn number lands on an entry. The first number drawn pays the top
+// prize, so this is exactly the chance the top prize is paid this draw.
+export const TERM_TOP_PRIZE_ODDS = 'Top prize odds'
+export function topPrizeOddsDescription(formattedPercent: string): string {
+    return `Chance that the top prize is paid in this draw: ${formattedPercent}`
+}

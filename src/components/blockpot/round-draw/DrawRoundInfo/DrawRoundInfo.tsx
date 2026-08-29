@@ -1,4 +1,4 @@
-import { TERM } from '@/constants/copy'
+import { TERM, TERM_TOP_PRIZE_ODDS, topPrizeOddsDescription } from '@/constants/copy'
 import HStack from '@/components/core/HStack/HStack'
 import { formatEtherMaxDecimalsGreedy, formatNumber, formatNumberMaxDecimalsGreedy } from '@/utilities/formatters'
 import { Container } from '@blockpot-dev/blockpot-design-system'
@@ -20,6 +20,7 @@ export default function DrawRoundInfo(props: DrawRoundInfoProps) {
     const prizePoolFormatted = formatEtherMaxDecimalsGreedy(prizePool, 2)
     const { selectedGame } = useSelectedGame()
     const isQuickGame = selectedGame === 'quick'
+    const oddsFormatted = `${formatNumberMaxDecimalsGreedy(winnerChance / 100, 0, 2)}%`
 
     const stats: ReactNode[] = [
         <RoundInfoStat key='pot' label={TERM.prizePool} value={`#${formatNumber(potIndex, 0)}`} />
@@ -28,7 +29,7 @@ export default function DrawRoundInfo(props: DrawRoundInfoProps) {
     if (!isQuickGame) {
         stats.push(
             <RoundInfoStat key='round' label={TERM.draw} value={`${formatNumber(currentRound, 0)} of ${formatNumber(maximumRounds, 0)}`} />,
-            <RoundInfoStat key='winner' label='Any Winner' value={`${formatNumberMaxDecimalsGreedy(winnerChance / 100, 0, 2)}%`} />
+            <RoundInfoStat key='odds' label={TERM_TOP_PRIZE_ODDS} value={oddsFormatted} description={topPrizeOddsDescription(oddsFormatted)} />
         )
     }
 

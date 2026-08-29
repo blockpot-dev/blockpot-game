@@ -31,8 +31,9 @@ export default function LifetimeStatsRow(props: LifetimeStatsRowProps) {
     return (
         <HStack className='gap-3'>
             <Stat label='Entered' eurMinor={props.enteredEurMinor} />
-            <Stat label='Won' eurMinor={props.wonEurMinor} />
-            <Stat label='Profit' eurMinor={props.profitEurMinor} />
+            <Stat label='Prizes' eurMinor={props.wonEurMinor} />
+            {/* BLO-750: 'Net' (signed prizes minus entered) replaces 'Profit' — no returns framing. */}
+            <Stat label='Net' eurMinor={props.profitEurMinor} />
         </HStack>
     )
 }

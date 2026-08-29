@@ -42,11 +42,11 @@ export default function MissedDrawDialog(props: MissedDrawDialogProps) {
             <DialogContent showCloseButton={false}>
                 <DialogTopSection
                     icon={<ElevatedIcon src='/assets/pngs/clock-badge.png' alt='' />}
-                    title='YOU MISSED THE DRAW!'
+                    title='A draw ran while you were away'
                 />
                 <div className='px-4 pb-4'>
                     <p className='text-base text-secondary-foreground text-center'>
-                        {'The draw for '}<span className='font-bold text-foreground'>{drawLabel}</span>{' has already taken place. You can rewatch the draw to see if you won.'}
+                        {'The draw for '}<span className='font-bold text-foreground'>{drawLabel}</span>{' has already taken place. Replay it or check the result on-chain.'}
                     </p>
                     <div className='flex justify-center pt-6'>
                         <Button

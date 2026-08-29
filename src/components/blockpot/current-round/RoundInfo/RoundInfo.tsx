@@ -1,4 +1,4 @@
-import { TERM } from '@/constants/copy'
+import { TERM, TERM_TOP_PRIZE_ODDS, topPrizeOddsDescription } from '@/constants/copy'
 import HStack from '@/components/core/HStack/HStack'
 import { formatNumber, formatNumberMaxDecimalsGreedy } from '@/utilities/formatters'
 import { RoundInfoStatContainer } from './RoundInfoStatContainer/RoundInfoStatContainer'
@@ -17,6 +17,7 @@ export type RoundInfoProps = {
 export default function RoundInfo(props: RoundInfoProps) {
     const { potIndex, currentRound, maximumRounds, winnerChance, totalTickets, yourTickets } = props
     const { selectedGame } = useSelectedGame()
+    const oddsFormatted = `${formatNumberMaxDecimalsGreedy(winnerChance / 100, 0, 2)}%`
     const isQuickGame = selectedGame === 'quick'
 
     return (
@@ -36,10 +37,10 @@ export default function RoundInfo(props: RoundInfoProps) {
             {!isQuickGame && (
                 <RoundInfoStatContainer
                     stats={[
-                        { label: 'Any Winner', value: `${formatNumberMaxDecimalsGreedy(winnerChance / 100, 0, 2)}%` }
+                        { label: TERM_TOP_PRIZE_ODDS, value: oddsFormatted, description: topPrizeOddsDescription(oddsFormatted) }
                     ]}
                     imageUrl='/assets/pngs/chance-badge.png'
-                    imageAlt='Chance Info'
+                    imageAlt='Odds'
                 />
             )}
             <RoundInfoStatContainer

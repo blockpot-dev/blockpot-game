@@ -24,15 +24,12 @@ export function ReferralEarningsView({ record, onClaim, isClaiming }: ReferralEa
     return (
         <VStack className="gap-2 rounded-md border border-border p-3">
             <HStack className="items-center justify-between">
-                <span className="text-sm font-semibold">Referral earnings</span>
-                <span className="text-xs text-muted-foreground">
-                    {record.effectiveShareBps / 100}% of operator fee
-                </span>
+                <span className="text-sm font-semibold">Referral rewards</span>
             </HStack>
             <HStack className="items-center justify-between text-sm">
-                <span>Claimable: {formatEther(record.accrued)} ETH</span>
+                <span>Available to claim: {formatEther(record.accrued)} ETH</span>
                 <span className="text-xs text-muted-foreground">
-                    lifetime {formatEther(record.lifetimeEarned)} ETH
+                    Received so far: {formatEther(record.lifetimeEarned)} ETH
                 </span>
             </HStack>
             {record.status !== 'active' && (

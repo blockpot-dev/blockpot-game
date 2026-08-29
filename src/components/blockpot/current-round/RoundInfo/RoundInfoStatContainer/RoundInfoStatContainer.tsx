@@ -17,14 +17,14 @@ export function RoundInfoStatContainer(props: RoundInfoStatContainerProps) {
     const { stats, imageUrl, imageAlt, forceFlex } = props
 
     const firstStat = stats[0]
-    const firstStatComponent = <RoundInfoStat key={firstStat.label} label={firstStat.label} value={firstStat.value} />
+    const firstStatComponent = <RoundInfoStat key={firstStat.label} label={firstStat.label} value={firstStat.value} description={firstStat.description} />
     const remainingStats = stats.slice(1)
 
     const statsElements: ReactNode[] = remainingStats.reduce((acc, stat) => {
         return [
             ...acc,
             <HighlightDivider key={`${stat.label}-divider`} direction='vertical' />,
-            <RoundInfoStat key={stat.label} label={stat.label} value={stat.value} />
+            <RoundInfoStat key={stat.label} label={stat.label} value={stat.value} description={stat.description} />
         ]
     }, [firstStatComponent])
 
