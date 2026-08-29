@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { Loader2 } from 'lucide-react'
-import { InfoBanner } from '@blockpot-dev/blockpot-design-system'
+import { Button, InfoBanner } from '@blockpot-dev/blockpot-design-system'
 import type { SnsWebSdk } from '@sumsub/websdk'
 import { KycTier } from '@/hooks/player/usePlayerKyc'
 import useKycToken from '@/hooks/player/useKycToken'
+import { SUPPORT_URL } from '@/constants/support'
 
 export type SumsubSdkHostProps = {
     targetTier: KycTier
@@ -23,6 +24,7 @@ export default function SumsubSdkHost({ targetTier, onComplete, onError }: Sumsu
     const tokenMutation = useKycToken()
     const [error, setError] = useState<string | null>(null)
     const [ready, setReady] = useState(false)
+    const [attempt, setAttempt] = useState(0)
 
     useEffect(() => {
         let cancelled = false
@@ -81,6 +83,7 @@ export default function SumsubSdkHost({ targetTier, onComplete, onError }: Sumsu
             } catch (e) {
                 if (cancelled) return
                 const message = e instanceof Error ? e.message : 'Unable to start verification'
+                console.error('[sumsub] init failed', e)
                 setError(message)
                 onError?.(message)
             }
@@ -96,14 +99,28 @@ export default function SumsubSdkHost({ targetTier, onComplete, onError }: Sumsu
                 // destroy is best-effort on unmount
             }
         }
-    // targetTier is the only input that should re-init; the mutation + callbacks are stable.
+    // targetTier and a Retry click are the only inputs that should re-init;
+    // the mutation + callbacks are stable.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [targetTier])
+    }, [targetTier, attempt])
 
     if (error) {
+        // The raw SDK / token error is logged above; players get plain copy.
         return (
-            <InfoBanner tone='block'>
-                Couldn&apos;t start verification: {error}
+            <InfoBanner
+                tone='block'
+                action={
+                    <Button
+                        size='sm'
+                        variant='secondary'
+                        onClick={() => { setError(null); setReady(false); setAttempt((n) => n + 1) }}
+                    >
+                        Retry
+                    </Button>
+                }
+            >
+                We couldn&apos;t start verification. Try again or{' '}
+                <a href={SUPPORT_URL} target='_blank' rel='noreferrer' className='underline'>contact support</a>.
             </InfoBanner>
         )
     }
@@ -111,8 +128,9 @@ export default function SumsubSdkHost({ targetTier, onComplete, onError }: Sumsu
     return (
         <div className='w-full min-h-[520px] relative'>
             {!ready && (
-                <div className='absolute inset-0 flex items-center justify-center'>
-                    <Loader2 className='h-6 w-6 animate-spin text-gray-400' />
+                <div className='absolute inset-0 flex items-center justify-center gap-2 text-sm text-gray-400' role='status'>
+                    <Loader2 className='h-6 w-6 animate-spin' />
+                    Loading verification…
                 </div>
             )}
             <div ref={containerRef} className='w-full' />

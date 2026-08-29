@@ -130,7 +130,7 @@ export function HowToPlayPage() {
                                 When the draw finalises on-chain, your prize is escrowed to
                                 your wallet. Claim it from your Account. Some claims need
                                 identity verification first —{' '}
-                                <Link to='/verify' className={LINK_CLASS}>verify your account</Link>{' '}
+                                <Link to='/verify' className={LINK_CLASS}>verify your identity</Link>{' '}
                                 to release them.
                             </p>
                             <p>
@@ -169,7 +169,7 @@ export function HowToPlayPage() {
                                 <li>
                                     Enter straight away. Identity verification is only asked
                                     for when a prize needs it — see{' '}
-                                    <Link to='/verify' className={LINK_CLASS}>Verify your account</Link>.
+                                    <Link to='/verify' className={LINK_CLASS}>Verify your identity</Link>.
                                 </li>
                             </ol>
                         </NumberedSection>
@@ -180,7 +180,7 @@ export function HowToPlayPage() {
                                 claimed. When a prize needs it, we tell you at the point of
                                 claiming; your prize stays escrowed and waiting until
                                 verification completes. You can also start early at{' '}
-                                <Link to='/verify' className={LINK_CLASS}>Verify your account</Link>.
+                                <Link to='/verify' className={LINK_CLASS}>Verify your identity</Link>.
                             </p>
                         </NumberedSection>
 

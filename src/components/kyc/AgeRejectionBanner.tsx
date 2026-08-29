@@ -1,5 +1,6 @@
 import { Button, InfoBanner } from '@blockpot-dev/blockpot-design-system'
 import { PlayerKycStatus } from '@/hooks/player/usePlayerKyc'
+import { SUPPORT_LINK_LABEL, SUPPORT_URL } from '@/constants/support'
 
 export type AgeRejectionBannerProps = {
     status: PlayerKycStatus | undefined
@@ -15,6 +16,8 @@ function isAgeRejection(status: PlayerKycStatus | undefined): boolean {
 
 // Hard-stop banner when Sumsub review rejects the applicant for being under
 // 18. Blocks the rest of the stepper and surfaces support contact info.
+// The "18" threshold is the Phase-1 default; per-jurisdiction minimum ages are
+// a KB (compliance-kyc) check owned by compliance, not this component (BLO-759).
 export default function AgeRejectionBanner({ status, className }: AgeRejectionBannerProps) {
     if (!isAgeRejection(status)) return null
     return (
@@ -23,13 +26,13 @@ export default function AgeRejectionBanner({ status, className }: AgeRejectionBa
             className={className}
             action={
                 <Button size='sm' variant='secondary' asChild>
-                    <a href='mailto:support@blockpot.com?subject=Age%20verification%20review'>
-                        Contact support
+                    <a href={SUPPORT_URL} target='_blank' rel='noreferrer'>
+                        {SUPPORT_LINK_LABEL}
                     </a>
                 </Button>
             }
         >
-            We can&apos;t proceed with your account. If you believe this was a mistake, please reach out to our support team.
+            You must be 18 or over to enter. If this is a mistake, contact support.
         </InfoBanner>
     )
 }

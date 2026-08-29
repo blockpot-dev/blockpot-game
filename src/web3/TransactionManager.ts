@@ -34,7 +34,7 @@ async function debugTransaction(publicClient: PublicClient, hash: Hash) {
 
 // Walks the error's cause chain looking for viem's UserRejectedRequestError
 // (EIP-1193 code 4001) — wallet connectors often wrap it.
-function isUserRejection(error: unknown): boolean {
+export function isUserRejection(error: unknown): boolean {
     let e = error
     while (e instanceof Error) {
         if (e instanceof UserRejectedRequestError) return true

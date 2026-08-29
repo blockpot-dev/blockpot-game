@@ -6,7 +6,9 @@ import type { KycTier } from '@/hooks/player/usePlayerKyc'
 import useAccountAddress from '@/hooks/utilities/useAccountAddress'
 import useSiweSignature from '@/hooks/contracts/player-registry/useSiweSignature'
 import { usePlayerSession } from '@/providers/PlayerSessionProvider'
+import { useWalletOptionsDialogOpen } from '@/providers/ModalOpenStateProvider'
 import { ZERO_ADDRESS } from '@/web3/constants'
+import { isUserRejection } from '@/web3/TransactionManager'
 
 type VerifySearch = {
     tier?: KycTier
@@ -32,7 +34,13 @@ export const Route = createFileRoute('/verify')({
 })
 
 function VerifyPage() {
-    const { tier, returnTo } = Route.useSearch()
+    const search = Route.useSearch()
+    return <VerifyPageContent {...search} />
+}
+
+// Exported for tests: the file route's component is not renderable outside
+// the generated route tree.
+export function VerifyPageContent({ tier, returnTo }: VerifySearch) {
     const targetTier: KycTier = tier ?? 'T1'
 
     return (
@@ -41,13 +49,16 @@ function VerifyPage() {
                 <Container highlight highlightBottomBorderHidden>
                     <VStack className='gap-6'>
                         <div>
-                            <h1 className='heading-4xl text-foreground'>Verify your account</h1>
+                            <h1 className='heading-4xl text-foreground'>Verify your identity</h1>
+                            <p className='mt-2 text-sm text-secondary-foreground'>
+                                Takes a few minutes. You&apos;ll need photo ID.
+                            </p>
                             {returnTo && (
                                 <Link
                                     to={returnTo}
                                     className='inline-block mt-3 text-xs text-secondary-foreground underline hover:text-foreground'
                                 >
-                                    ← Back to {returnTo.replace('/', '')}
+                                    ← Back to Play
                                 </Link>
                             )}
                         </div>
@@ -68,23 +79,32 @@ function SessionGate({ targetTier }: { targetTier: KycTier }) {
     const address = useAccountAddress()
     const { session } = usePlayerSession()
     const siwe = useSiweSignature()
+    const walletOptionsDialogOpen = useWalletOptionsDialogOpen()
 
     if (address === ZERO_ADDRESS) {
         return (
-            <p className='text-sm text-secondary-foreground'>
-                Connect your wallet to start verification.
-            </p>
+            <VStack className='gap-3 items-start'>
+                <p className='text-sm text-secondary-foreground'>
+                    Connect your wallet to verify your identity.
+                </p>
+                <Button onClick={() => walletOptionsDialogOpen.update(true)}>
+                    Connect wallet
+                </Button>
+            </VStack>
         )
     }
 
     if (!session) {
+        // Never surface the raw SIWE / wallet error to the player.
         const errorMessage = siwe.isError
-            ? siwe.error instanceof Error ? siwe.error.message : 'Sign-in failed.'
+            ? isUserRejection(siwe.error)
+                ? 'Sign-in was cancelled. Try again.'
+                : 'We couldn\'t sign you in. Check your wallet and try again.'
             : null
         return (
             <VStack className='gap-3 items-start'>
                 <p className='text-sm text-secondary-foreground'>
-                    Sign in with your wallet to continue verification. Your wallet
+                    Sign in with your wallet to continue. Your wallet
                     will prompt you to sign a short message — no transaction or
                     gas required.
                 </p>
@@ -95,7 +115,7 @@ function SessionGate({ targetTier }: { targetTier: KycTier }) {
                     onClick={() => siwe.mutate({ address })}
                     disabled={siwe.isPending}
                 >
-                    {siwe.isPending ? 'SIGNING…' : 'SIGN IN'}
+                    {siwe.isPending ? 'SIGNING…' : 'SIGN IN WITH WALLET'}
                 </Button>
             </VStack>
         )

@@ -45,10 +45,10 @@ export function KycVerificationContent({
             <VStack className='gap-3 items-start'>
                 <div className='flex items-center gap-2 text-green-400'>
                     <CheckCircle2 className='size-6' />
-                    <h2 className='text-xl font-semibold text-foreground'>Verification complete</h2>
+                    <h2 className='text-xl font-semibold text-foreground'>You&apos;re verified</h2>
                 </div>
                 <p className='text-sm text-gray-400'>
-                    Your tier is now <span className='text-foreground font-medium'>{onChainTier}</span>. You can head back to the game.
+                    You&apos;re verified. You can claim your prize and keep entering.
                 </p>
                 {/* design-system Button always renders 3 children inside its
                     wrapper (loader + children + hover overlay), which breaks
@@ -84,8 +84,9 @@ export default function KycVerificationView({ targetTier }: KycVerificationViewP
 
     if (isLoading) {
         return (
-            <div className='flex items-center justify-center min-h-[320px]'>
-                <Loader2 className='h-6 w-6 animate-spin text-gray-400' />
+            <div className='flex items-center justify-center gap-2 min-h-[320px] text-sm text-gray-400' role='status'>
+                <Loader2 className='h-6 w-6 animate-spin' />
+                Loading verification status…
             </div>
         )
     }
