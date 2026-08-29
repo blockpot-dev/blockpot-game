@@ -26,3 +26,26 @@ export enum NetworkId {
   }
   
 export type EthereumNetwork = NetworkId.MAINNET | NetworkId.TESTNET_GOERLI;
+
+/**
+ * Public JSON-RPC endpoints a reader can use to query the chain without trusting this app.
+ * Only chains we deploy to are listed; the Blockpot testnet URL is whatever the build was
+ * configured with. Missing entries surface as a `$RPC_URL` placeholder in verification snippets.
+ */
+export const PUBLIC_RPC_URL: Partial<Record<NetworkId, string>> = {
+    [NetworkId.LOCAL]: 'http://127.0.0.1:8545',
+    [NetworkId.MAINNET]: 'https://ethereum-rpc.publicnode.com',
+    [NetworkId.ARBITRUM_TESTNET]: 'https://goerli-rollup.arbitrum.io/rpc',
+    [NetworkId.POLYGON_TESTNET]: 'https://rpc-mumbai.maticvigil.com',
+    ...(import.meta.env.VITE_TESTNET_RPC_URL
+        ? { [NetworkId.BLOCK_POT_TESTNET]: import.meta.env.VITE_TESTNET_RPC_URL as string }
+        : {}),
+}
+
+export const CHAIN_DISPLAY_NAME: Partial<Record<NetworkId, string>> = {
+    [NetworkId.LOCAL]: 'Local anvil',
+    [NetworkId.MAINNET]: 'Ethereum mainnet',
+    [NetworkId.ARBITRUM_TESTNET]: 'Arbitrum Goerli',
+    [NetworkId.POLYGON_TESTNET]: 'Polygon Mumbai',
+    [NetworkId.BLOCK_POT_TESTNET]: 'Blockpot Testnet',
+}

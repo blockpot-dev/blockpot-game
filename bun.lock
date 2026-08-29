@@ -5,7 +5,7 @@
     "": {
       "name": "blockpot-game",
       "dependencies": {
-        "@blockpot-dev/blockpot-design-system": "^0.3.6",
+        "@blockpot-dev/blockpot-design-system": "^0.3.7",
         "@emotion/react": "^11.14.0",
         "@emotion/server": "^11.11.0",
         "@radix-ui/react-checkbox": "^1.3.3",
@@ -162,7 +162,7 @@
 
     "@babel/types": ["@babel/types@7.28.6", "", { "dependencies": { "@babel/helper-string-parser": "^7.27.1", "@babel/helper-validator-identifier": "^7.28.5" } }, "sha512-0ZrskXVEHSWIqZM/sQZ4EV3jZJXRkio/WCxaqKZP1g//CEWEPSfeZFcms4XeKBCHU0ZKnIkdJeU/kF+eRp5lBg=="],
 
-    "@blockpot-dev/blockpot-design-system": ["@blockpot-dev/blockpot-design-system@0.3.6", "https://npm.pkg.github.com/download/@blockpot-dev/blockpot-design-system/0.3.6/69452b6b24fd474476211f335fb1889ad36e3168", { "dependencies": { "@radix-ui/react-checkbox": "^1.1.5", "@radix-ui/react-dialog": "^1.1.14", "@radix-ui/react-popover": "^1.1.15", "@radix-ui/react-select": "^2.2.5", "@radix-ui/react-slot": "^1.1.2", "@tailwindcss/cli": "^4.1.11", "@tailwindcss/postcss": "^4.1.11", "class-variance-authority": "^0.7.1", "clsx": "^2.1.1", "cmdk": "^1.1.1", "lucide-react": "^0.485.0", "postcss": "^8.5.3", "react-markdown": "^9", "remark-gfm": "^4.0.1", "tailwind-merge": "^3.3.1", "tailwindcss": "^4.1.11", "tw-animate-css": "^1.2.5" }, "peerDependencies": { "react": "^19.1.1", "react-dom": "^19.1.1", "typescript": "^5.8.2" } }, "sha512-X3axEZ+xj65c7+Y3xISBg5exQX9G8jQt2nVn/axE//FQbeezrGgyF4ce1g2ff84GW84IkkKF6MjLnA76mD1aeg=="],
+    "@blockpot-dev/blockpot-design-system": ["@blockpot-dev/blockpot-design-system@0.3.7", "https://npm.pkg.github.com/download/@blockpot-dev/blockpot-design-system/0.3.7/a8ba80379909e8c3f18c45c84422df31e6fbb216", { "dependencies": { "@radix-ui/react-checkbox": "^1.1.5", "@radix-ui/react-dialog": "^1.1.14", "@radix-ui/react-popover": "^1.1.15", "@radix-ui/react-select": "^2.2.5", "@radix-ui/react-slot": "^1.1.2", "@tailwindcss/cli": "^4.1.11", "@tailwindcss/postcss": "^4.1.11", "class-variance-authority": "^0.7.1", "clsx": "^2.1.1", "cmdk": "^1.1.1", "lucide-react": "^0.485.0", "postcss": "^8.5.3", "react-markdown": "^9", "remark-gfm": "^4.0.1", "tailwind-merge": "^3.3.1", "tailwindcss": "^4.1.11", "tw-animate-css": "^1.2.5" }, "peerDependencies": { "react": "^19.1.1", "react-dom": "^19.1.1", "typescript": "^5.8.2" } }, "sha512-UiSJzNEZ2I7GrHHuecxLnbJrdlCuGon13wVJ+rwnefErZzBcuBFvnHoF/18Gysff1lr+zYOQLroOkdQWKvJ3RQ=="],
 
     "@csstools/cascade-layer-name-parser": ["@csstools/cascade-layer-name-parser@3.0.0", "", { "peerDependencies": { "@csstools/css-parser-algorithms": "^4.0.0", "@csstools/css-tokenizer": "^4.0.0" } }, "sha512-/3iksyevwRfSJx5yH0RkcrcYXwuhMQx3Juqf40t97PeEy2/Mz2TItZ/z/216qpe4GgOyFBP8MKIwVvytzHmfIQ=="],
 
