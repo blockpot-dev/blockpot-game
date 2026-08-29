@@ -16,7 +16,7 @@ export type CountOfProps = {
  */
 export default function CountOf(props: CountOfProps) {
     const { value, total, suffix, connectorClassName } = props
-    const connector = cn('font-body font-normal text-secondary-foreground text-[0.5em] align-middle', connectorClassName)
+    const connector = cn('font-body font-normal text-secondary-foreground text-[0.5em] align-middle mx-[0.35em]', connectorClassName)
     return (
         <span data-testid='count-of'>
             {value}
