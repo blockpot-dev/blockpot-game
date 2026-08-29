@@ -88,3 +88,22 @@ export const ActiveMlroPermanent: Story = {
         onApply: noop,
     },
 }
+
+export const LoadError: Story = {
+    args: {
+        walletConnected: true,
+        active: null,
+        loadError: true,
+        onRetry: noop,
+        onApply: noop,
+    },
+}
+
+export const JustApplied: Story = {
+    args: {
+        walletConnected: true,
+        active: activeRecord,
+        justApplied: true,
+        onApply: noop,
+    },
+}

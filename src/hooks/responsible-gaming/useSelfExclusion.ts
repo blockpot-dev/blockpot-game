@@ -85,6 +85,7 @@ export default function useSelfExclusion() {
         state: query.data,
         active: query.data?.active ?? null,
         isLoading: query.isLoading,
+        isError: query.isError,
         error: query.error,
         refetch: query.refetch,
         invalidate: () => queryClient.invalidateQueries({

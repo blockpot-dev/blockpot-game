@@ -9,12 +9,13 @@ import VStack from '@/components/core/VStack/VStack'
 import {
     SelfExclusionDuration,
 } from '@/hooks/responsible-gaming/useSelfExclusion'
-import { durationLabel } from './selfExclusionCopy'
+import { durationLabel, formatEndsAt } from './selfExclusionCopy'
 
 export type SelfExclusionConfirmDialogProps = {
     open: boolean
     onOpenChange: (open: boolean) => void
     duration: SelfExclusionDuration
+    endsAt: string | null
     onConfirm: () => void
     submitting?: boolean
     error?: string
@@ -24,11 +25,13 @@ export default function SelfExclusionConfirmDialog({
     open,
     onOpenChange,
     duration,
+    endsAt,
     onConfirm,
     submitting = false,
     error,
 }: SelfExclusionConfirmDialogProps) {
     const isPermanent = duration === 'permanent'
+    const label = isPermanent ? 'permanently' : `for ${durationLabel(duration)}`
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent
@@ -36,23 +39,18 @@ export default function SelfExclusionConfirmDialog({
                 className='sm:max-w-lg'
                 showCloseButton={!submitting}
             >
-                <DialogTopSection title='Confirm self-exclusion' />
+                <DialogTopSection title={`Self-exclude ${label}?`} />
                 <VStack className='gap-3 mb-4'>
                     <p className='text-sm text-foreground'>
-                        You are about to self-exclude for{' '}
-                        <strong>{durationLabel(duration)}</strong>.
+                        {isPermanent
+                            ? 'You won\'t be able to enter draws again.'
+                            : <>You won&apos;t be able to enter draws until <strong>{formatEndsAt(endsAt)}</strong>.</>}
+                        {' '}You can still claim prizes.
                     </p>
                     <p className='text-sm text-secondary-foreground font-body'>
-                        This action cannot be undone early. {isPermanent
-                            ? 'Permanent exclusions can only be lifted after MLRO review.'
-                            : duration === '6mo'
-                                ? 'Six-month exclusions cannot be shortened — they only end at the scheduled time.'
-                                : 'Shorter exclusions cannot be cancelled or shortened once set.'}
-                    </p>
-                    <p className='text-sm text-secondary-foreground font-body'>
-                        While the exclusion is active, the platform will refuse new draw
-                        entries and surface a banner on every page. You can still claim any
-                        prizes you&apos;re owed during this period.
+                        {isPermanent
+                            ? 'This can\'t be cancelled or shortened once set. It can only be lifted after a review by the Blockpot team.'
+                            : 'This can\'t be cancelled or shortened once set.'}
                     </p>
                 </VStack>
 
@@ -69,7 +67,7 @@ export default function SelfExclusionConfirmDialog({
                         onClick={() => onOpenChange(false)}
                         disabled={submitting}
                     >
-                        CANCEL
+                        GO BACK
                     </Button>
                     <Button
                         variant='destructive'
@@ -78,8 +76,8 @@ export default function SelfExclusionConfirmDialog({
                         disabled={submitting}
                     >
                         {submitting
-                            ? <><Loader2 className='mr-2 h-4 w-4 animate-spin' /><span>APPLYING…</span></>
-                            : 'CONFIRM SELF-EXCLUSION'}
+                            ? <><Loader2 className='mr-2 h-4 w-4 animate-spin' /><span>SETTING UP…</span></>
+                            : `SELF-EXCLUDE ${label.toUpperCase()}`}
                     </Button>
                 </div>
             </DialogContent>

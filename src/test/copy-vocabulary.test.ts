@@ -4,9 +4,10 @@
 // minimal fixture chosen to exercise the branch that used to say "You Won",
 // "Any Winner", "Profit", "Referral earnings", "escrowed winnings".
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { cleanup, render } from '@testing-library/react'
+import { cleanup, render, screen } from '@testing-library/react'
 import { createElement } from 'react'
 import type { Address } from 'viem'
+import { renderWithProviders } from '@/test/renderWithProviders'
 import RoundInfo from '@/components/blockpot/current-round/RoundInfo/RoundInfo'
 import DrawRoundInfo from '@/components/blockpot/round-draw/DrawRoundInfo/DrawRoundInfo'
 import { _PreviousRound } from '@/components/blockpot/previous-rounds/PreviousRound/PreviousRound'
@@ -112,11 +113,12 @@ describe('player-facing copy vocabulary (BLO-750)', () => {
         expectCleanBody()
     })
 
-    it('SelfExclusionBannerView with claimable prizes', () => {
-        render(createElement(SelfExclusionBannerView, {
+    it('SelfExclusionBannerView with claimable prizes', async () => {
+        renderWithProviders(createElement(SelfExclusionBannerView, {
             record: { id: '1', duration: '7d', startsAt: new Date().toISOString(), endsAt: new Date(Date.now() + 7 * 86400e3).toISOString(), appliedBy: 'player' },
             hasClaimableWinnings: true,
         }))
+        await screen.findByRole('alert')
         expectCleanBody()
     })
 })

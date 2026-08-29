@@ -8,7 +8,7 @@ export type CoolOffStatusBannerProps = {
 
 // Player-facing cool-off status: surfaces WHEN entries reopen instead of the
 // generic "paused" message. Renders nothing while the account is not blocked.
-// Note: the entry block is orthogonal to tier — an MLRO tier override does not
+// Note: the entry block is orthogonal to tier — a team-applied tier override does not
 // bypass it — so this banner renders regardless of the player's currentTier.
 export default function CoolOffStatusBanner({ blockedUntil, className }: CoolOffStatusBannerProps) {
     const status = deriveCoolOffStatus(blockedUntil, Date.now() / 1000)

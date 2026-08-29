@@ -1,4 +1,5 @@
 import { Address } from 'viem'
+import { Link } from '@tanstack/react-router'
 import useSelfExclusion, {
     SelfExclusionRecord,
 } from '@/hooks/responsible-gaming/useSelfExclusion'
@@ -20,8 +21,8 @@ export function SelfExclusionBannerView({
     if (!record) return null
     const isPermanent = record.duration === 'permanent' || !record.endsAt
     const summary = isPermanent
-        ? 'You are self-excluded permanently.'
-        : `You are self-excluded until ${formatEndsAt(record.endsAt)} (${durationLabel(record.duration)}).`
+        ? 'You\'re self-excluded permanently.'
+        : `You're self-excluded until ${formatEndsAt(record.endsAt)} (${durationLabel(record.duration)}).`
 
     return (
         <div
@@ -30,8 +31,13 @@ export function SelfExclusionBannerView({
         >
             <strong className='mr-2'>Self-exclusion active:</strong>
             {summary}
-            {hasClaimableWinnings && ' You can still claim any prizes you\'re owed during this period.'}
-            {' '}See the Responsible gaming page for details.
+            {hasClaimableWinnings
+                ? ' You can still claim prizes — you have some waiting.'
+                : ' You can still claim prizes.'}
+            {' '}
+            <Link to='/responsible-gaming' className='underline underline-offset-2'>
+                Manage your settings
+            </Link>
         </div>
     )
 }
