@@ -76,7 +76,7 @@ export default function AccountDialogView(props: AccountDialogViewProps) {
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className='lg:min-w-[560px]' showCloseButton={false} containerContentClassName='p-6'>
+            <DialogContent className='lg:min-w-[560px]' showCloseButton={false} containerContentClassName='p-6 min-h-0 flex flex-col'>
                 <DialogHeader className='flex flex-row justify-between'>
                     <HStack className='gap-4 items-center justify-between w-full'>
                         <DialogTitle className='uppercase heading-xl font-normal h-auto'>Your Account</DialogTitle>
@@ -85,7 +85,7 @@ export default function AccountDialogView(props: AccountDialogViewProps) {
                         </Button>
                     </HStack>
                 </DialogHeader>
-                <VStack className='pt-6 gap-6'>
+                <VStack className='pt-6 gap-6 overflow-y-auto min-h-0 pr-2 -mr-2'>
                     {state
                         ? (
                             <Tabs defaultValue='wallet' className='gap-6'>
