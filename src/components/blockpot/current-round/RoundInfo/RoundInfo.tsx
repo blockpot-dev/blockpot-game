@@ -1,3 +1,4 @@
+import CountOf from '@/components/core/CountOf/CountOf'
 import { TERM, TERM_TOP_PRIZE_ODDS, topPrizeOddsDescription } from '@/constants/copy'
 import HStack from '@/components/core/HStack/HStack'
 import { formatNumber, formatNumberMaxDecimalsGreedy } from '@/utilities/formatters'
@@ -27,7 +28,7 @@ export default function RoundInfo(props: RoundInfoProps) {
                     ? [{ label: TERM.prizePool, value: `#${formatNumber(potIndex, 0)}` }]
                     : [
                         { label: TERM.prizePool, value: `#${formatNumber(potIndex, 0)}` },
-                        { label: TERM.draw, value: `${formatNumber(currentRound, 0)} of ${formatNumber(maximumRounds, 0)}` }
+                        { label: TERM.draw, value: <CountOf value={formatNumber(currentRound, 0)} total={formatNumber(maximumRounds, 0)} /> }
                     ]
                 }
                 forceFlex={isQuickGame}

@@ -1,3 +1,4 @@
+import CountOf from '@/components/core/CountOf/CountOf'
 import { TERM, TERM_TOP_PRIZE_ODDS, topPrizeOddsDescription } from '@/constants/copy'
 import HStack from '@/components/core/HStack/HStack'
 import { formatEtherMaxDecimalsGreedy, formatNumber, formatNumberMaxDecimalsGreedy } from '@/utilities/formatters'
@@ -28,7 +29,7 @@ export default function DrawRoundInfo(props: DrawRoundInfoProps) {
 
     if (!isQuickGame) {
         stats.push(
-            <RoundInfoStat key='round' label={TERM.draw} value={`${formatNumber(currentRound, 0)} of ${formatNumber(maximumRounds, 0)}`} />,
+            <RoundInfoStat key='round' label={TERM.draw} value={<CountOf value={formatNumber(currentRound, 0)} total={formatNumber(maximumRounds, 0)} />} />,
             <RoundInfoStat key='odds' label={TERM_TOP_PRIZE_ODDS} value={oddsFormatted} description={topPrizeOddsDescription(oddsFormatted)} />
         )
     }

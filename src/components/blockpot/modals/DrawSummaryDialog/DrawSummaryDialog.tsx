@@ -1,3 +1,4 @@
+import CountOf from '@/components/core/CountOf/CountOf'
 import { TERM, TERM_TOP_PRIZE_ODDS, topPrizeOddsDescription } from '@/constants/copy'
 import VStack from '@/components/core/VStack/VStack'
 import { Button, Container, Dialog, DialogContent, DialogHeader, DialogTitle } from '@blockpot-dev/blockpot-design-system'
@@ -68,7 +69,7 @@ export function _DrawSummaryDialog(props: _DrawSummaryDialogProps) {
                         {gameType !== 'quick' && (
                             <>
                                 <HighlightDivider direction='vertical' />
-                                <RoundInfoStat label={TERM.draw} value={`${roundId.roundIndex.toFixed(0)} of ${roundId.maxRoundsPerPot.toFixed(0)}`} />
+                                <RoundInfoStat label={TERM.draw} value={<CountOf value={roundId.roundIndex.toFixed(0)} total={roundId.maxRoundsPerPot.toFixed(0)} />} />
                             </>
                         )}
                         <HighlightDivider direction='vertical' />

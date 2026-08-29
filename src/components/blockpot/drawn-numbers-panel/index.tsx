@@ -1,3 +1,4 @@
+import CountOf from '@/components/core/CountOf/CountOf'
 import styles from './DrawnNumbersPanel.module.css'
 import { Container } from '@blockpot-dev/blockpot-design-system'
 import VStack from '@/components/core/VStack/VStack'
@@ -36,7 +37,7 @@ function DrawnNumbersPanel(props: DrawnNumbersPanelProps) {
             <VStack className='gap-4'>
                 <VStack className='gap-4'>
                     <ContainerHeading trailing={
-                        <span className='body-lg font-bold leading-none'>{`${stagedDraw.drawnNumbers.length.toFixed(0)} of ${totalDrawnNumbers.toFixed(0)} drawn`}</span>
+                        <span className='body-lg font-bold leading-none'><CountOf value={stagedDraw.drawnNumbers.length.toFixed(0)} total={totalDrawnNumbers.toFixed(0)} suffix='drawn' connectorClassName='text-[0.75em]' /></span>
                     }>
                         Drawn Numbers
                     </ContainerHeading>
