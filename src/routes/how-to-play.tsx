@@ -162,7 +162,7 @@ export function HowToPlayPage() {
                                     are not available.
                                 </li>
                                 <li>
-                                    Accept the Terms of Service on your first entry — this
+                                    Accept the Terms and Conditions on your first entry — this
                                     confirms you are old enough to enter and that entering is
                                     legal where you live.
                                 </li>

@@ -7,9 +7,9 @@ const MOCK_TOS: CurrentTos = {
     versionHash: '0x' + '00'.repeat(32),
     versionLabel: 'v2026-04-22',
     bodyMarkdown: [
-        '# Blockpot Terms of Service',
+        '# Blockpot Terms and Conditions',
         '',
-        'These are mock Terms of Service used for Storybook rendering.',
+        'These are mock Terms and Conditions used for Storybook rendering.',
         '',
         '1. You must be of legal gambling age in your jurisdiction.',
         '2. Blockpot does not accept players from blocked jurisdictions.',
@@ -92,7 +92,7 @@ const RICH_TOS: CurrentTos = {
     versionHash: '0x' + 'aa'.repeat(32),
     versionLabel: 'v2026-04-27-rich',
     bodyMarkdown: [
-        '# Blockpot Terms of Service',
+        '# Blockpot Terms and Conditions',
         '',
         'Welcome to Blockpot. By continuing you agree to the terms set out below.',
         'These terms incorporate, by reference, the Privacy Policy at',

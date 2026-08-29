@@ -108,7 +108,7 @@ function PrivacyAndDataNotice() {
                 are used solely to detect duplicate accounts, sanctions exposure, and
                 fraud patterns. We never sell or share this data, and we store the device
                 fingerprint as an irreversible hash, not the underlying components. The
-                full policy lives in our Terms of Service.
+                full policy lives in our Terms and Conditions.
             </p>
         </VStack>
     )

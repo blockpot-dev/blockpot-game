@@ -172,7 +172,7 @@ export default function AttestationModal({
             >
                 <DialogTopSection title='Welcome to Blockpot' />
                 <div className='text-sm text-gray-300 font-body mb-4'>
-                    Before you continue, confirm a few details and accept our Terms of Service.
+                    Before you continue, confirm a few details and accept our Terms and Conditions.
                 </div>
 
                 <VStack className='gap-4 mb-4'>
@@ -232,13 +232,13 @@ export default function AttestationModal({
 
                     <div>
                         <label className='text-xs uppercase text-gray-400 tracking-wide'>
-                            Terms of Service {tos?.versionLabel ? `(${tos.versionLabel})` : ''}
+                            Terms and Conditions {tos?.versionLabel ? `(${tos.versionLabel})` : ''}
                         </label>
                         <div className='mt-1.5 h-40 overflow-y-auto rounded-md border border-gray-700 bg-gray-950 p-3 text-xs text-gray-300 font-body'>
                             {tosLoading && (
                                 <div className='flex items-center gap-2 text-gray-400'>
                                     <Loader2 className='size-4 animate-spin' />
-                                    <span>Loading Terms of Service…</span>
+                                    <span>Loading Terms and Conditions…</span>
                                 </div>
                             )}
                             {!tosLoading && tosError && (
