@@ -1,3 +1,4 @@
+import { TERM } from '@/constants/copy'
 import HStack from '@/components/core/HStack/HStack'
 import VStack from '@/components/core/VStack/VStack'
 import usePreviousRoundsList, { PreviousRoundsFilter } from '@/hooks/contracts/draw/usePreviousRoundsList'
@@ -14,8 +15,8 @@ import { useBlockpotDraw } from '@/providers/BlockpotDrawProvider'
 
 const FILTER_OPTIONS = [
     { label: 'All', value: 'all' },
-    { label: 'Main', value: 'main' },
-    { label: 'Quick', value: 'quick' },
+    { label: TERM.mainGame, value: 'main' },
+    { label: TERM.quickGame, value: 'quick' },
 ]
 
 export type PreviousRoundsProps = {
@@ -117,7 +118,7 @@ export default function PreviousRounds(props: PreviousRoundsProps) {
                     <HStack className='justify-between items-center'>
                         <HStack className='items-center'>
                             <IconHistory size={24} />
-                            <h2 className='heading-xl'>Previous Rounds</h2>
+                            <h2 className='heading-xl'>{TERM.pastDraws}</h2>
                         </HStack>
                         <Button variant='ghost' size='icon' onClick={() => {
                             isOpen.update(false)

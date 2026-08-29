@@ -1,3 +1,4 @@
+import { drawOfLabel, prizePoolLabel } from '@/constants/copy'
 import { Dialog, DialogContent, DialogTopSection, Button } from '@blockpot-dev/blockpot-design-system'
 import { ElevatedIcon } from '@blockpot-dev/blockpot-design-system'
 import { XIcon } from 'lucide-react'
@@ -34,7 +35,7 @@ export default function MissedDrawDialog(props: MissedDrawDialogProps) {
 
     const potNumber = round.potIndex.toString()
     const roundNumber = (round.roundIndexInPot + 1).toString()
-    const drawLabel = gameType === 'quick' ? `Pot #${potNumber}` : `Pot #${potNumber} - Round ${roundNumber}`
+    const drawLabel = gameType === 'quick' ? prizePoolLabel(potNumber) : `${prizePoolLabel(potNumber)} - ${drawOfLabel(roundNumber, round.maxRoundsInPot)}`
 
     return (
         <Dialog open={missedDrawDialogOpen.value} onOpenChange={handleClose}>

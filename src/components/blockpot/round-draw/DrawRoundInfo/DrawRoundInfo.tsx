@@ -1,3 +1,4 @@
+import { TERM } from '@/constants/copy'
 import HStack from '@/components/core/HStack/HStack'
 import { formatEtherMaxDecimalsGreedy, formatNumber, formatNumberMaxDecimalsGreedy } from '@/utilities/formatters'
 import { Container } from '@blockpot-dev/blockpot-design-system'
@@ -21,12 +22,12 @@ export default function DrawRoundInfo(props: DrawRoundInfoProps) {
     const isQuickGame = selectedGame === 'quick'
 
     const stats: ReactNode[] = [
-        <RoundInfoStat key='pot' label='Pot No.' value={`#${formatNumber(potIndex, 0)}`} />
+        <RoundInfoStat key='pot' label={TERM.prizePool} value={`#${formatNumber(potIndex, 0)}`} />
     ]
 
     if (!isQuickGame) {
         stats.push(
-            <RoundInfoStat key='round' label='Round No.' value={`${formatNumber(currentRound, 0)}/${formatNumber(maximumRounds, 0)}`} />,
+            <RoundInfoStat key='round' label={TERM.draw} value={`${formatNumber(currentRound, 0)} of ${formatNumber(maximumRounds, 0)}`} />,
             <RoundInfoStat key='winner' label='Any Winner' value={`${formatNumberMaxDecimalsGreedy(winnerChance / 100, 0, 2)}%`} />
         )
     }

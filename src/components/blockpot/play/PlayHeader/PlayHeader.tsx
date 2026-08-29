@@ -1,3 +1,4 @@
+import { TERM } from '@/constants/copy'
 import HStack from '@/components/core/HStack/HStack'
 import GameTypeItem from '../../header/GameTypeItem'
 import { Button } from '@blockpot-dev/blockpot-design-system'
@@ -19,15 +20,15 @@ export function PlayHeaderPure(props: PlayHeaderPureProps) {
                 <HStack className='justify-between w-full h-full items-center'>
                     <HStack className='gap-8 h-full'>
                         <GameTypeItem isSelected={selectedGame === 'main'} onClick={() => setSelectedGame('main')}>
-                            Main Game
+                            {TERM.mainGame}
                         </GameTypeItem>
                         <GameTypeItem isSelected={selectedGame === 'quick'} onClick={() => setSelectedGame('quick')}>
-                            Quick Game
+                            {TERM.quickGame}
                         </GameTypeItem>
                     </HStack>
                     <Button variant='ghost' size='sm' className='h-7 normal-case gap-1' onClick={() => isPreviousRoundsOpen.update(true)}>
                         <History size={20} className='translate-y-0.25' />
-                        Previous Rounds
+                        {TERM.pastDraws}
                     </Button>
                 </HStack>
             </div>

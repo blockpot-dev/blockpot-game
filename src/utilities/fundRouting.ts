@@ -2,7 +2,7 @@ import { BASIS_POINTS_DIVISOR } from '@/constants/protocol'
 import { GameConfig } from '@/types/draw/config'
 
 export type FundRoutingEntry = {
-    label: string // e.g. "Top prize", "2nd", "Next-pot reserve", "Parent game"
+    label: string // e.g. "Top prize", "2nd", "Next prize pool", "Parent game"
     bps: number // share of PEA in basis points (amount / pea)
     amount: bigint // wei routed to this bucket for the given PEA
     percent: number // amount / pea * 100
@@ -51,7 +51,7 @@ export function computeFundRouting(pea: bigint, gameConfig: GameConfig): FundRou
 
     const routing: FundRouting = { tiers }
     if (nextPotAllocation > 0) {
-        routing.nextPot = makeEntry('Next-pot reserve', nextPotAmount, pea)
+        routing.nextPot = makeEntry('Next prize pool', nextPotAmount, pea)
     }
     if (parentGamePotAllocation > 0) {
         routing.parentGame = makeEntry('Parent game', parentGameAmount, pea)

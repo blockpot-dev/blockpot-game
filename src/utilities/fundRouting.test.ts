@@ -3,7 +3,7 @@ import { computeFundRouting } from './fundRouting'
 import { PEA_PER_ENTRY_WEI } from '@/constants/protocol'
 import { DEFAULT_GAME_CONFIG, GameConfig } from '@/types/draw/config'
 
-// Main game: 3 tiers (9000/900/100 bps of the current pot), 10% of PEA to the
+// Main Game: 3 tiers (9000/900/100 bps of the current pot), 10% of PEA to the
 // next-pot reserve, nothing to a parent game.
 const mainGameConfig: GameConfig = {
     ...DEFAULT_GAME_CONFIG,
@@ -16,7 +16,7 @@ function sumAmounts(...amounts: bigint[]): bigint {
     return amounts.reduce((acc, a) => acc + a, 0n)
 }
 
-// Quick game: 5 tiers (8000/1000/600/300/100 bps of the current pot), no
+// Quick Game: 5 tiers (8000/1000/600/300/100 bps of the current pot), no
 // next-pot reserve, 20% of PEA forwarded to the parent (main) game.
 const quickGameConfig: GameConfig = {
     ...DEFAULT_GAME_CONFIG,
@@ -36,7 +36,7 @@ describe('computeFundRouting — main game', () => {
         expect(routing.tiers[1]).toEqual({ label: '2nd', bps: 810, amount: 81_000_000_000_000n, percent: 8.1 })
         expect(routing.tiers[2]).toEqual({ label: '3rd', bps: 90, amount: 9_000_000_000_000n, percent: 0.9 })
 
-        expect(routing.nextPot).toEqual({ label: 'Next-pot reserve', bps: 1000, amount: 100_000_000_000_000n, percent: 10 })
+        expect(routing.nextPot).toEqual({ label: 'Next prize pool', bps: 1000, amount: 100_000_000_000_000n, percent: 10 })
         expect(routing.parentGame).toBeUndefined()
     })
 

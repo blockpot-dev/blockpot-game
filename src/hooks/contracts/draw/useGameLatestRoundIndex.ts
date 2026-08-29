@@ -12,7 +12,7 @@ export default function useGameLatestRoundIndex(gameType: GameType): number | un
         queryFn: async () => {
             return await game.currentRoundIndex()
         },
-        // Refetch on every mount: the Previous Rounds panel relies on this
+        // Refetch on every mount: the Past draws panel relies on this
         // value being current the moment it opens, even after a round just
         // completed off-screen. The default 1h staleTime would otherwise
         // serve a cached pre-completion index until the next event tick.

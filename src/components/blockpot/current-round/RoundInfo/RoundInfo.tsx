@@ -1,3 +1,4 @@
+import { TERM } from '@/constants/copy'
 import HStack from '@/components/core/HStack/HStack'
 import { formatNumber, formatNumberMaxDecimalsGreedy } from '@/utilities/formatters'
 import { RoundInfoStatContainer } from './RoundInfoStatContainer/RoundInfoStatContainer'
@@ -22,10 +23,10 @@ export default function RoundInfo(props: RoundInfoProps) {
         <HStack className='gap-4'>
             <RoundInfoStatContainer
                 stats={isQuickGame
-                    ? [{ label: 'Pot No.', value: `${formatNumber(potIndex, 0)}` }]
+                    ? [{ label: TERM.prizePool, value: `#${formatNumber(potIndex, 0)}` }]
                     : [
-                        { label: 'Pot No.', value: `${formatNumber(potIndex, 0)}` },
-                        { label: 'Round No.', value: `${formatNumber(currentRound, 0)}/${formatNumber(maximumRounds, 0)}` }
+                        { label: TERM.prizePool, value: `#${formatNumber(potIndex, 0)}` },
+                        { label: TERM.draw, value: `${formatNumber(currentRound, 0)} of ${formatNumber(maximumRounds, 0)}` }
                     ]
                 }
                 forceFlex={isQuickGame}

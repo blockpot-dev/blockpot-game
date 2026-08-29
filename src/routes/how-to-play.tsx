@@ -58,7 +58,7 @@ function HowToPlayPage() {
                         <NumberedSection number={1} id='s1' title='What is an entry?'>
                             <p>
                                 Each entry gives you one chance to win prizes in the current
-                                round. Every entry costs a fixed amount:
+                                draw. Every entry costs a fixed amount:
                             </p>
                             <ul className='list-disc pl-6 space-y-1'>
                                 <li><strong>Entry amount</strong> — 0.001 ETH, goes to the prize pool.</li>
@@ -73,7 +73,7 @@ function HowToPlayPage() {
 
                         <NumberedSection number={2} id='s2' title='How draws work'>
                             <p>
-                                When the round timer reaches zero and enough entries have been
+                                When the draw timer reaches zero and enough entries have been
                                 made, a draw is triggered. Random numbers are produced on-chain
                                 using Chainlink VRF, which means no one — not the operator, not
                                 any player, not the protocol — can influence the outcome.
@@ -84,17 +84,17 @@ function HowToPlayPage() {
                                 draw slot.
                             </p>
                             <p>
-                                A draw only fires once both conditions are met: the round timer
-                                has reached zero <em>and</em> the round has reached its minimum
+                                A draw only fires once both conditions are met: the draw timer
+                                has reached zero <em>and</em> the draw has reached its minimum
                                 entry threshold. If the minimum is not met by the timer, the
-                                round extends until it is.
+                                draw extends until it is.
                             </p>
                         </NumberedSection>
 
                         {/* Claim semantics mirror src/hooks/claim/useClaimRequest.ts and src/components/blockpot/winnings/ClaimDecision.tsx. Per project memory and spec §7.6 / task 34, self-exclusion is not a control point on claims of already-earned winnings; sanctions/Sybil branches are intentionally not surfaced per spec §16. */}
                         <NumberedSection number={3} id='s3' title='How payouts work'>
                             <p>
-                                When the round finalizes on-chain, your prize is escrowed
+                                When the draw finalizes on-chain, your prize is escrowed
                                 against your wallet. Claim it from the Account screen — claims
                                 are usually processed within seconds, but may be paused if your
                                 KYC tier does not yet cover the amount, or if your current

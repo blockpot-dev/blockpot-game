@@ -1,3 +1,4 @@
+import { drawOfLabel, prizePoolLabel } from '@/constants/copy'
 import HStack from '@/components/core/HStack/HStack'
 import VStack from '@/components/core/VStack/VStack'
 import useDrawRound from '@/hooks/contracts/draw/useDrawRound'
@@ -65,14 +66,14 @@ export function _PreviousRound(props: _PreviousRoundProps) {
                                 {gameType !== 'quick' ? (
                                     <>
                                         <HStack className='gap-2 items-center'>
-                                            <h3 className='text-md font-bold'>Round {round.roundIndexInPot + 1}/{round.maxRoundsInPot}</h3>
+                                            <h3 className='text-md font-bold'>{drawOfLabel(round.roundIndexInPot + 1, round.maxRoundsInPot)}</h3>
                                             <span className='bg-gray-800 text-xs px-2 py-0.5 rounded-sm'>{gameLabel(gameType)}</span>
                                         </HStack>
-                                        <span className='text-secondary-foreground'>Pot #{round.potIndex.toString()}</span>
+                                        <span className='text-secondary-foreground'>{prizePoolLabel(round.potIndex)}</span>
                                     </>
                                 ) : (
                                     <HStack className='gap-2 items-center'>
-                                        <h3 className='text-md font-bold'>Pot #{round.potIndex.toString()}</h3>
+                                        <h3 className='text-md font-bold'>{prizePoolLabel(round.potIndex)}</h3>
                                         <span className='bg-gray-800 text-xs px-2 py-0.5 rounded-sm'>{gameLabel(gameType)}</span>
                                     </HStack>
                                 )}

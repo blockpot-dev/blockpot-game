@@ -1,3 +1,4 @@
+import { TERM } from '@/constants/copy'
 import VStack from '@/components/core/VStack/VStack'
 import HStack from '@/components/core/HStack/HStack'
 import { Button, Dialog, DialogContent, DialogHeader, DialogTitle } from '@blockpot-dev/blockpot-design-system'
@@ -14,7 +15,7 @@ import { GameType } from '@/providers/SelectedGameProvider'
 // The util labels the forwarded bucket generically; the dialog knows the actual
 // destination (a quick game's parent is the main game) and relabels for display.
 function parentLabel(selectedGame: GameType, fallback: string): string {
-    return selectedGame === 'quick' ? 'Main game' : fallback
+    return selectedGame === 'quick' ? TERM.mainGame : fallback
 }
 
 function AmountCell({ amount, fiatConverter }: { amount: bigint, fiatConverter: FiatConverter }) {
@@ -58,7 +59,7 @@ export function _FundRoutingDialog(props: _FundRoutingDialogProps) {
         extras.push({
             entry: routing.parentGame,
             label,
-            caption: `Forwarded to the ${label}, this game's parent pool.`,
+            caption: `Added to the ${label} prize pool.`,
         })
     }
 
@@ -79,7 +80,7 @@ export function _FundRoutingDialog(props: _FundRoutingDialogProps) {
                 </p>
 
                 <VStack className='gap-2'>
-                    <h3 className='font-bold'>Current game prize pots</h3>
+                    <h3 className='font-bold'>This draw&apos;s prizes</h3>
                     <Table className='after:content-[""] after:absolute after:inset-0 after:border after:border-gray-700 after:rounded-lg [&_tr]:border-gray-700'>
                         <TableHeader>
                             <TableRow>
@@ -108,7 +109,7 @@ export function _FundRoutingDialog(props: _FundRoutingDialogProps) {
 
                 {extras.length > 0 && (
                     <VStack className='gap-2'>
-                        <h3 className='font-bold'>Routed elsewhere</h3>
+                        <h3 className='font-bold'>Also funded by your entry</h3>
                         <VStack className='gap-3'>
                             {extras.map(({ entry, label, caption }) => (
                                 <HStack key={label} className='justify-between items-start gap-4 bg-gray-950 rounded-sm p-4'>

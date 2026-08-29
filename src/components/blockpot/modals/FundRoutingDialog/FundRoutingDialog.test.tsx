@@ -43,8 +43,8 @@ describe('<FundRoutingDialog>', () => {
         expect(await screen.findByText('Top prize')).toBeInTheDocument()
         expect(screen.getByText('2nd')).toBeInTheDocument()
         expect(screen.getByText('3rd')).toBeInTheDocument()
-        expect(screen.getByText('Next-pot reserve')).toBeInTheDocument()
-        expect(screen.queryByText('Main game')).not.toBeInTheDocument()
+        expect(screen.getByText('Next prize pool')).toBeInTheDocument()
+        expect(screen.queryByText('Main Game')).not.toBeInTheDocument()
     })
 
     it('shows the full ETH amount per row without rounding it to 0', async () => {
@@ -62,12 +62,12 @@ describe('<FundRoutingDialog>', () => {
         // Jackpot = 81% of 0.001 ETH = 0.00081 ETH. It must render in full, not
         // collapse to "0 ETH" under a 2-decimal rounding.
         expect(await screen.findByText('0.00081 ETH')).toBeInTheDocument()
-        // Next-pot reserve = 10% = 0.0001 ETH.
+        // Next prize pool = 10% = 0.0001 ETH.
         expect(screen.getByText('0.0001 ETH')).toBeInTheDocument()
         expect(screen.queryByText('0 ETH')).not.toBeInTheDocument()
     })
 
-    it('shows a parent (Main game) row and no next-pot reserve for the quick game', async () => {
+    it('shows a parent (Main Game) row and no next prize pool for the quick game', async () => {
         renderWithProviders(
             <_FundRoutingDialog
                 open
@@ -79,8 +79,8 @@ describe('<FundRoutingDialog>', () => {
             />,
         )
 
-        expect(await screen.findByText('Main game')).toBeInTheDocument()
+        expect(await screen.findByText('Main Game')).toBeInTheDocument()
         expect(screen.getByText('5th')).toBeInTheDocument()
-        expect(screen.queryByText('Next-pot reserve')).not.toBeInTheDocument()
+        expect(screen.queryByText('Next prize pool')).not.toBeInTheDocument()
     })
 })

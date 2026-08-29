@@ -1,3 +1,4 @@
+import { TERM } from '@/constants/copy'
 import VStack from '@/components/core/VStack/VStack'
 import { Button, Container, Dialog, DialogContent, DialogHeader, DialogTitle } from '@blockpot-dev/blockpot-design-system'
 import DrawnNumberTicket from '../../common/DrawnNumberTicket/DrawnNumberTicket'
@@ -63,11 +64,11 @@ export function _DrawSummaryDialog(props: _DrawSummaryDialogProps) {
             <VStack className='pt-6 gap-6 overflow-y-auto min-h-0 pr-2'>
                 <Container containerClassName='bg-gray-950' className="p-6">
                     <HStack className='gap-0'>
-                        <RoundInfoStat label='Pot No.' value={roundId.potIndex.toFixed(0)} />
+                        <RoundInfoStat label={TERM.prizePool} value={`#${roundId.potIndex.toFixed(0)}`} />
                         {gameType !== 'quick' && (
                             <>
                                 <HighlightDivider direction='vertical' />
-                                <RoundInfoStat label='Round No.' value={`${roundId.roundIndex.toFixed(0)}/${roundId.maxRoundsPerPot.toFixed(0)}`} />
+                                <RoundInfoStat label={TERM.draw} value={`${roundId.roundIndex.toFixed(0)} of ${roundId.maxRoundsPerPot.toFixed(0)}`} />
                             </>
                         )}
                         <HighlightDivider direction='vertical' />
