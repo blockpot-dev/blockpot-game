@@ -1,6 +1,6 @@
 import { drawAbi } from '@/abi/drawAbi'
 import { TransactionStatus } from '@/types/web3/transactions'
-import { decodeErrorResult, Hash, PublicClient } from 'viem'
+import { decodeErrorResult, Hash, PublicClient, UserRejectedRequestError } from 'viem'
 
 async function debugTransaction(publicClient: PublicClient, hash: Hash) {
     const tx = await publicClient.getTransaction({ hash })
@@ -29,6 +29,19 @@ async function debugTransaction(publicClient: PublicClient, hash: Hash) {
             return null
         }
     }
+}
+
+
+// Walks the error's cause chain looking for viem's UserRejectedRequestError
+// (EIP-1193 code 4001) — wallet connectors often wrap it.
+function isUserRejection(error: unknown): boolean {
+    let e = error
+    while (e instanceof Error) {
+        if (e instanceof UserRejectedRequestError) return true
+        if ((e as Error & { code?: number }).code === 4001) return true
+        e = e.cause
+    }
+    return false
 }
 
 export default class TransactionManager {
@@ -68,9 +81,15 @@ export default class TransactionManager {
                 this.updateHandler(id, 'reverted', title)
                 statusSync('reverted')
             }
-        } catch {
-            this.updateHandler(id, 'cancelled', title)
-            statusSync('cancelled')
+        } catch (error) {
+            // A throw before we have a hash is either the user rejecting in
+            // the wallet or the write failing upfront (simulation /
+            // estimateGas revert). Only the former is a cancellation —
+            // presenting a revert as "Cancelled" hides the real failure
+            // (BLO-734).
+            const status = isUserRejection(error) ? 'cancelled' : 'reverted'
+            this.updateHandler(id, status, title)
+            statusSync(status)
         }
     }
 }

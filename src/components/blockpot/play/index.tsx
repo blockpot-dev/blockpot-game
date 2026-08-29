@@ -23,6 +23,9 @@ import PlayHeader from '@/components/blockpot/play/PlayHeader/PlayHeader'
 import ReferralBanner from '@/components/blockpot/play/ReferralBanner/ReferralBanner'
 import VStack from '@/components/core/VStack/VStack'
 import usePlayerRegistration from '@/hooks/contracts/player-registry/usePlayerRegistration'
+import usePlayerStatus from '@/hooks/contracts/player-registry/usePlayerStatus'
+import { deriveEntryGate } from '@/components/blockpot/play/entryGate'
+import { ZERO_ADDRESS } from '@/web3/constants'
 import AttestationModal from '@/components/onboarding/AttestationModal'
 import useCurrentTos from '@/hooks/tos/useCurrentTos'
 import { useCountry } from '@/providers/CountryProvider'
@@ -77,14 +80,28 @@ function Play() {
     const tosQuery = useCurrentTos(playerRegistration.attestationModalOpen)
     const { country } = useCountry()
 
+    const accountAddress = useAccountAddress()
+    const { status: playerStatus, isLoading: isStatusLoading } = usePlayerStatus(accountAddress ?? ZERO_ADDRESS)
+    // BLO-734: only a wallet the registry has never seen registers; a
+    // suspended/banned player gets a disabled entry CTA with the reason
+    // instead of an enabled REGISTER button whose tx reverts.
+    const gate = deriveEntryGate({
+        isOperatorApproved,
+        playerStatus,
+        isStatusLoading,
+        isActiveLoading: playerRegistration.isActiveLoading,
+    })
+
     let disabledReason: string | undefined
     if (!isOperatorApproved) {
         disabledReason = 'This operator is not whitelisted yet — entries are disabled.'
+    } else if (gate.accessReason) {
+        disabledReason = gate.accessReason
     } else if (error) {
         disabledReason = error
     }
 
-    const needsRegistration = isOperatorApproved && !isPlayerActive && !playerRegistration.isActiveLoading
+    const needsRegistration = gate.needsRegistration && !isPlayerActive
     // Pre-deposit fallback: player is registered on-chain but the client has no
     // attestation record. Forces them through the attestation modal before the
     // entry form becomes interactive.
@@ -106,7 +123,6 @@ function Play() {
         : undefined
 
     const { isConnected } = useAccount()
-    const accountAddress = useAccountAddress()
     const { currentRound, pots } = useDraw()
     const { draw, advanceDraw } = useBlockpotDraw()
     let roundIndexForTickets: number
@@ -184,7 +200,7 @@ function Play() {
                                         basisPointsDivisor={basisPointsDivisor}
                                         gameConfig={gameConfig}
                                         selectedGame={selectedGame}
-                                        error={error}
+                                        error={gate.accessReason ?? error}
                                         canEnter={canEnter}
                                         disabledReason={disabledReason}
                                         baseBalance={baseBalance}
