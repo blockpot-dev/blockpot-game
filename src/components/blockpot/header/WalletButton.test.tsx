@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import WalletButton from './WalletButton'
 
-// Disconnected branch: renders "Connect Wallet" and opens WalletOptionsDialog
+// Disconnected branch: renders "Connect wallet" and opens WalletOptionsDialog
 // via useWalletOptionsDialogOpen().update(true).
 // Connected branch: renders a single pill that opens AccountDialog on click
 // and must NOT invoke useDisconnect().disconnect — regression guard for task
@@ -52,7 +52,7 @@ vi.mock('@/hooks/contracts/operator/usePlayerBalances', () => ({
 }))
 
 describe('<WalletButton>', () => {
-    it('case 1 — disconnected: renders Connect Wallet and opens WalletOptionsDialog on click', () => {
+    it('case 1 — disconnected: renders Connect wallet and opens WalletOptionsDialog on click', () => {
         useAccountMock.mockReturnValue({ isConnected: false })
         walletOptionsUpdateMock.mockClear()
         disconnectMock.mockClear()

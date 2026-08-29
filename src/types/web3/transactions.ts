@@ -1,11 +1,11 @@
 export type TransactionStatus = 'success' | 'reverted' | 'cancelled' | 'userPrompt' | 'pending'
 export function messageForTransactionStatus(status: TransactionStatus) {
     switch (status) {
-    case 'success': return 'Success'
-    case 'reverted': return 'Reverted'
-    case 'cancelled': return 'Cancelled'
-    case 'userPrompt': return 'Waiting...'
-    case 'pending': return 'Pending...'
+    case 'success': return 'Confirmed on-chain'
+    case 'reverted': return 'Transaction failed on-chain — nothing was charged beyond gas'
+    case 'cancelled': return 'Cancelled in wallet'
+    case 'userPrompt': return 'Confirm in your wallet…'
+    case 'pending': return 'Confirming on-chain…'
     }
 }
 

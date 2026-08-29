@@ -14,7 +14,13 @@ describe('OperatorApprovalBanner', () => {
     })
 
     it('renders nothing while the approval check is loading', () => {
-        mockUseIsOperatorApproved.mockReturnValue({ isWhitelisted: false, isLoading: true })
+        mockUseIsOperatorApproved.mockReturnValue({ isWhitelisted: undefined, isLoading: true })
+        const { container } = render(<OperatorApprovalBanner />)
+        expect(container).toBeEmptyDOMElement()
+    })
+
+    it('renders nothing on a transient read error (isWhitelisted undefined)', () => {
+        mockUseIsOperatorApproved.mockReturnValue({ isWhitelisted: undefined, isLoading: false, isError: true })
         const { container } = render(<OperatorApprovalBanner />)
         expect(container).toBeEmptyDOMElement()
     })
@@ -30,9 +36,10 @@ describe('OperatorApprovalBanner', () => {
         render(<OperatorApprovalBanner />)
 
         const alert = screen.getByRole('alert')
-        expect(alert).toHaveTextContent('Entries disabled')
-        expect(alert).toHaveTextContent('this operator is not approved in the ApprovedOperatorRegistry')
-        expect(alert).toHaveTextContent('Contact the operator to resolve')
+        expect(alert).toHaveTextContent('Entries are closed')
+        expect(alert).toHaveTextContent('Blockpot isn\'t currently approved to run draws')
+        expect(alert).toHaveTextContent('We\'ll reopen as soon as it\'s resolved')
+        expect(alert.textContent).not.toMatch(/ApprovedOperatorRegistry/)
     })
 
     it('never uses retired licensure or lottery vocabulary', () => {

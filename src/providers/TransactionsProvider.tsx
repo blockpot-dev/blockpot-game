@@ -93,7 +93,7 @@ export default function TransactionsProvider(props: { children: ReactNode }) {
             const receipt = await publicClient.waitForTransactionReceipt({hash: transaction.hash, confirmations: 1})
             toast.success(title, {
                 id: transaction.hash,
-                description: message ?? 'Success!'
+                description: message ?? messageForTransactionStatus('success')
             })
             updateTransactionDetails({
                 hash: transaction.hash,
@@ -102,7 +102,7 @@ export default function TransactionsProvider(props: { children: ReactNode }) {
         } catch {
             toast.error(title, {
                 id: transaction.hash,
-                description: message ?? 'Failed!'
+                description: message ?? messageForTransactionStatus('reverted')
             })
         }
     }
@@ -110,7 +110,7 @@ export default function TransactionsProvider(props: { children: ReactNode }) {
     const addTransaction = (transaction: Transaction, title: string, message?: string) => {
         toast.loading(title, {
             id: transaction.hash,
-            description: message ?? 'Waiting...'
+            description: message ?? messageForTransactionStatus('pending')
         })
         waitForTransaction(transaction, title, message)
         addTransactionDetails({
@@ -123,7 +123,7 @@ export default function TransactionsProvider(props: { children: ReactNode }) {
     const startTransaction = useCallback((id: string, title: string, message?: string) => {
         toast.loading(title, {
             id: id,
-            description: message ?? 'Waiting...'
+            description: message ?? messageForTransactionStatus('userPrompt')
         })
     }, [])
 

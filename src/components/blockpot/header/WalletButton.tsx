@@ -44,7 +44,7 @@ export default function WalletButton() {
                 className='h-[40px] flex items-center gap-2 justify-center rounded-sm px-3 cursor-pointer'
                 onClick={() => walletOptionsDialogOpen.update(true)}
             >
-                Connect Wallet
+                Connect wallet
             </Button>
         )
     }
@@ -59,7 +59,7 @@ export default function WalletButton() {
                 size='sm'
                 className='h-[40px] flex items-center gap-2 justify-center rounded-sm bg-gray-950 px-3 cursor-pointer relative'
                 onClick={() => setOpen(true)}
-                aria-label='Account'
+                aria-label='Open your account'
             >
                 {ensAvatar
                     ? <img src={ensAvatar} alt='' width={24} height={24} />

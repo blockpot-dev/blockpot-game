@@ -37,10 +37,10 @@ export default function Footer() {
                     description: `1 ETH on the way · tx ${shortHash(data.txHash)}`,
                 })
             },
-            onError: (error) => {
+            onError: () => {
                 toast.error('Could not send test ETH', {
                     id: FAUCET_TOAST_ID,
-                    description: error instanceof Error ? error.message : 'Please try again.',
+                    description: 'Please try again in a moment.',
                 })
             },
         })
@@ -51,7 +51,7 @@ export default function Footer() {
         if (address === ZERO_ADDRESS) {
             toast.error('Connect a wallet first', {
                 id: FAUCET_TOAST_ID,
-                description: 'Open the wallet menu in the header, then try again.',
+                description: 'Connect wallet in the header, then try again.',
             })
             return
         }
@@ -61,16 +61,16 @@ export default function Footer() {
         }
         toast.loading('Sign in to request test ETH', {
             id: FAUCET_TOAST_ID,
-            description: 'Approve the signature in your wallet…',
+            description: 'Sign a message in your wallet to continue…',
         })
         siwe.mutate(
             { address: address as Address },
             {
                 onSuccess: () => sendFaucetRequest(),
-                onError: (error) => {
+                onError: () => {
                     toast.error('Could not sign in', {
                         id: FAUCET_TOAST_ID,
-                        description: error instanceof Error ? error.message : 'Signature rejected.',
+                        description: 'The signature was not completed. Try again when you are ready.',
                     })
                 },
             },
@@ -110,7 +110,8 @@ export default function Footer() {
                             <span className='text-xs text-secondary-foreground'>Randomness by</span>
                             <img
                                 src='/chainlink-logo.svg'
-                                alt='Chainlink'
+                                alt='Chainlink VRF'
+                                aria-label='Randomness by Chainlink VRF'
                                 className='w-[86px] h-[26px]'
                             />
                         </HStack>
@@ -123,7 +124,7 @@ export default function Footer() {
                                     rel='noopener noreferrer'
                                     className='cursor-pointer hover:opacity-80 hover:scale-95 transition-all'
                                 >
-                                    <img src={social.src} alt={social.name} width={20} height={20} />
+                                    <img src={social.src} alt={`Blockpot on ${social.name}`} width={20} height={20} />
                                 </a>
                             ))}
                         </HStack>

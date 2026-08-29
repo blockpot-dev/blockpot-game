@@ -45,7 +45,11 @@ export default function useTrackedContractWrite<
         setTransactionId(trackTransaction(transaction, notificationTitle))
         try {
             return await transaction
-        } catch (error) {
+        } catch {
+            // The tracker already classified the throw: a wallet rejection
+            // (viem UserRejectedRequestError / EIP-1193 code 4001) surfaces as
+            // status `cancelled` with "Cancelled in wallet"; anything else as
+            // `reverted`. See TransactionManager.isUserRejection.
             return { hash: '0x0' } as { hash: Hash }
         }
     }

@@ -65,14 +65,14 @@ function setHooks(overrides: {
 }
 
 describe('<OperatorStatusIndicator>', () => {
-    it('renders "Wallet disconnected" when the operator is whitelisted but no wallet is connected', () => {
+    it('renders "Not connected" when the operator is whitelisted but no wallet is connected', () => {
         setHooks({
             isConnected: false,
             address: undefined,
             isWhitelisted: true,
         })
         render(<OperatorStatusIndicator />)
-        expect(screen.getByText('Wallet disconnected')).toBeInTheDocument()
+        expect(screen.getByText('Not connected')).toBeInTheDocument()
         expect(screen.queryByText('Connected')).not.toBeInTheDocument()
     })
 

@@ -51,7 +51,7 @@ export default function useErc20WithAllowance(token: ContractName, spender: Addr
     })
 
     const approve = (amount: bigint) => {
-        approveWrite.write([spender, amount], `Approving ${formatFixedMaxDecimals(data?.balance ?? 0n, data?.decimals ?? 18, 4)}`)
+        approveWrite.write([spender, amount], `Approve ${formatFixedMaxDecimals(data?.balance ?? 0n, data?.decimals ?? 18, 4)} ${data?.symbol ?? ''}`.trimEnd())
     }
 
     return {

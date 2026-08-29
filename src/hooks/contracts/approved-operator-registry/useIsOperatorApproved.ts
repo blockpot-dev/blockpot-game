@@ -16,7 +16,11 @@ export default function useIsOperatorApproved() {
     })
 
     return {
-        isWhitelisted: data ?? false,
+        // `undefined` while loading or after a read error, so callers can
+        // tell "confirmed not approved" (false) from "not known yet" and avoid
+        // flashing a site-wide closure on a transient RPC failure (BLO-754).
+        // Entry gating treats undefined as closed (fail-closed).
+        isWhitelisted: data as boolean | undefined,
         isLoading,
     }
 }

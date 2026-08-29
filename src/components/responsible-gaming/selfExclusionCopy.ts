@@ -2,13 +2,13 @@ import { SelfExclusionDuration } from '@/hooks/responsible-gaming/useSelfExclusi
 
 export const DURATION_OPTIONS: { value: SelfExclusionDuration; label: string; helper: string }[] = [
     { value: '24h', label: '24 hours', helper: 'Short cooling-off — ends after one day.' },
-    { value: '7d', label: '7 days', helper: 'A week away from the platform.' },
+    { value: '7d', label: '7 days', helper: 'A week away from Blockpot.' },
     { value: '30d', label: '30 days', helper: 'A month-long break.' },
     { value: '6mo', label: '6 months', helper: 'Cannot be lifted early. Useful for a sustained pause.' },
     {
         value: 'permanent',
         label: 'Permanent',
-        helper: 'Only an MLRO operator can lift this. Choose only if you intend to stop for good.',
+        helper: 'Only the Blockpot team can lift this. Choose only if you intend to stop for good.',
     },
 ]
 

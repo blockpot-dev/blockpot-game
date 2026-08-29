@@ -5,6 +5,7 @@ import usePlayerStatus, { PlayerStatus } from '@/hooks/contracts/player-registry
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { ZERO_ADDRESS } from '@/web3/constants'
 import { cn } from '@/lib/utils'
+import { SUPPORT_LINK_LABEL, SUPPORT_URL } from '@/constants/support'
 
 type State =
     | 'loading'
@@ -19,43 +20,43 @@ type State =
 const STATE_STYLES: Record<State, { dot: string, label: string, tooltip: string }> = {
     loading: {
         dot: 'bg-muted-foreground animate-pulse',
-        label: 'Connecting',
-        tooltip: 'Checking operator and wallet status…',
+        label: 'Checking status…',
+        tooltip: 'Checking whether draws are open and your wallet is ready…',
     },
     'not-whitelisted': {
         dot: 'bg-destructive',
         label: 'Site unavailable',
-        tooltip: 'The operator is not approved in the ApprovedOperatorRegistry. Entries are disabled site-wide until it is approved.',
+        tooltip: 'Entries are closed right now. Check back soon.',
     },
     'wallet-disconnected': {
         dot: 'bg-muted-foreground',
-        label: 'Wallet disconnected',
-        tooltip: 'Connect your wallet to view your account status and enter draws.',
+        label: 'Not connected',
+        tooltip: 'Connect your wallet to see your account and enter draws.',
     },
     blocked: {
         dot: 'bg-destructive',
         label: 'Blocked',
-        tooltip: 'This wallet is suspended or banned by the operator. Contact support to resolve.',
+        tooltip: 'This wallet can\'t enter draws right now.',
     },
     'not-registered': {
         dot: 'bg-warning',
         label: 'Not registered',
-        tooltip: 'Your wallet is connected but not yet registered as a player. Click Register in the entry panel to finish onboarding.',
+        tooltip: 'Your wallet is connected. Register in the entry panel to start entering draws.',
     },
     registering: {
         dot: 'bg-warning animate-pulse',
         label: 'Registering…',
-        tooltip: 'Registration transaction submitted. Waiting for on-chain confirmation.',
+        tooltip: 'Registration sent. Confirming on-chain…',
     },
     'registration-failed': {
         dot: 'bg-destructive',
         label: 'Registration failed',
-        tooltip: 'The last registration attempt failed. Click Try again in the entry panel.',
+        tooltip: 'Registration didn\'t go through. Use Try again in the entry panel.',
     },
     connected: {
         dot: 'animate-pulse-positive',
         label: 'Ready',
-        tooltip: 'Your wallet is registered and the operator is active. Draws are open.',
+        tooltip: 'Your wallet is registered. Draws are open.',
     },
 }
 
@@ -110,6 +111,15 @@ export function OperatorStatusIndicator() {
             </TooltipTrigger>
             <TooltipContent side='bottom' className='max-w-[240px] bg-gray-800 text-xs'>
                 {styles.tooltip}
+                {state === 'blocked' && (
+                    <>
+                        {' '}
+                        <a href={SUPPORT_URL} target='_blank' rel='noopener noreferrer' className='underline'>
+                            {SUPPORT_LINK_LABEL}
+                        </a>
+                        {' to resolve it.'}
+                    </>
+                )}
             </TooltipContent>
         </Tooltip>
     )

@@ -153,7 +153,7 @@ export default function useEnterDraw() {
         isSuccess: enterWrite.isSuccess || enterWethWrite.isSuccess,
         isIdle: enterWrite.isIdle || enterWethWrite.isIdle,
         status: enterWrite.status || enterWethWrite.status,
-        isOperatorApproved: isWhitelisted,
+        isOperatorApproved: isWhitelisted ?? false,
         isPlayerActive: isActive,
     }
 }
