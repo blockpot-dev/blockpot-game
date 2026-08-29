@@ -99,7 +99,7 @@ export default function useEnterDraw() {
         // intent timing, not the wallet UX delay.
         recordEntryCadence()
 
-        const label = `Purchasing ${amount} ${amount === 1 ? 'entry' : 'entries'}`
+        const label = `Entering with ${amount} ${amount === 1 ? 'entry' : 'entries'}`
 
         try {
             if (useWeth) {

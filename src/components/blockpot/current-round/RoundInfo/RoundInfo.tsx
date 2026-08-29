@@ -44,30 +44,30 @@ export default function RoundInfo(props: RoundInfoProps) {
             <RoundInfoStatContainer
                 stats={[
                     {
-                        label: 'Total Tickets',
+                        label: 'Total entries',
                         value: (
                             <CompactCountValue
                                 value={totalTickets}
                                 variant='animated'
-                                unit='tickets'
-                                description='Total tickets purchased for the current round.'
+                                unit='entries'
+                                description='All entries in this draw.'
                             />
                         )
                     },
                     {
-                        label: 'Your Tickets',
+                        label: 'Your entries',
                         value: (
                             <CompactCountValue
                                 value={yourTickets}
                                 variant='static'
-                                unit='tickets'
-                                description='Your tickets purchased for the current round.'
+                                unit='entries'
+                                description='Your entries in this draw.'
                             />
                         )
                     }
                 ]}
                 imageUrl='/assets/pngs/tickets-badge.png'
-                imageAlt='Tickets Info'
+                imageAlt='Entries Info'
             />
         </HStack>
     )

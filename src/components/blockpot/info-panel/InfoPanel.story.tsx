@@ -54,7 +54,7 @@ export const Basic: Story = {
     }
 }
 
-export const SinglePurchase: Story = {
+export const SingleEntry: Story = {
     render: renderStory,
     args: {
         isConnected: true,
@@ -69,7 +69,7 @@ export const SinglePurchase: Story = {
     }
 }
 
-export const MultiplePurchases: Story = {
+export const MultipleEntries: Story = {
     render: renderStory,
     args: {
         isConnected: true,
@@ -95,7 +95,7 @@ export const MultiplePurchases: Story = {
     }
 }
 
-export const FullPurchases: Story = {
+export const FullEntries: Story = {
     render: renderStory,
     args: {
         isConnected: true,
@@ -127,7 +127,7 @@ export const FullPurchases: Story = {
     }
 }
 
-export const OverflowPurchases: Story = {
+export const OverflowEntries: Story = {
     render: renderStory,
     args: {
         isConnected: true,
@@ -165,7 +165,7 @@ export const OverflowPurchases: Story = {
     }
 }
 
-export const LargeRangePurchase: Story = {
+export const LargeRangeEntry: Story = {
     render: renderStory,
     args: {
         isConnected: true,
@@ -181,7 +181,7 @@ export const LargeRangePurchase: Story = {
     }
 }
 
-export const ConnectedNoPurchases: Story = {
+export const ConnectedNoEntries: Story = {
     render: renderStory,
     args: {
         isConnected: true,
@@ -192,11 +192,11 @@ export const ConnectedNoPurchases: Story = {
 
 // Regression scenario for task 52: in v2 the on-chain beneficiary is the operator contract, so
 // useRoundEntryIndexes -> entriesForBeneficiary(round, connectedWallet) is empty and the
-// InfoPanel "Your Tickets" list is blank. The fix routes the lookup through
+// InfoPanel "Your Entries" list is blank. The fix routes the lookup through
 // resolvePlayerEntries which queries entriesForBeneficiary(round, OPERATOR_ADDRESS), then maps
 // each entry back to its real owner via operator.entryOwnerOf, then filters by the connected
-// wallet. Pre-fix this story renders zero rows; post-fix it renders one Purchase row
-// covering ticket numbers 100..104.
+// wallet. Pre-fix this story renders zero rows; post-fix it renders one entry row
+// covering entry numbers 100..104.
 const REGRESSION_ROUND = 7
 const REGRESSION_DRAW = '0x0000000000000000000000000000000000000A11' as Address
 const REGRESSION_OPERATOR = '0x0000000000000000000000000000000000000B22' as Address

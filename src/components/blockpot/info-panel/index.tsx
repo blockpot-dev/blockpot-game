@@ -57,9 +57,9 @@ export function _InfoPanel(props: _InfoPanelProps) {
         <Container containerClassName='w-[300px]' className='p-6 h-full'>
             <VStack className='gap-4'>
                 <VStack className='gap-4'>
-                    <ContainerHeading>Your Tickets</ContainerHeading>
+                    <ContainerHeading>Your Entries</ContainerHeading>
                     <span className='text-sm text-gray-400 leading'>
-                        {'Below are your tickets purchased for the next draw.'}
+                        {'Your entries in this draw.'}
                     </span>
                 </VStack>
                 <VStack ref={(node) => { scrollContainerRef.current = node }} className={`gap-4 -mx-4 pt-4 pl-4 pr-3 overflow-y-auto h-[556px] max-h-[556px] ${styles.infoPanelPurchases}`}>

@@ -33,7 +33,7 @@ export default function EntryCost(props: EntryCostProps) {
 
     const tooltipContent = <div className='inline-block'>
         <span>
-            {'Each ticket costs '}
+            {'Each entry costs '}
             <span className='font-bold whitespace-nowrap'>{ethLabel}</span>
             {' or '}
             <span className='font-bold whitespace-nowrap'>{usdLabel}</span>
@@ -52,6 +52,7 @@ export default function EntryCost(props: EntryCostProps) {
                 <TooltipTrigger asChild>
                     <button
                         type='button'
+                        aria-label='Switch price currency'
                         onClick={() => cycle(available)}
                         className='rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary-foreground'
                     >

@@ -41,7 +41,7 @@ function DrawnNumbersPanel(props: DrawnNumbersPanelProps) {
                         Drawn Numbers
                     </ContainerHeading>
                     <span className='text-sm text-gray-400 leading'>
-                        {'Below are the drawn tickets for the current draw.'}
+                        {'Below are the drawn numbers for the current draw.'}
                     </span>
                 </VStack>
                 <VStack ref={(node) => { scrollContainerRef.current = node }} className={`gap-4 -mx-4 pt-4 px-4 overflow-y-hidden h-[556px] max-h-[556px] ${styles.drawnNumbersPanelPurchases}`}>

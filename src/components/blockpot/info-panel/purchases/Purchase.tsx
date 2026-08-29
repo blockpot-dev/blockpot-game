@@ -19,13 +19,13 @@ function PurchaseContent(props: PurchaseContentProps) {
     return (
         <>
             <div className='grow flex gap-2 justify-between z-1'>
-                <span className='body-sm'>Purchase #{purchase.id.toFixed(0)}</span>
-                <span className='body-sm font-bold'>{formatNumber(totalTickets)} Tickets</span>
+                <span className='body-sm'>Entry #{purchase.id.toFixed(0)}</span>
+                <span className='body-sm font-bold'>{formatNumber(totalTickets)} {totalTickets === 1 ? 'entry' : 'entries'}</span>
             </div>
             {
                 purchase.type === 'single' ? (
                     <div className='grow flex gap-2 justify-between z-1'>
-                        <span className='body-sm'>Ticket Number:</span>
+                        <span className='body-sm'>Entry number</span>
                         <span className='body-sm font-bold'>{formatNumber(purchase.number)}</span>
                     </div>
                 ) : (
@@ -210,11 +210,11 @@ function Purchase(props: PurchaseProps) {
                             {
                                 isConnected ? (
                                     <>
-                                        Purchase a ticket<br />to enter draw
+                                        No entries yet.{' '}<br />Enter the draw on the left.
                                     </>
                                 ) : (
                                     <>
-                                        Connect Wallet To<br/>Purchase a Ticket
+                                        Connect your wallet{' '}<br />to enter.
                                     </>
                                 )
                             }

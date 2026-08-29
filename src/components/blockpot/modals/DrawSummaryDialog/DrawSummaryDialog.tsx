@@ -102,19 +102,19 @@ export function _DrawSummaryDialog(props: _DrawSummaryDialogProps) {
                 </HStack>
                 <VStack>
                     <HStack className='justify-between'>
-                        <span className='text-sm'>Your Purchases:</span>
+                        <span className='text-sm'>Your entries</span>
                         <span className='text-sm'>
-                            <span className='text-secondary-foreground'>{'Total Tickets: '}</span>
+                            <span className='text-secondary-foreground'>{'Total entries: '}</span>
                             <span className='font-bold text-foreground'>{totalTickets}</span>
                         </span>
                     </HStack>
                     <Table className='after:content-[""] after:absolute after:inset-0 after:border after:border-gray-700 after:rounded-lg'>
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="pl-4">Purchase No.</TableHead>
-                                <TableHead>Tickets</TableHead>
-                                <TableHead>From</TableHead>
-                                <TableHead className="pr-4">To</TableHead>
+                                <TableHead className="pl-4">Entry</TableHead>
+                                <TableHead>Count</TableHead>
+                                <TableHead>First number</TableHead>
+                                <TableHead className="pr-4">Last number</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>

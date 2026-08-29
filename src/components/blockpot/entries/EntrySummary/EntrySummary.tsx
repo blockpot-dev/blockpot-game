@@ -70,7 +70,7 @@ export default function EntrySummary(props: EntrySummaryProps) {
                     <span className='text-sm text-secondary-foreground font-bold uppercase'>Summary</span>
                     <HStack className='gap-2 items-center'>
                         <span className='text-sm'>
-                            <span className='text-secondary-foreground'>Wallet: </span>
+                            <span className='text-secondary-foreground'>Balance: </span>
                             <span className='font-bold'>{baseBalance}</span>
                         </span>
                         <Token token='eth' size='lg' />
@@ -107,11 +107,11 @@ export default function EntrySummary(props: EntrySummaryProps) {
                                 <div className='py-4'>
                                     <BreakdownRow label='Prize pool' amount={pea} onClick={() => fundRoutingDialogOpen.update(true)} />
                                     <OperatorDivider symbol='+' />
-                                    <BreakdownRow label={`Protocol fee (${bpsToPercent(cfBasisPoints, basisPointsDivisor)})`} amount={cf} />
+                                    <BreakdownRow label={`Unipot Protocol fee (${bpsToPercent(cfBasisPoints, basisPointsDivisor)})`} amount={cf} />
                                     {ofBasisPoints > 0n && (
                                         <>
                                             <OperatorDivider symbol='+' />
-                                            <BreakdownRow label={`Operator fee (${bpsToPercent(ofBasisPoints, basisPointsDivisor)})`} amount={of} />
+                                            <BreakdownRow label={`Blockpot fee (${bpsToPercent(ofBasisPoints, basisPointsDivisor)})`} amount={of} />
                                         </>
                                     )}
                                     <OperatorDivider symbol='=' />

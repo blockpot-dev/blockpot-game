@@ -9,7 +9,7 @@ export const Route = createFileRoute('/how-to-play')({
 type SectionMeta = { number: number, id: string, title: string }
 
 const SECTIONS: SectionMeta[] = [
-    { number: 1, id: 's1', title: 'What is a ticket?' },
+    { number: 1, id: 's1', title: 'What is an entry?' },
     { number: 2, id: 's2', title: 'How draws work' },
     { number: 3, id: 's3', title: 'How payouts work' },
     { number: 4, id: 's4', title: 'Getting started' },
@@ -55,10 +55,10 @@ function HowToPlayPage() {
                         <TableOfContents />
 
                         {/* PEA / CF mirrored from src/constants/protocol.ts; OF default mirrored from src/constants/operator.ts (VITE_OPERATOR_FEE_BPS). */}
-                        <NumberedSection number={1} id='s1' title='What is a ticket?'>
+                        <NumberedSection number={1} id='s1' title='What is an entry?'>
                             <p>
-                                Each ticket gives you one chance to win prizes in the current
-                                round. Every ticket costs a fixed amount:
+                                Each entry gives you one chance to win prizes in the current
+                                round. Every entry costs a fixed amount:
                             </p>
                             <ul className='list-disc pl-6 space-y-1'>
                                 <li><strong>Entry amount</strong> — 0.001 ETH, goes to the prize pool.</li>
@@ -73,20 +73,20 @@ function HowToPlayPage() {
 
                         <NumberedSection number={2} id='s2' title='How draws work'>
                             <p>
-                                When the round timer reaches zero and enough tickets have been
-                                sold, a draw is triggered. Random numbers are produced on-chain
+                                When the round timer reaches zero and enough entries have been
+                                made, a draw is triggered. Random numbers are produced on-chain
                                 using Chainlink VRF, which means no one — not the operator, not
                                 any player, not the protocol — can influence the outcome.
                             </p>
                             <p>
-                                Each drawn number maps back to a specific ticket. If one of your
-                                tickets is drawn, you win the prize tier associated with that
+                                Each drawn number maps back to a specific entry. If one of your
+                                entries is drawn, you win the prize tier associated with that
                                 draw slot.
                             </p>
                             <p>
                                 A draw only fires once both conditions are met: the round timer
                                 has reached zero <em>and</em> the round has reached its minimum
-                                ticket threshold. If the minimum is not met by the timer, the
+                                entry threshold. If the minimum is not met by the timer, the
                                 round extends until it is.
                             </p>
                         </NumberedSection>
@@ -118,7 +118,7 @@ function HowToPlayPage() {
                             <ol className='list-decimal pl-6 space-y-1'>
                                 <li>
                                     Connect an EVM-compatible wallet from the top right —
-                                    your tickets and winnings live at your wallet address, with
+                                    your entries and winnings live at your wallet address, with
                                     no account to create and no password to remember.
                                 </li>
                                 <li>

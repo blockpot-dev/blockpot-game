@@ -36,9 +36,9 @@ export default function EntryOptions(props: EntryOptionsProps) {
                 <ContainerHeading
                     trailing={<EntryCost entryCost={amountPerEntry} />}
                 >
-                    PURCHASE
+                    ENTER
                 </ContainerHeading>
-                <Input placeholder='0' value={inputValue} onChange={(e) => handleManualEntryAmountChange(e.target.value)} />
+                <Input aria-label='Number of entries' placeholder='0' value={inputValue} onChange={(e) => handleManualEntryAmountChange(e.target.value)} />
                 <SegmentedControl
                     onSelect={(value) => {
                         selectedEntries.update({ type: 'fixed', amount: parseInt(value) })

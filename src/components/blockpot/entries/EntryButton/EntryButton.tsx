@@ -13,7 +13,7 @@ export type RegistrationMode = {
     disabled: boolean
     disabledReason?: string
     // Optional overrides for labels. Used by the pre-deposit attestation
-    // fallback to surface "ACCEPT TERMS" instead of "REGISTER".
+    // fallback to surface "ACCEPT TERMS" instead of "REGISTER TO ENTER".
     idleLabel?: string
     signingLabel?: string
 }
@@ -44,7 +44,7 @@ export default function EntryButton(props: EntryButtonProps) {
     }, [triggerSuccess, start])
 
     if (registration) {
-        const { register, isSigning, isPending, isFailed, disabled, disabledReason: regReason, idleLabel = 'REGISTER', signingLabel = 'SIGNING…' } = registration
+        const { register, isSigning, isPending, isFailed, disabled, disabledReason: regReason, idleLabel = 'REGISTER TO ENTER', signingLabel = 'CONFIRM IN WALLET…' } = registration
         const busy = isSigning || isPending
         let label: React.ReactNode = idleLabel
         if (isSigning) label = <><Loader2 className='mr-2 h-4 w-4 animate-spin' /><span>{signingLabel}</span></>
@@ -73,15 +73,15 @@ export default function EntryButton(props: EntryButtonProps) {
                 {
                     showSuccess ? <>
                         <CheckIcon className='size-6' />
-                        <span className='uppercase'>{' Purchased'}</span>
+                        <span className='uppercase'>{' ENTERED'}</span>
                     </>
                         : (
                             isEntering
                                 ? <>
                                     <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                                    <span>PURCHASING</span>
+                                    <span>ENTERING…</span>
                                 </>
-                                : 'PURCHASE'
+                                : 'ENTER DRAW'
                         )
                 }
             </Button>
