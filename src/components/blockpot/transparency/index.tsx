@@ -1,6 +1,6 @@
 import VStack from '@/components/core/VStack/VStack'
 import BlockpotBalances from './BlockpotBalances'
-import TierThresholds from './TierThresholds'
+import TierThresholdsGate from './TierThresholdsGate'
 import DrawFairnessSection from './DrawFairnessSection/DrawFairnessSection'
 
 export default function Transparency() {
@@ -16,9 +16,9 @@ export default function Transparency() {
                         live contract state so you can verify it yourself.
                     </p>
 
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-6 [&>*:only-child]:md:col-span-2'>
                         <BlockpotBalances />
-                        <TierThresholds />
+                        <TierThresholdsGate />
                     </div>
 
                     <DrawFairnessSection />
