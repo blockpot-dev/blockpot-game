@@ -1,9 +1,1 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="23.9973" height="24" rx="11.9987" fill="#627EEA"/>
-<path d="M11.9985 4L11.8893 4.36462V14.9442L11.9985 15.0512L16.9969 12.1484L11.9985 4Z" fill="#C1CCF7"/>
-<path d="M11.9985 4L7 12.1484L11.9985 15.0512V9.91623V4Z" fill="white"/>
-<path d="M11.9985 15.981L11.937 16.0548V19.8234L11.9985 20L17 13.0797L11.9985 15.981Z" fill="#C1CCF7"/>
-<path d="M11.9985 20V15.981L7 13.0797L11.9985 20Z" fill="white"/>
-<path d="M11.9985 15.0512L16.9969 12.1484L11.9985 9.91623V15.0512Z" fill="#8198EE"/>
-<path d="M7 12.1484L11.9985 15.0512V9.91623L7 12.1484Z" fill="#C1CCF7"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><rect width="23.997" height="24" fill="#627eea" rx="11.999"/><path fill="#c1ccf7" d="m11.999 4-.11.365v10.58l.11.106 4.998-2.903z"/><path fill="#fff" d="M11.999 4 7 12.148l4.999 2.903V4"/><path fill="#c1ccf7" d="m11.999 15.981-.062.074v3.768l.062.177L17 13.08z"/><path fill="#fff" d="M11.999 20v-4.019L7 13.08z"/><path fill="#8198ee" d="m11.999 15.051 4.998-2.903-4.998-2.232z"/><path fill="#c1ccf7" d="m7 12.148 4.999 2.903V9.916z"/></svg>
