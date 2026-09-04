@@ -535,8 +535,10 @@ function TermsPage() {
                                 <li>providing false or incomplete information at registration or verification;</li>
                                 <li>using stolen identity information, or a wallet you do not control;</li>
                                 <li>
-                                    entering from, or manipulating your location to appear outside, an
-                                    Excluded Territory;
+                                    entering from an Excluded Territory, or from any place within
+                                    Section 3.3(a), or concealing, altering, or misrepresenting your
+                                    location, residence, or nationality, whether or not you turn out to
+                                    be ineligible (Section 3.3(c));
                                 </li>
                                 <li>operating more than one account, or colluding with other players;</li>
                                 <li>
