@@ -767,20 +767,32 @@ function TermsPage() {
                                 under Section 3.5; the current version is always the one published
                                 here.
                             </p>
-                            <p>
-                                Afghanistan · Armenia · Australia · Austria · Bahrain · Bangladesh ·
-                                Belarus · Belgium · Brazil · Brunei · Cambodia · Chile · China
-                                (mainland) · Colombia · Costa Rica · Cuba · Czechia · Denmark ·
-                                Ecuador · Egypt · Estonia · France · Georgia · Germany · Greece ·
-                                Hungary · India · Indonesia · Iran · Ireland · Italy · Japan · Kenya ·
-                                Kuwait · Latvia · Lithuania · Malaysia · Mexico · Morocco · Myanmar ·
-                                Netherlands · North Korea · Oman · Pakistan · Panama · Peru ·
-                                Philippines · Poland · Portugal · Qatar · Romania · Russia · Saudi
-                                Arabia · Singapore · Slovakia · South Africa · South Korea · Spain ·
-                                Sweden · Switzerland · Syria · Tanzania · Thailand · Turkey · Ukraine
-                                (occupied territories) · United Arab Emirates · United Kingdom ·
-                                United States of America (including its territories) · Vietnam
-                            </p>
+                            <ul className='list-disc pl-5 space-y-1'>
+                                <li>Australia</li>
+                                <li>Belarus</li>
+                                <li>Brazil</li>
+                                <li>Cayman Islands</li>
+                                <li>Costa Rica</li>
+                                <li>Cuba</li>
+                                <li>France</li>
+                                <li>Germany</li>
+                                <li>Iran</li>
+                                <li>Italy</li>
+                                <li>Myanmar</li>
+                                <li>Netherlands</li>
+                                <li>North Korea</li>
+                                <li>Panama</li>
+                                <li>Portugal</li>
+                                <li>Russia</li>
+                                <li>Singapore</li>
+                                <li>South Korea</li>
+                                <li>Spain</li>
+                                <li>Sweden</li>
+                                <li>Syria</li>
+                                <li>Ukraine (occupied territories)</li>
+                                <li>United Kingdom</li>
+                                <li>United States of America (including its territories)</li>
+                            </ul>
                             <p>
                                 In addition, nationals of South Korea are excluded regardless of
                                 location or residence (Section 3.1).
