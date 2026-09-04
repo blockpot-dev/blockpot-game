@@ -494,8 +494,9 @@ function TermsPage() {
                             </p>
                             <p>
                                 11.2. <strong>We close accounts for compliance reasons</strong> where these Terms
-                                or the law require it — including: residence in an Excluded Territory
-                                coming to light, a South Korean passport surfacing at verification,
+                                or the law require it, including: residence in an Excluded Territory
+                                coming to light, ineligibility under Section 3.3 coming to light, a
+                                South Korean passport surfacing at verification,
                                 failure to verify within the window in Section 7.3, sanctions matches,
                                 and material breach of these Terms (including the prohibited practices
                                 in Section 12).
