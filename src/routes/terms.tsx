@@ -77,8 +77,11 @@ function TermsPage() {
                                 2.1. We may amend these Terms. The current version, its version number,
                                 and its effective date are always published on this page. Material
                                 changes take effect no earlier than 14 days after we publish them and
-                                show a notice in the Service — except that changes required by law, by
+                                show a notice in the Service, except that changes required by law, by
                                 a regulatory authority, or to Schedule A take effect on publication.
+                                Section 3.3 is not amended when the law of a place changes: its effect
+                                follows that law as the law stands at the relevant time, so no
+                                publication and no notice period apply to it.
                             </p>
                             <p>
                                 2.2. Your continued use of the Service after a new version takes effect
