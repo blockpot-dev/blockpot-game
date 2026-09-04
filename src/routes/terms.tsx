@@ -102,11 +102,12 @@ function TermsPage() {
                                 </li>
                                 <li>
                                     you are not located in, resident in, or accessing the Service from
-                                    an Excluded Territory (Schedule A);
+                                    an Excluded Territory (Schedule A), and you are not otherwise
+                                    ineligible under Section 3.3;
                                 </li>
                                 <li>
                                     you are not a national of the Republic of Korea (South Korea),
-                                    regardless of where you live — South Korean law exposes its
+                                    regardless of where you live. South Korean law exposes its
                                     nationals to prosecution for participating in games of chance
                                     abroad, and we exclude them for their protection and ours;
                                 </li>
@@ -131,25 +132,76 @@ function TermsPage() {
                                 3.2. <strong>We determine your location; you must not manipulate it.</strong>{' '}
                                 Eligibility is assessed on your resolved location, derived from
                                 technical signals. Using a VPN, proxy, or any other tool to disguise
-                                your location in order to access the Service from an Excluded Territory
-                                is a material breach of these Terms. If a verification document later
-                                shows you are resident in an Excluded Territory, your account will be
-                                closed under Section 11 even if technical checks passed at the time.
+                                your location in order to access the Service from an Excluded Territory,
+                                or from any place within Section 3.3(a), is a material breach of these
+                                Terms. If a verification document later shows you are resident in an
+                                Excluded Territory, or that you are ineligible under Section 3.3, your
+                                account will be closed under Section 11 even if technical checks passed
+                                at the time.
                             </p>
                             <p>
-                                3.3. It is your responsibility to ensure that using the Service is
+                                3.3. <strong>Eligibility beyond Schedule A.</strong>
+                            </p>
+                            <ul className='list-disc pl-5 space-y-1'>
+                                <li>
+                                    <strong>(a)</strong> Schedule A lists the territories we exclude
+                                    outright. It is not the limit of ineligibility. You are also
+                                    ineligible to register, to enter, and to claim if, at the relevant
+                                    time, you are located in, resident in, or accessing the Service from
+                                    any place where <strong>(i)</strong> your participation in the
+                                    Service is unlawful for you, or <strong>(ii)</strong> our provision
+                                    of the Service to you would require a licence, registration,
+                                    authorisation, or permit that Blockpot does not hold.
+                                </li>
+                                <li>
+                                    <strong>(b)</strong> Whether (a) applies is determined by your
+                                    resolved location under Section 3.2 and by the law of that place. We
+                                    do not publish a list of places within (a): it changes, and the
+                                    absence of a place from Schedule A is not a statement that you are
+                                    eligible there.
+                                </li>
+                                <li>
+                                    <strong>(c)</strong> Using a VPN, proxy, or any other tool,
+                                    technique, or arrangement to conceal, alter, or misrepresent your
+                                    location, or giving false or misleading information about your
+                                    residence or nationality, is a breach of these Terms in itself,
+                                    whether or not you turn out to be ineligible.
+                                </li>
+                                <li>
+                                    <strong>(d)</strong> If we determine that you were ineligible under
+                                    this Section 3.3, or that you have breached (c), we will close your
+                                    account and resolve the closure under Sections 11.3 to 11.5: you are
+                                    returned exactly the amount that brings your lifetime position to
+                                    net zero, all escrowed or unclaimed value beyond that amount is
+                                    reinjected into the prize pool, and Blockpot retains nothing. The
+                                    full-forfeit rule in Section 11.4 applies only to sanctions matches
+                                    under Section 9, never to ineligibility or breach under this
+                                    Section 3.3.
+                                </li>
+                                <li>
+                                    <strong>(e)</strong> Nothing in this Section 3.3 makes any Excluded
+                                    Territory eligible, and nothing in Schedule A limits this
+                                    Section 3.3.
+                                </li>
+                            </ul>
+                            <p>
+                                3.4. It is your responsibility to ensure that using the Service is
                                 lawful where you are. We make no representation that the Service is
                                 lawful in any particular place, and access to the Service does not
                                 imply that it is.
                             </p>
                             <p>
-                                3.4. We may amend Schedule A at any time to reflect legal developments.
+                                3.5. We may amend Schedule A at any time to reflect legal developments.
                                 Amendments apply immediately on publication. If a territory you are in
-                                becomes an Excluded Territory, Section 11 governs what happens to your
-                                account.
+                                becomes an Excluded Territory, or if you become ineligible under
+                                Section 3.3 because the law of the place you are in changes or because
+                                we can no longer lawfully provide the Service to you there, Section 11
+                                governs what happens to your account. You are not treated as having
+                                breached these Terms where your ineligibility arises only from such a
+                                change.
                             </p>
                             <p>
-                                3.5. <strong>One account per person.</strong> Opening or attempting to operate
+                                3.6. <strong>One account per person.</strong> Opening or attempting to operate
                                 more than one account is a breach of these Terms and may result in all
                                 your accounts being closed under Section 11.
                             </p>
@@ -707,8 +759,10 @@ function TermsPage() {
                         <Section title='Schedule A — Excluded Territories'>
                             <p>
                                 Persons located or resident in the following territories may not
-                                register for or use the Service. This Schedule may be amended under
-                                Section 3.4; the current version is always the one published here.
+                                register for or use the Service. Territories outside this Schedule may
+                                still be ineligible under Section 3.3. This Schedule may be amended
+                                under Section 3.5; the current version is always the one published
+                                here.
                             </p>
                             <p>
                                 Afghanistan · Armenia · Australia · Austria · Bahrain · Bangladesh ·
