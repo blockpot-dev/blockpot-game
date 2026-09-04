@@ -23,7 +23,7 @@ function TermsPage() {
                     <VStack className='gap-8'>
                         <h1 className='heading-4xl text-foreground'>Terms and Conditions</h1>
                         <p className='text-sm text-secondary-foreground'>
-                            Effective 29 August 2026 · Version 1.0
+                            Effective 4 September 2026 · Version 1.1
                         </p>
 
                         <Section title='1. Who we are and what these Terms cover'>
@@ -42,8 +42,8 @@ function TermsPage() {
                                 on <strong>Unipot Protocol</strong>, a set of immutable smart contracts deployed
                                 on Base, an Ethereum layer-2 network. Blockpot uses Unipot Protocol
                                 under a technology services agreement with its legal steward; Blockpot
-                                does not own or control the protocol, and no party — Blockpot
-                                included — can alter a draw, its odds, or its winner selection, or
+                                does not own or control the protocol, and no party, Blockpot
+                                included, can alter a draw, its odds, or its winner selection, or
                                 reduce its prize pool, once entries open.
                             </p>
                             <p>
@@ -98,7 +98,7 @@ function TermsPage() {
                                 <li>
                                     you are at least 18 years old, or older where the law of your
                                     jurisdiction sets a higher minimum age for participating in prize
-                                    draws or games of chance — whichever is greater;
+                                    draws or games of chance, whichever is greater;
                                 </li>
                                 <li>
                                     you are not located in, resident in, or accessing the Service from
@@ -236,8 +236,8 @@ function TermsPage() {
                             <p>
                                 4.4. Your account links your wallet(s) to your registration and, where
                                 applicable, your verified identity. You must keep your information
-                                true, complete, and current, and tell us without undue delay — and at
-                                the latest within 5 days — of any change.
+                                true, complete, and current, and tell us without undue delay, and at
+                                the latest within 5 days, of any change.
                             </p>
                             <p>
                                 4.5. Accounts are personal. You must not sell, lend, or transfer your
@@ -248,8 +248,8 @@ function TermsPage() {
 
                         <Section title='5. Draws, entries, and prizes'>
                             <p>
-                                5.1. Each draw&rsquo;s rules — entry price, entry limits, schedule, odds,
-                                and prize structure — are published on the Service and in the on-chain
+                                5.1. Each draw&rsquo;s rules (entry price, entry limits, schedule, odds,
+                                and prize structure) are published on the Service and in the on-chain
                                 contract parameters. The on-chain parameters are definitive. Where any
                                 description on the Service differs from the deployed contract, the
                                 contract governs.
@@ -266,8 +266,7 @@ function TermsPage() {
                                 5.3. <strong>Winner selection.</strong> Winners are selected using Chainlink VRF
                                 (Verifiable Random Function), which produces a random value together
                                 with a cryptographic proof that it was not manipulated. Selection and
-                                prize settlement run automatically in the smart contracts. Nobody —
-                                including us — can influence, predict, or re-run the outcome of a draw.
+                                prize settlement run automatically in the smart contracts. Nobody, including us, can influence, predict, or re-run the outcome of a draw.
                             </p>
                             <p>
                                 5.4. <strong>You can check every draw yourself.</strong> Each draw&rsquo;s entries,
@@ -279,9 +278,9 @@ function TermsPage() {
                             </p>
                             <p>
                                 5.5. <strong>Fees.</strong> Fees are additive to the entry price, in the way a
-                                sales tax is: the full entry price funds the prize pools — allocated
+                                sales tax is: the full entry price funds the prize pools, allocated
                                 between the current draw and future draws as the published draw rules
-                                describe — and two fees are charged on top of it: (a) a Unipot Protocol
+                                describe, and two fees are charged on top of it: (a) a Unipot Protocol
                                 fee of 2% of the entry price, which the protocol routes to the company
                                 that develops and maintains it and which we do not receive; and (b) a
                                 Blockpot operator fee of 5% of the entry price, which we receive. An
@@ -292,8 +291,7 @@ function TermsPage() {
                             </p>
                             <p>
                                 5.6. We may add, suspend, or retire draw formats at any time.
-                                Suspension or retirement never affects a draw whose entries are open —
-                                a draw that has taken entries always settles on-chain according to its
+                                Suspension or retirement never affects a draw whose entries are open: a draw that has taken entries always settles on-chain according to its
                                 rules.
                             </p>
                             <p>
@@ -338,9 +336,9 @@ function TermsPage() {
                                 7.1. If you win a prize that exceeds what your current verification
                                 level allows you to claim, the prize is not lost and not reduced. It is
                                 handled in two parts, automatically, at the moment of the win: (a) an
-                                amount equal to your <strong>net losses</strong> — everything you have paid to
+                                amount equal to your <strong>net losses</strong> (everything you have paid to
                                 enter draws, minus everything you have already claimed, measured in EUR
-                                at the recorded rates (Section 9.5) — is paid to your wallet
+                                at the recorded rates under Section 9.5) is paid to your wallet
                                 immediately, up to the claim limit that applies to your account at that
                                 moment; and (b) the remainder, including any part of your net losses
                                 above that limit, is held in escrow, safe and assigned to you, and is
@@ -364,7 +362,7 @@ function TermsPage() {
                             <p>
                                 8.1. You can register and start entering draws with only the
                                 information in Section 4.2. Identity verification becomes mandatory
-                                when your activity requires it — for example when your cumulative
+                                when your activity requires it, for example when your cumulative
                                 activity or a prize crosses thresholds we apply, when you ask to claim
                                 to a new wallet, or where we are required to verify you by law. The
                                 Service tells you at the moment verification is required, and the
@@ -432,8 +430,8 @@ function TermsPage() {
                             <p>
                                 9.5. For compliance purposes, all activity on your account is measured
                                 in EUR at the exchange rate recorded at the time of each transaction,
-                                using an independent on-chain price feed. These recorded values — not
-                                later market movements — are the basis for the limits, thresholds, and
+                                using an independent on-chain price feed. These recorded values, not
+                                later market movements, are the basis for the limits, thresholds, and
                                 returns described in these Terms.
                             </p>
                         </Section>
@@ -448,18 +446,18 @@ function TermsPage() {
                             <p>10.2. The Service provides tools to help you stay in control:</p>
                             <ul className='list-disc pl-5 space-y-1'>
                                 <li>
-                                    <strong>Stake and loss limits</strong> — caps you set on what you can spend or
+                                    <strong>Stake and loss limits</strong>: caps you set on what you can spend or
                                     lose over a period. Setting a limit, or lowering one, takes effect
                                     immediately. Raising or removing a limit takes effect only after a
                                     7-day cooling-off period, and only if you confirm the request again
                                     once the period ends.
                                 </li>
                                 <li>
-                                    <strong>Reality checks</strong> — periodic in-session reminders of how long you
+                                    <strong>Reality checks</strong>: periodic in-session reminders of how long you
                                     have been playing and your session activity.
                                 </li>
                                 <li>
-                                    <strong>Self-exclusion</strong> — you may exclude yourself for 1, 3, 6, or 12
+                                    <strong>Self-exclusion</strong>: you may exclude yourself for 1, 3, 6, or 12
                                     months, or permanently. While excluded you cannot enter draws, you
                                     will not receive marketing from us, and you must not attempt to
                                     open another account. Self-exclusion cannot be shortened or
@@ -487,7 +485,7 @@ function TermsPage() {
                                 11.1. <strong>You can close your account at any time</strong> in your account
                                 settings or by emailing support@blockpot.com. Escrowed prizes remain
                                 claimable per Section 6 before closure completes; funds never held by
-                                us cannot be &ldquo;returned&rdquo; by us — your wallet remains yours. If you
+                                us cannot be &ldquo;returned&rdquo; by us; your wallet remains yours. If you
                                 close your account while a prize is pending under Section 7 and you
                                 have not completed verification, the closure is treated as a failure to
                                 verify under Section 7.3 and the return rule in Section 11.3 applies.
@@ -503,14 +501,13 @@ function TermsPage() {
                             </p>
                             <p>
                                 11.3. <strong>The return rule.</strong> When we close your account for any reason
-                                under Section 11.2 — a compliance reason or a material breach alike —
-                                you are returned exactly the amount that brings your lifetime position
+                                under Section 11.2, a compliance reason or a material breach alike, you are returned exactly the amount that brings your lifetime position
                                 to net zero, measured in the EUR values recorded under Section 9.5:
                                 everything you paid in entry fees, minus everything you have already
                                 received back in claims and payments. Concretely: (a) if your lifetime
                                 position is a net loss, that net loss is paid to your wallet; (b) if
-                                your lifetime position is net positive — you have already received at
-                                least as much as you paid — nothing further is paid; (c) all escrowed
+                                your lifetime position is net positive (you have already received at
+                                least as much as you paid), nothing further is paid; (c) all escrowed
                                 or unclaimed value beyond the returned amount is reinjected into the
                                 prize pool of a current or future draw. It is never retained by us as
                                 revenue.
@@ -522,7 +519,7 @@ function TermsPage() {
                             </p>
                             <p>
                                 11.5. The principle behind 11.3 and 11.4 is that we do not profit from
-                                closing an account — not that a person we are prohibited from serving
+                                closing an account, not that a person we are prohibited from serving
                                 is paid out. The return rule is not a reward for breach: value
                                 extracted by exploiting an error remains recoverable as a debt under
                                 Section 12.3, and the sanctions exception in 11.4 always prevails.
@@ -583,26 +580,26 @@ function TermsPage() {
                             </p>
                             <ul className='list-disc pl-5 space-y-1'>
                                 <li>
-                                    <strong>Irreversibility</strong> — confirmed transactions cannot be undone by
+                                    <strong>Irreversibility</strong>: confirmed transactions cannot be undone by
                                     anyone.
                                 </li>
                                 <li>
-                                    <strong>Network conditions</strong> — congestion and fee volatility can delay
+                                    <strong>Network conditions</strong>: congestion and fee volatility can delay
                                     or price up your transactions; the network fee is never ours and
                                     never refundable by us.
                                 </li>
                                 <li>
-                                    <strong>Your keys, your responsibility</strong> — anyone with your keys is, to
+                                    <strong>Your keys, your responsibility</strong>: anyone with your keys is, to
                                     the blockchain, you.
                                 </li>
                                 <li>
-                                    <strong>Asset volatility</strong> — the market value of ETH can change at any
+                                    <strong>Asset volatility</strong>: the market value of ETH can change at any
                                     time; entries are paid in ETH or wrapped ETH (wETH), and prizes are
                                     denominated and paid the same way, whatever their value in your
                                     local currency at claim time.
                                 </li>
                                 <li>
-                                    <strong>Smart-contract and infrastructure risk</strong> — the Unipot Protocol
+                                    <strong>Smart-contract and infrastructure risk</strong>: the Unipot Protocol
                                     contracts that run draws are immutable and their source code is
                                     published for anyone to verify; the Blockpot operator contracts
                                     that apply our compliance rules and hold prizes in escrow pending
@@ -611,7 +608,7 @@ function TermsPage() {
                                     underlying network, wallets, and oracles are outside our control.
                                 </li>
                                 <li>
-                                    <strong>Publicity</strong> — blockchain transactions are permanently public.
+                                    <strong>Publicity</strong>: blockchain transactions are permanently public.
                                     Anyone who links your wallet address to you can see your entries
                                     and claims.
                                 </li>
@@ -629,7 +626,7 @@ function TermsPage() {
                                 Service, an oracle failure, or a material error in published draw
                                 information, and the smart contract&rsquo;s own rules provide for a refund
                                 path, entries are returned per those rules. Where the contract has
-                                settled, the settlement stands — see 5.4.
+                                settled, the settlement stands (see 5.4).
                             </p>
                             <p>
                                 14.2. Obvious errors in Service-side displays (a mispublished prize
@@ -645,7 +642,7 @@ function TermsPage() {
                         <Section title='15. Intellectual property'>
                             <p>
                                 15.1. The Blockpot name, logo, and branding, and all content on the
-                                Service — text, design, graphics, software, and media — belong to us or
+                                Service (text, design, graphics, software, and media) belong to us or
                                 our licensors. Unipot Protocol and its marks belong to its respective
                                 owners.
                             </p>
@@ -707,16 +704,16 @@ function TermsPage() {
                                 weeks, and will tell you if we need longer and why.
                             </p>
                             <p>
-                                17.2. In any dispute about the outcome of a draw, the on-chain record —
-                                the entries, the VRF proof, and the settlement transactions — has
-                                absolute evidential priority (5.4).
+                                17.2. In any dispute about the outcome of a draw, the on-chain record (the entries, the
+                                VRF proof, and the settlement transactions) has absolute evidential
+                                priority (5.4).
                             </p>
                             <p>17.3. Complaint communications are in English and may be recorded.</p>
                             <p>
                                 17.4. <strong>Governing law and forum.</strong> These Terms are governed by the
                                 law of Costa Rica. Disputes not resolved through our complaints process
                                 are subject to the exclusive jurisdiction of the courts of San José,
-                                Costa Rica — except where the law of your habitual residence gives you
+                                Costa Rica, except where the law of your habitual residence gives you
                                 a mandatory right to bring or defend proceedings there, which these
                                 Terms do not take away.
                             </p>
@@ -754,12 +751,12 @@ function TermsPage() {
                             </p>
                             <p>
                                 18.7. <strong>Survival.</strong> Sections that by their nature should survive
-                                termination — including 6 (claims on escrowed prizes), 9, 11, 13, 16,
-                                and 17 — survive.
+                                termination, including 6 (claims on escrowed prizes), 9, 11, 13, 16,
+                                and 17, survive.
                             </p>
                         </Section>
 
-                        <Section title='Schedule A — Excluded Territories'>
+                        <Section title='Schedule A: Excluded Territories'>
                             <p>
                                 Persons located or resident in the following territories may not
                                 register for or use the Service. Territories outside this Schedule may
