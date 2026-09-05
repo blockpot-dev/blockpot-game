@@ -31,7 +31,7 @@ function CookiePolicyPage() {
                     <VStack className='gap-8'>
                         <h1 className='heading-4xl text-foreground'>Cookie Policy</h1>
                         <p className='text-sm text-secondary-foreground'>
-                            Effective 29 August 2026 · Version 1.0
+                            Effective 5 September 2026 · Version 1.1
                         </p>
 
                         <Section title='1. What this covers'>
@@ -118,8 +118,7 @@ function CookiePolicyPage() {
                             <p>
                                 Almost nothing, and none of it from your device&rsquo;s stored data.
                                 To decide whether we may serve you (Terms, Section 3), your
-                                location is resolved and location-masking tools (VPNs, proxies)
-                                are detected — but that happens <strong>on our servers, from the
+                                location is resolved — but that happens <strong>on our servers, from the
                                 characteristics of your connection</strong>, the way any website sees
                                 a request. The application does not read your files, your device
                                 identifiers, or other sites&rsquo; data, and does not fingerprint

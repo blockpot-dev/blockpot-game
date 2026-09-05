@@ -23,7 +23,7 @@ function PrivacyPolicyPage() {
                     <VStack className='gap-8'>
                         <h1 className='heading-4xl text-foreground'>Privacy Policy</h1>
                         <p className='text-sm text-secondary-foreground'>
-                            Effective 29 August 2026 · Version 1.0
+                            Effective 5 September 2026 · Version 1.1
                         </p>
 
                         <Section title='1. Who we are'>
@@ -69,10 +69,7 @@ function PrivacyPolicyPage() {
                                 address, network and device signals, and the origin of the funds
                                 you play with — and record the resolved country and a snapshot of
                                 the signals we consulted. There is no country field for you to
-                                fill in; we resolve it ourselves. We also detect the use of VPNs,
-                                proxies, and similar tools; detection does not block you by
-                                itself, but it is logged and weighed in the risk assessment
-                                described in 2.4. And we screen your wallet address against
+                                fill in; we resolve it ourselves. And we screen your wallet address against
                                 sanctions data before your account is created and daily
                                 thereafter (Section 5).
                             </p>
@@ -198,9 +195,8 @@ function PrivacyPolicyPage() {
                             <p>
                                 3.2. <strong>Automated decisions.</strong> Some decisions with real effects
                                 on you are made automatically: the location gate at registration
-                                and at each transaction, the age check, the sanctions screen on
-                                your wallets, and the risk weighting that includes VPN and proxy
-                                detection. We rely on these being necessary for entering and
+                                and at each transaction, the age check, and the sanctions screen
+                                on your wallets. We rely on these being necessary for entering and
                                 performing our contract with you and, where applicable,
                                 authorised by the law that applies to us. You can contest any of
                                 them: write to support@blockpot.com and a human — our compliance
