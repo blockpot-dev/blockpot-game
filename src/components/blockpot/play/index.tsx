@@ -28,7 +28,6 @@ import { deriveEntryGate } from '@/components/blockpot/play/entryGate'
 import { ZERO_ADDRESS } from '@/web3/constants'
 import AttestationModal from '@/components/onboarding/AttestationModal'
 import useCurrentTos from '@/hooks/tos/useCurrentTos'
-import { useCountry } from '@/providers/CountryProvider'
 import SelfExclusionRouteGate from '@/components/responsible-gaming/SelfExclusionRouteGate'
 import RealityCheckHost from '@/components/responsible-gaming/RealityCheckHost'
 import { SUPPORT_LINK_LABEL, SUPPORT_URL } from '@/constants/support'
@@ -85,7 +84,6 @@ function Play() {
 
     const playerRegistration = usePlayerRegistration()
     const tosQuery = useCurrentTos(playerRegistration.attestationModalOpen)
-    const { country } = useCountry()
 
     const accountAddress = useAccountAddress()
     const { status: playerStatus, isLoading: isStatusLoading } = usePlayerStatus(accountAddress ?? ZERO_ADDRESS)
@@ -277,16 +275,21 @@ function Play() {
                 tosError={tosQuery.error ? TOS_LOAD_FAILED_COPY : undefined}
                 onRetryTos={() => { void tosQuery.refetch() }}
                 submitting={playerRegistration.isSubmittingAny}
-                submitError={playerRegistration.registerError ? REGISTRATION_FAILED_COPY : undefined}
+                // A gate refusal takes over the modal (see `refusal`); only
+                // everything else is a retryable form error.
+                submitError={
+                    playerRegistration.registerError && !playerRegistration.attestationRefusal
+                        ? REGISTRATION_FAILED_COPY
+                        : undefined
+                }
+                refusal={playerRegistration.attestationRefusal}
                 onConfirm={(value) => {
                     void playerRegistration.confirmAttestation({
                         dobSelfDeclared: value.dob,
-                        jurisdictionSelfDeclared: value.jurisdiction,
                         tosVersionHash: value.tosVersionHash,
                     })
                 }}
                 onCancel={() => playerRegistration.cancelAttestation()}
-                defaultJurisdiction={country ?? undefined}
             />
         </div>
     )

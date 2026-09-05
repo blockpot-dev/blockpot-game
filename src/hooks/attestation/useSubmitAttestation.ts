@@ -7,7 +7,6 @@ export type AttestationPayload = {
     address: Address
     tosVersionHash: string
     dobSelfDeclared: string
-    jurisdictionSelfDeclared: string
 }
 
 export type AttestationResult = {
@@ -42,17 +41,24 @@ function writeStoredAttestationId(chainId: number, address: Address, attestation
 async function postAttestation(payload: AttestationPayload): Promise<AttestationResult> {
     const body = await authedFetch<AttestationResponse>('/v1/attestation', {
         method: 'POST',
+        // The v2 body is DOB + TOS hash and nothing else (BLO-674). There is no
+        // declared country: the server resolves it from the request and decides
+        // eligibility there. Do not add one back — the server ignores unknown
+        // keys, so a reintroduced field would be silently dead while still
+        // manufacturing the evidence the gate change exists to avoid.
         body: {
             tos_version_hash: payload.tosVersionHash,
             dob_self_declared: payload.dobSelfDeclared,
-            jurisdiction_self_declared: payload.jurisdictionSelfDeclared,
         },
     })
     return { attestationId: body.attestation_id }
 }
 
-// Records the player's age + jurisdiction + TOS attestation on the gaming
-// service. Auth uses the Bearer JWT minted by /v1/auth/verify (see
+// Records the player's age + TOS attestation on the gaming service, and is the
+// call that runs the registration eligibility gate: the server resolves country
+// from the request, refuses blocked jurisdictions, checks age against that
+// jurisdiction's threshold, and screens the wallet for sanctions. Each refusal
+// comes back as HTTP 403 with an `ApiError.code` the modal renders. Auth uses the Bearer JWT minted by /v1/auth/verify (see
 // useSiweSignature) — wallet address, chainId, and SIWE material are derived
 // server-side from the JWT claims. The returned attestation_id flows into
 // /v1/players/register.

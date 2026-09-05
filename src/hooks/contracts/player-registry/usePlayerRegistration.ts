@@ -21,7 +21,19 @@ export type RegistrationPhase =
     | 'submitting_attestation'
     | 'submitting_registration'
 
-type AttestationInput = Pick<AttestationPayload, 'dobSelfDeclared' | 'jurisdictionSelfDeclared' | 'tosVersionHash'>
+type AttestationInput = Pick<AttestationPayload, 'dobSelfDeclared' | 'tosVersionHash'>
+
+// The registration gate's refusals (BLO-674). Each is a terminal HTTP 403 from
+// POST /v1/attestation: the visitor cannot retry into a different answer, so
+// the modal replaces its form with the matching copy rather than surfacing
+// these as a form error.
+const REFUSAL_CODES = ['JURISDICTION_BLOCKED', 'UNDERAGE', 'SANCTIONS_REFUSAL'] as const
+type RefusalCode = (typeof REFUSAL_CODES)[number]
+
+function refusalCodeOf(err: unknown): RefusalCode | undefined {
+    const code = (err as { code?: string } | null)?.code
+    return REFUSAL_CODES.includes(code as RefusalCode) ? (code as RefusalCode) : undefined
+}
 
 export default function usePlayerRegistration() {
     const chainId = useChainId()
@@ -115,7 +127,6 @@ export default function usePlayerRegistration() {
             const { attestationId } = await attestationMutation.mutateAsync({
                 address: pendingSiwe.address,
                 dobSelfDeclared: input.dobSelfDeclared,
-                jurisdictionSelfDeclared: input.jurisdictionSelfDeclared,
                 tosVersionHash: input.tosVersionHash,
             })
             if (!attestationOnly) {
@@ -169,6 +180,11 @@ export default function usePlayerRegistration() {
         ?? attestationMutation.error
         ?? registerMutation.error
 
+    // A gate refusal is not a form error and must not be rendered as one: there
+    // is no input the visitor can change to pass. Split it out so the modal can
+    // replace itself with the refusal copy.
+    const attestationRefusal = refusalCodeOf(registerError)
+
     const needsAttestation = hasAddress && isActive && !storedAttestationId
 
     return {
@@ -195,6 +211,7 @@ export default function usePlayerRegistration() {
         attestationModalOpen,
         setAttestationModalOpen,
         attestationOnly,
+        attestationRefusal,
         confirmAttestation,
         cancelAttestation,
 

@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react'
-import countries from 'i18n-iso-countries'
 import {
     AttestationCheckbox,
     Button,
@@ -11,19 +10,63 @@ import {
 } from '@blockpot-dev/blockpot-design-system'
 import { Loader2 } from 'lucide-react'
 import VStack from '@/components/core/VStack/VStack'
-import { BLOCKED_COUNTRY_CODES, isBlockedCountry } from '@/constants/blocked-jurisdictions'
 import type { CurrentTos } from '@/hooks/tos/useCurrentTos'
 
-// Tier 0 attestation modal. The surrounding onboarding flow (task 17) runs this
-// after the SIWE signature but before /v1/players/register so the attestation
-// row exists before the player is registered on-chain. Shape follows ConsentDialog
-// but is open-coded here because the spec requires the Phase 2 notice to render
-// *below* the required checkbox, which ConsentDialog does not expose as a slot.
+// Tier 0 attestation modal. The surrounding onboarding flow runs this after the
+// SIWE signature but before /v1/players/register, so the attestation row exists
+// before the player is registered on-chain. Shape follows ConsentDialog but is
+// open-coded here because the spec requires the forward-disclosure notice to
+// render *below* the required checkbox, which ConsentDialog does not expose as
+// a slot.
+//
+// THERE IS NO COUNTRY FIELD, AND ONE MUST NEVER BE ADDED (BLO-674 / BLO-682).
+//
+// This modal used to collect a declared country and gate on it client-side
+// against a bundled blocklist. Registration gate v2 removed both. A declared
+// country is trivially false as a control — anyone excluded picks a different
+// entry from the list — but potent as evidence against us, because storing it
+// documents that we knowingly accepted a resident of wherever they typed.
+//
+// Eligibility is now decided server-side in POST /v1/attestation on the country
+// the server resolves from the request (BLO-678), which also runs the age check
+// against that jurisdiction's threshold and screens the wallet for sanctions.
+// The client cannot pre-empt any of it and must not try: a client-side gate
+// would leak the blocklist into the bundle and still be trivially bypassed.
+//
+// The modal's only job on the eligibility axis is to render the three refusals
+// the server can return, neutrally — never echoing back the resolved country or
+// naming which check fired beyond what the copy says.
 
 export type AttestationFormValue = {
     dob: string // ISO yyyy-mm-dd
-    jurisdiction: string // ISO 3166-1 alpha-2
     tosVersionHash: string
+}
+
+/**
+ * The refusal codes POST /v1/attestation can return, each as HTTP 403.
+ * Mirrors `internal/httpapi/errors.go`; the strings are the wire contract and
+ * are matched exactly.
+ */
+export type AttestationRefusal = 'JURISDICTION_BLOCKED' | 'UNDERAGE' | 'SANCTIONS_REFUSAL'
+
+// Player-facing refusal copy. Deliberately neutral and deliberately vague:
+// the server never tells the client which country it resolved, and the client
+// never speculates. Naming the resolved country would confirm to an evader
+// exactly what to change; naming the sanctions screen would tip off a screened
+// wallet. Each says what happened and what to do next, and stops there.
+const REFUSAL_COPY: Record<AttestationRefusal, { title: string; body: string }> = {
+    JURISDICTION_BLOCKED: {
+        title: 'Not available where you are',
+        body: 'Blockpot runs in some places and not others, and yours is one of the others for now. Nothing has been saved, and no account has been created.',
+    },
+    UNDERAGE: {
+        title: 'You are not old enough to play',
+        body: 'The minimum age where you are is higher than the date of birth you entered. Nothing has been saved, and no account has been created.',
+    },
+    SANCTIONS_REFUSAL: {
+        title: 'We cannot open an account for this wallet',
+        body: 'This wallet did not pass the checks we are required to run before opening an account. If you believe this is wrong, contact support@blockpot.com and quote the wallet address.',
+    },
 }
 
 export type AttestationModalProps = {
@@ -38,7 +81,12 @@ export type AttestationModalProps = {
     submitError?: string
     onConfirm: (value: AttestationFormValue) => void
     onCancel?: () => void
-    defaultJurisdiction?: string
+    /**
+     * Set when the server refused registration. Replaces the whole form: there
+     * is nothing the visitor can edit that would change the outcome, so leaving
+     * inputs on screen would invite them to try.
+     */
+    refusal?: AttestationRefusal
 }
 
 const MONTHS = [
@@ -80,15 +128,6 @@ function parseDob(day: string, month: string, year: string): Date | null {
     return d
 }
 
-function useCountryOptions() {
-    return useMemo(() => {
-        const names = countries.getNames('en', { select: 'official' })
-        return Object.entries(names)
-            .map(([code, name]) => ({ code, name }))
-            .sort((a, b) => a.name.localeCompare(b.name))
-    }, [])
-}
-
 export default function AttestationModal({
     open,
     onOpenChange,
@@ -100,7 +139,7 @@ export default function AttestationModal({
     submitError,
     onConfirm,
     onCancel,
-    defaultJurisdiction,
+    refusal,
 }: AttestationModalProps) {
     const currentYear = new Date().getFullYear()
     const years = useMemo(() => {
@@ -109,31 +148,24 @@ export default function AttestationModal({
         return list
     }, [currentYear])
 
-    const countryOptions = useCountryOptions()
-
     const [day, setDay] = useState('')
     const [month, setMonth] = useState('')
     const [year, setYear] = useState('')
-    const [jurisdiction, setJurisdiction] = useState(defaultJurisdiction ?? '')
     const [attested, setAttested] = useState(false)
     const [attempted, setAttempted] = useState(false)
 
     const dob = parseDob(day, month, year)
+    // UX pre-check only. MIN_AGE_YEARS is the floor across every jurisdiction we
+    // serve; the binding check is the server's, against the threshold for the
+    // country it resolves. A DOB that clears this can still come back UNDERAGE.
     const ageOk = dob ? ageAtDate(dob, new Date()) >= MIN_AGE_YEARS : false
-    const jurisdictionOk = !!jurisdiction && !isBlockedCountry(jurisdiction)
-    const formOk = ageOk && jurisdictionOk && attested && !!tos
+    const formOk = ageOk && attested && !!tos
 
     const dobError =
         attempted && !dob
             ? 'Enter your date of birth'
             : attempted && dob && !ageOk
                 ? `You must be at least ${MIN_AGE_YEARS} years old`
-                : undefined
-    const jurisdictionError =
-        attempted && !jurisdiction
-            ? 'Select your country of residence'
-            : attempted && jurisdiction && isBlockedCountry(jurisdiction)
-                ? 'Blockpot cannot accept players from this jurisdiction'
                 : undefined
     const attestationError = attempted && !attested ? 'Required' : undefined
 
@@ -153,7 +185,6 @@ export default function AttestationModal({
         if (!formOk || !tos) return
         onConfirm({
             dob: `${year}-${month}-${day}`,
-            jurisdiction,
             tosVersionHash: tos.versionHash,
         })
     }
@@ -170,123 +201,146 @@ export default function AttestationModal({
                 className='sm:max-w-xl'
                 showCloseButton={false}
             >
-                <DialogTopSection title='Welcome to Blockpot' />
-                <div className='text-sm text-gray-300 font-body mb-4'>
+                {refusal ? (
+                    <RefusalView refusal={refusal} onClose={handleCancel} />
+                ) : (
+                    <>
+                        <DialogTopSection title='Welcome to Blockpot' />
+                        <div className='text-sm text-gray-300 font-body mb-4'>
                     Before you continue, confirm a few details and accept our Terms and Conditions.
-                </div>
-
-                <VStack className='gap-4 mb-4'>
-                    <div>
-                        <label className='text-xs uppercase text-gray-400 tracking-wide'>Date of birth</label>
-                        <div className='grid grid-cols-3 gap-2 mt-1.5'>
-                            <Combobox
-                                value={day}
-                                onValueChange={setDay}
-                                options={days.map((d) => ({ value: d, label: d }))}
-                                placeholder='Day'
-                                searchPlaceholder='Type a day…'
-                                emptyMessage='No matching day'
-                            />
-                            <Combobox
-                                value={month}
-                                onValueChange={setMonth}
-                                options={MONTHS.map((m) => ({ value: m.value, label: m.label }))}
-                                placeholder='Month'
-                                searchPlaceholder='Type a month…'
-                                emptyMessage='No matching month'
-                            />
-                            <Combobox
-                                value={year}
-                                onValueChange={setYear}
-                                options={years.map((y) => ({ value: y, label: y }))}
-                                placeholder='Year'
-                                searchPlaceholder='Type a year…'
-                                emptyMessage='No matching year'
-                            />
                         </div>
-                        {dobError && (
-                            <p role='alert' className='text-xs text-destructive mt-1.5'>{dobError}</p>
-                        )}
-                    </div>
 
-                    <div>
-                        <label className='text-xs uppercase text-gray-400 tracking-wide'>Country of residence</label>
-                        <Combobox
-                            value={jurisdiction}
-                            onValueChange={setJurisdiction}
-                            options={countryOptions.map((c) => ({
-                                value: c.code,
-                                label: c.name,
-                                disabled: BLOCKED_COUNTRY_CODES.includes(c.code),
-                                suffix: BLOCKED_COUNTRY_CODES.includes(c.code) ? '— not supported' : undefined,
-                            }))}
-                            placeholder='Select your country'
-                            searchPlaceholder='Search countries…'
-                            emptyMessage='No matching country'
-                            triggerClassName='mt-1.5'
-                        />
-                        {jurisdictionError && (
-                            <p role='alert' className='text-xs text-destructive mt-1.5'>{jurisdictionError}</p>
-                        )}
-                    </div>
-
-                    <div>
-                        <label className='text-xs uppercase text-gray-400 tracking-wide'>
-                            Terms and Conditions {tos?.versionLabel ? `(${tos.versionLabel})` : ''}
-                        </label>
-                        <div className='mt-1.5 h-40 overflow-y-auto rounded-md border border-gray-700 bg-gray-950 p-3 text-xs text-gray-300 font-body'>
-                            {tosLoading && (
-                                <div className='flex items-center gap-2 text-gray-400'>
-                                    <Loader2 className='size-4 animate-spin' />
-                                    <span>Loading Terms and Conditions…</span>
+                        <VStack className='gap-4 mb-4'>
+                            <div>
+                                <label className='text-xs uppercase text-gray-400 tracking-wide'>Date of birth</label>
+                                <div className='grid grid-cols-3 gap-2 mt-1.5'>
+                                    <Combobox
+                                        value={day}
+                                        onValueChange={setDay}
+                                        options={days.map((d) => ({ value: d, label: d }))}
+                                        placeholder='Day'
+                                        searchPlaceholder='Type a day…'
+                                        emptyMessage='No matching day'
+                                    />
+                                    <Combobox
+                                        value={month}
+                                        onValueChange={setMonth}
+                                        options={MONTHS.map((m) => ({ value: m.value, label: m.label }))}
+                                        placeholder='Month'
+                                        searchPlaceholder='Type a month…'
+                                        emptyMessage='No matching month'
+                                    />
+                                    <Combobox
+                                        value={year}
+                                        onValueChange={setYear}
+                                        options={years.map((y) => ({ value: y, label: y }))}
+                                        placeholder='Year'
+                                        searchPlaceholder='Type a year…'
+                                        emptyMessage='No matching year'
+                                    />
                                 </div>
-                            )}
-                            {!tosLoading && tosError && (
-                                <div className='flex items-center gap-2'>
-                                    <span role='alert' className='text-destructive'>{tosError}</span>
-                                    {onRetryTos && (
-                                        <button type='button' onClick={onRetryTos} className='underline underline-offset-2 text-foreground cursor-pointer'>
+                                {dobError && (
+                                    <p role='alert' className='text-xs text-destructive mt-1.5'>{dobError}</p>
+                                )}
+                            </div>
+
+                            <div>
+                                <label className='text-xs uppercase text-gray-400 tracking-wide'>
+                            Terms and Conditions {tos?.versionLabel ? `(${tos.versionLabel})` : ''}
+                                </label>
+                                <div className='mt-1.5 h-40 overflow-y-auto rounded-md border border-gray-700 bg-gray-950 p-3 text-xs text-gray-300 font-body'>
+                                    {tosLoading && (
+                                        <div className='flex items-center gap-2 text-gray-400'>
+                                            <Loader2 className='size-4 animate-spin' />
+                                            <span>Loading Terms and Conditions…</span>
+                                        </div>
+                                    )}
+                                    {!tosLoading && tosError && (
+                                        <div className='flex items-center gap-2'>
+                                            <span role='alert' className='text-destructive'>{tosError}</span>
+                                            {onRetryTos && (
+                                                <button type='button' onClick={onRetryTos} className='underline underline-offset-2 text-foreground cursor-pointer'>
                                             Retry loading terms
-                                        </button>
+                                                </button>
+                                            )}
+                                        </div>
+                                    )}
+                                    {!tosLoading && !tosError && tos && (
+                                        <Markdown source={tos.bodyMarkdown} className='text-xs text-gray-300 font-body' />
                                     )}
                                 </div>
-                            )}
-                            {!tosLoading && !tosError && tos && (
-                                <Markdown source={tos.bodyMarkdown} className='text-xs text-gray-300 font-body' />
-                            )}
+                            </div>
+                        </VStack>
+
+                        <div className='mb-3'>
+                            <AttestationCheckbox
+                                checked={attested}
+                                onCheckedChange={setAttested}
+                                label='I confirm I am of legal gambling age in my jurisdiction and that my use of this platform is legal where I reside.'
+                                error={attestationError}
+                                required
+                            />
                         </div>
-                    </div>
-                </VStack>
 
-                <div className='mb-3'>
-                    <AttestationCheckbox
-                        checked={attested}
-                        onCheckedChange={setAttested}
-                        label='I confirm I am of legal gambling age in my jurisdiction and that my use of this platform is legal where I reside.'
-                        error={attestationError}
-                        required
-                    />
-                </div>
+                        {/* Forward disclosure required by the registration gate (BLO-674).
+                    Says the two things the strategy requires and nothing more: that
+                    identity verification arrives at larger claims, and that it
+                    becomes mandatory later. It must not describe the tier ladder,
+                    the caps, or where the player currently sits — Phase 1 hides all
+                    of that from players. "Claims", never "withdrawals": the player
+                    claims escrowed prizes from their own wallet and is never
+                    custodied. */}
+                        <p
+                            data-testid='attestation-forward-disclosure'
+                            className='text-xs text-gray-400 font-body mb-6 leading-relaxed'
+                        >
+                    Identity verification will be required for larger claims, and will become
+                    mandatory for all accounts in a future licensed phase. We&apos;ll tell you
+                    before that happens.
+                        </p>
 
-                <p className='text-xs text-gray-400 font-body mb-6 leading-relaxed'>
-                    To continue using Blockpot after Phase 2 launch, you&apos;ll need to complete identity verification. We&apos;ll notify you in advance.
-                </p>
+                        {submitError && (
+                            <p role='alert' className='text-xs text-destructive mb-3'>{submitError}</p>
+                        )}
 
-                {submitError && (
-                    <p role='alert' className='text-xs text-destructive mb-3'>{submitError}</p>
-                )}
-
-                <div className='flex flex-col-reverse gap-2 sm:flex-row sm:justify-end'>
-                    <Button variant='outline' size='default' onClick={handleCancel} disabled={submitting}>
+                        <div className='flex flex-col-reverse gap-2 sm:flex-row sm:justify-end'>
+                            <Button variant='outline' size='default' onClick={handleCancel} disabled={submitting}>
                         CANCEL
-                    </Button>
-                    <Button size='default' onClick={handleConfirm} disabled={submitting || !tos}>
-                        {submitting
-                            ? <><Loader2 className='mr-2 h-4 w-4 animate-spin' /><span>SUBMITTING…</span></>
-                            : 'AGREE & CONTINUE'}
-                    </Button>
-                </div>
+                            </Button>
+                            <Button size='default' onClick={handleConfirm} disabled={submitting || !tos}>
+                                {submitting
+                                    ? <><Loader2 className='mr-2 h-4 w-4 animate-spin' /><span>SUBMITTING…</span></>
+                                    : 'AGREE & CONTINUE'}
+                            </Button>
+                        </div>
+                    </>
+                )}
             </DialogContent>
         </Dialog>
+    )
+}
+
+// A refused visitor sees this instead of the form. There is deliberately no way
+// back to the inputs: no field they can change alters the server's answer, and
+// offering one would read as an invitation to retry with different details.
+function RefusalView({ refusal, onClose }: { refusal: AttestationRefusal; onClose: () => void }) {
+    const { title, body } = REFUSAL_COPY[refusal]
+    return (
+        <>
+            {/* One alert region over the title and the body together, so a screen
+                reader announces the whole refusal rather than a heading followed
+                by an unattached paragraph. */}
+            <div role='alert' data-slot='attestation-refusal' data-refusal={refusal}>
+                <DialogTopSection title={title} />
+                <div className='text-sm text-gray-300 font-body mb-6 leading-relaxed'>
+                    {body}
+                </div>
+            </div>
+            <div className='flex justify-end'>
+                <Button variant='outline' size='default' onClick={onClose}>
+                    CLOSE
+                </Button>
+            </div>
+        </>
     )
 }
