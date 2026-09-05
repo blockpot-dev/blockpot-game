@@ -41,11 +41,30 @@ const blockPotTestnet: Chain = {
     }
 }
 
+// Wallet-connect metadata. Reown/WalletConnect renders these in the wallet's
+// connection-approval dialog and its connected-sessions list — the first thing
+// a player reads about Blockpot, at the moment they decide whether to trust it.
+// Every previous copy sweep missed this because it is configuration, not a
+// component (BLO-830).
+//
+// The description deliberately avoids "provably fair". /transparency does
+// substantiate that claim, but this text is read *inside a wallet*, away from
+// the page that proves it — and a claim the reader cannot check from where
+// they are standing fails the messaging guardrails' own test. "A prize draw
+// you can check" is approved positioning and stands on its own.
+//
+// url and icons come from the app's own origin rather than a hardcoded
+// blockpot.com. Two reasons: the public domain is not settled (BLO-820), and
+// the wallet FETCHES the icon over the network — pointing at another repo's
+// deployment means a broken mark at the connection prompt whenever that
+// deployment is not live, which includes every non-production environment.
+const appOrigin = typeof window !== 'undefined' ? window.location.origin : ''
+
 const metadata = {
     name: 'Blockpot',
-    description: 'Provably fair on-chain prize draws',
-    url: 'https://blockpot.com',
-    icons: ['https://avatars.githubusercontent.com/u/37784886'] // TODO: Change me
+    description: 'A prize draw you can check',
+    url: appOrigin,
+    icons: [`${appOrigin}/assets/svgs/logo-round.svg`]
 }
 
 const appMode = import.meta.env.VITE_APP_MODE

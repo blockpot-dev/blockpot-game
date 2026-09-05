@@ -1,3 +1,20 @@
+// The `ticket` vocabulary in this file and in the asset filenames it references
+// is an ACCEPTED EXCEPTION to BLO-692's prize-draw identifier sweep. Founder
+// decision, 5 September 2026 (BLO-830) — it was reviewed and deliberately not
+// renamed, so do not re-raise it as an oversight.
+//
+// Why: the messaging guardrails govern *rendered strings*, and none of this is
+// rendered. The scope would be eleven PNGs, one SVG and eight exports for zero
+// player-visible change — and asset renames are the case where a missed
+// reference ships a broken image rather than a compile error, in the draw UI.
+//
+// The same reasoning already applies elsewhere: `DrawnNumber.winner` keeps its
+// name because it is the on-chain field, and "no support ticket" in
+// WhyBlockpot is a different sense of the word.
+//
+// This is a decision not to do the work now, not a decision that the names are
+// right. If these assets are ever regenerated for another reason, name the new
+// ones with entry/prize vocabulary.
 import { Address, isAddressEqual } from 'viem'
 import { ZERO_ADDRESS } from '@/web3/constants'
 import { DisplayDrawnNumberData } from '@/types/draw/display-drawn-number-data'

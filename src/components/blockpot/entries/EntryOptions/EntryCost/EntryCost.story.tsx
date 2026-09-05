@@ -46,7 +46,7 @@ function EntryCostStoryView(props: EntryCostStoryViewProps) {
 
     const tooltipContent = <div className='inline-block'>
         <span>
-            {'Each ticket costs '}
+            {'Each entry costs '}
             <span className='font-bold whitespace-nowrap'>{ethLabel}</span>
             {' or '}
             <span className='font-bold whitespace-nowrap'>{usdLabel}</span>
