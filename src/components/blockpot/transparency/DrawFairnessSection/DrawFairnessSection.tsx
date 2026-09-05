@@ -6,6 +6,7 @@ import VStack from '@/components/core/VStack/VStack'
 import HStack from '@/components/core/HStack/HStack'
 import GameTypeToggle from '@/components/blockpot/common/GameTypeToggle/GameTypeToggle'
 import DrawFairnessProof from '../DrawFairnessProof/DrawFairnessProof'
+import PrizesPaid from '../PrizesPaid/PrizesPaid'
 import useGameLatestRoundIndex from '@/hooks/contracts/draw/useGameLatestRoundIndex'
 import { GameType, useSelectedGame } from '@/providers/SelectedGameProvider'
 
@@ -156,7 +157,10 @@ export default function DrawFairnessSection() {
             latestRoundIndex={latestRoundIndex}
             onRoundChange={setSelectedRound}
         >
-            <DrawFairnessProof game={game} roundIndex={roundIndex} />
+            <VStack className='gap-4'>
+                <DrawFairnessProof game={game} roundIndex={roundIndex} />
+                <PrizesPaid game={game} roundIndex={roundIndex} />
+            </VStack>
         </DrawFairnessSectionPure>
     )
 }

@@ -28,9 +28,19 @@ vi.mock('../DrawFairnessProof/DrawFairnessProof', () => ({
     ),
 }))
 
+// Same for the prizes panel — it reads the chain (useChainId), and this suite
+// mounts without a WagmiProvider on purpose. Echoing the props also pins that
+// both panels are handed the same page-local game and round.
+vi.mock('../PrizesPaid/PrizesPaid', () => ({
+    default: ({ game, roundIndex }: { game: GameType; roundIndex: number }) => (
+        <div data-testid='prizes'>{game}:{roundIndex}</div>
+    ),
+}))
+
 const { default: DrawFairnessSection } = await import('./DrawFairnessSection')
 
 const proof = () => screen.getByTestId('proof').textContent
+const prizes = () => screen.getByTestId('prizes').textContent
 // RouterProvider mounts its tree asynchronously, so wait for the first paint.
 const mount = async () => {
     renderWithProviders(<DrawFairnessSection />)
@@ -99,5 +109,23 @@ describe('<DrawFairnessSection>', () => {
         await mount()
         fireEvent.click(screen.getByText('Main Game'))
         expect(proof()).toBe('main:9')
+    })
+
+    // Both panels must read the same page-local (game, round). If the prizes
+    // panel ever bound to the global SelectedGameProvider instead — which is
+    // what reusing useRoundDraw would have done — it would show a Main Game
+    // payout beside a Quick Game proof, and nothing else here would fail.
+    it('hands the proof and prizes panels the same game and round', async () => {
+        await mount()
+        expect(prizes()).toBe(proof())
+
+        fireEvent.click(screen.getByText('Quick Game'))
+        expect(proof()).toBe('quick:3')
+        expect(prizes()).toBe('quick:3')
+
+        fireEvent.change(roundInput(), { target: { value: '2' } })
+        fireEvent.keyDown(roundInput(), { key: 'Enter' })
+        expect(prizes()).toBe('quick:2')
+        expect(prizes()).toBe(proof())
     })
 })
