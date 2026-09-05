@@ -18,8 +18,14 @@ export type PlayerTier = 'T0' | 'T1' | 'T2' | 'T3' | 'T4'
 // The gate model itself is netted: a single signed net position
 // (cumEntered − cumClaims) consumes the inflow cap while positive and the
 // outflow cap while negative, so only one cap is being eaten into at any
-// moment. These fields stay gross totals for the existing consumers
-// (TierUpgradePrompt, PrizePoolPreCommitBanner, entry/claim guards).
+// moment. These fields stay gross totals for the existing consumers: the
+// entry and claim guards.
+//
+// The standing tier UI that used to read them is gone (BLO-675): TierBadge,
+// TierBreakdown, NetFlowCard, TierUpgradePrompt and PrizePoolPreCommitBanner
+// are all deleted. Nothing player-facing renders a ratio or a headroom figure
+// any more, and nothing should start — the four verification surfaces are the
+// only place verification reaches a player.
 export type DirectionalFlow = {
     capEurMinor: number | null // null = unlimited (uint256.max)
     usedEurMinor: number

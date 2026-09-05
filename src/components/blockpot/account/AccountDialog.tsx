@@ -6,14 +6,10 @@ import { toast } from 'sonner'
 import { useQueryClient } from '@tanstack/react-query'
 import useAccountAddress from '@/hooks/utilities/useAccountAddress'
 import usePlayerActivityState from '@/hooks/player-summary/usePlayerActivityState'
-import usePrizePoolContext from '@/hooks/player-summary/usePrizePoolContext'
-import { useBlockpotDraw } from '@/providers/BlockpotDrawProvider'
-import usePlayerKyc from '@/hooks/player/usePlayerKyc'
 import usePlayerBalances from '@/hooks/contracts/operator/usePlayerBalances'
 import useLifetimeSnapshot from '@/hooks/contracts/operator/useLifetimeSnapshot'
 import useIsCompliant from '@/hooks/contracts/kyc-registry/useIsCompliant'
 import useEntryBlockedUntil from '@/hooks/contracts/kyc-registry/useEntryBlockedUntil'
-import usePlayerGates from '@/hooks/contracts/kyc-registry/usePlayerGates'
 import useClaimRequest from '@/hooks/claim/useClaimRequest'
 import useClaimOperation from '@/hooks/claim/useClaimOperation'
 import { ClaimDecision } from '@/hooks/claim/types'
@@ -35,13 +31,9 @@ export default function AccountDialog({ open, onOpenChange }: AccountDialogProps
     const { blockedUntil } = useEntryBlockedUntil(address as `0x${string}`)
 
     const { state, isLoading: stateLoading } = usePlayerActivityState()
-    const { draw } = useBlockpotDraw()
-    const { context: prizePoolContext } = usePrizePoolContext({ enabled: open && !draw })
-    const { status: kycStatus } = usePlayerKyc()
     const { eth, weth } = usePlayerBalances(address)
     const { snapshot } = useLifetimeSnapshot(address)
     const { isCompliant } = useIsCompliant(address)
-    const { gates: onChainGates } = usePlayerGates(address as Address)
 
     const enteredEurMinor = snapshot?.enteredEurMinor ?? 0n
     const wonEurMinor = snapshot?.wonEurMinor ?? 0n
@@ -142,10 +134,6 @@ export default function AccountDialog({ open, onOpenChange }: AccountDialogProps
             state={state}
             stateLoading={stateLoading}
             onRetryState={() => { void queryClient.invalidateQueries() }}
-            draw={!!draw}
-            prizePoolContext={prizePoolContext}
-            kycGates={kycStatus?.gates}
-            onChainGates={onChainGates}
             eth={eth}
             weth={weth}
             enteredEurMinor={enteredEurMinor}

@@ -20,6 +20,19 @@ vi.mock('@/hooks/referral/useReferrerDashboard', () => ({
     default: () => ({ record: null, isLoading: false, isError: false, refetch: vi.fn(), claim: vi.fn(), isClaiming: false }),
 }))
 
+// Surface 4 (VerificationStatusRow) now lives in the Verification tab and reads
+// server state. Mock at the hook boundary rather than wrapping a QueryClient —
+// same convention as the wagmi mock below. Default: the player has never been
+// asked to verify, which is the state the tab is empty for.
+const verificationState = vi.fn(() => ({
+    data: { capProximity: null, firstVerificationContactAt: null as string | null },
+}))
+vi.mock('@/hooks/player/useVerificationState', () => ({
+    default: () => verificationState(),
+    useDismissNudge: () => ({ mutate: vi.fn(), isPending: false }),
+    useRecordVerificationContact: () => ({ mutate: vi.fn() }),
+}))
+
 vi.mock('wagmi', () => ({
     useAccount: () => useAccountMock(),
     useEnsName: () => ({ data: undefined }),
@@ -115,10 +128,6 @@ function makeProps(over: Partial<React.ComponentProps<typeof AccountDialogView>>
         open: true,
         onOpenChange: vi.fn(),
         state: T1_STATE,
-        draw: false,
-        prizePoolContext: undefined,
-        kycGates: {},
-        onChainGates: 0n,
         eth: 0n,
         weth: 0n,
         enteredEurMinor: 100_00n,
@@ -153,8 +162,11 @@ describe('<AccountDialogView> — Wallet / Verification tabs', () => {
 
         await user.click(screen.getByRole('tab', { name: /verification/i }))
 
-        expect(screen.getByText(/some prizes need identity verification/i)).toBeInTheDocument()
+        // The Verification tab is deliberately empty for a player who has never
+        // been asked for ID (BLO-675 Surface 4). What proves the swap is that
+        // the wallet panel's content is gone, not that new copy appeared.
         expect(screen.queryByText(/profit/i)).not.toBeInTheDocument()
+        expect(screen.queryByRole('button', { name: /disconnect/i })).not.toBeInTheDocument()
     })
 
     it('renders the wallet card inside the Wallet tab only, not on Verification', async () => {
@@ -219,32 +231,47 @@ describe('<AccountDialogView> — no tier ladder on any player surface', () => {
         expect(container.textContent).not.toMatch(LADDER_COPY)
     })
 
-    it('shows the gates still missing and a single Verify now CTA on the Verification tab', async () => {
+    // Replaces "shows the gates still missing and a single Verify now CTA".
+    // That behaviour is gone: the gate-by-gate checklist was the ladder, and
+    // BLO-675 removed it. A player who has never been asked for ID now finds
+    // nothing verification-shaped anywhere, which is the point.
+    it('shows nothing on the Verification tab before the player has been asked for ID', async () => {
+        const user = userEvent.setup()
+        render(<AccountDialogView {...makeProps({ state: { ...T0_STATE, pendingClaimEurMinor: 0 } })} />)
+
+        await user.click(screen.getByRole('tab', { name: /verification/i }))
+        expect(screen.queryByText('Identity')).not.toBeInTheDocument()
+        expect(screen.queryByRole('button', { name: /^verify now$/i })).not.toBeInTheDocument()
+        expect(screen.queryByTestId('verification-status-row')).not.toBeInTheDocument()
+    })
+
+    // The one thing that does appear, and only after first contact.
+    it('shows the resume row once the player has been asked', async () => {
         const user = userEvent.setup()
         const onVerify = vi.fn()
-        // No held prize and under the 90% nudge, so the only Verify now is the checklist's.
+        verificationState.mockReturnValue({
+            data: { capProximity: null, firstVerificationContactAt: '2026-09-05T00:00:00Z' },
+        })
         render(<AccountDialogView {...makeProps({ state: { ...T0_STATE, pendingClaimEurMinor: 0 }, onVerify })} />)
 
         await user.click(screen.getByRole('tab', { name: /verification/i }))
-        expect(screen.getByText('Identity')).toBeInTheDocument()
-        expect(screen.queryByRole('tab', { name: /tier/i })).not.toBeInTheDocument()
-
-        const ctas = screen.getAllByRole('button', { name: /^verify now$/i })
-        expect(ctas).toHaveLength(1)
-        await user.click(ctas[0])
+        expect(screen.getByTestId('verification-status-row')).toBeInTheDocument()
+        await user.click(screen.getByRole('button', { name: 'CONTINUE' }))
         expect(onVerify).toHaveBeenCalledOnce()
     })
 
-    it('shows exactly one dismissible proximity nudge at 90% and remembers the dismissal', async () => {
+    // Replaces the old client-side proximity nudge, which derived the crossing
+    // from PlayerActivityState and remembered the dismissal in sessionStorage.
+    // Both are gone: the crossing and the dismissal are server state now
+    // (BLO-679, Surface 3), because a sessionStorage dismissal comes back every
+    // new session and on every other device — which is not "at most once".
+    it('derives no proximity nudge from client state, and stores no dismissal locally', async () => {
         const user = userEvent.setup()
         render(<AccountDialogView {...makeProps({ state: T2_STATE })} />)
 
         await user.click(screen.getByRole('tab', { name: /verification/i }))
-        const nudge = screen.getByText(/you're close to a limit that needs verification/i)
-        expect(nudge).toBeInTheDocument()
-
-        await user.click(screen.getByRole('button', { name: /dismiss/i }))
-        expect(screen.queryByText(/you're close to a limit that needs verification/i)).not.toBeInTheDocument()
-        expect(window.sessionStorage.getItem('blockpot.proximityNudgeDismissed')).toBe('1')
+        expect(screen.queryByText(/close to a limit/i)).not.toBeInTheDocument()
+        expect(screen.queryByRole('button', { name: /dismiss/i })).not.toBeInTheDocument()
+        expect(window.sessionStorage.getItem('blockpot.proximityNudgeDismissed')).toBeNull()
     })
 })

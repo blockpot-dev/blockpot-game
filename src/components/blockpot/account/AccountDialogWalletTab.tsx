@@ -2,12 +2,10 @@ import { Button } from '@blockpot-dev/blockpot-design-system'
 import HStack from '@/components/core/HStack/HStack'
 import VStack from '@/components/core/VStack/VStack'
 import { ClaimDecision } from '@/hooks/claim/types'
-import { PrizePoolContext } from '@/hooks/player-summary/usePrizePoolContext'
 import { PlayerActivityState } from '@/hooks/player-summary/usePlayerActivityState'
 import { formatEtherMaxDecimals } from '@/utilities/formatters'
 import LifetimeStatsRow from '@/components/blockpot/winnings/LifetimeStatsRow'
 import ClaimDecisionView from '@/components/blockpot/winnings/ClaimDecision'
-import PrizePoolPreCommitBanner from '@/components/blockpot/tier/PrizePoolPreCommitBanner'
 import CoolOffStatusBanner from '@/components/responsible-gaming/CoolOffStatusBanner'
 import { SUPPORT_LINK_LABEL, SUPPORT_URL } from '@/constants/support'
 import AccountDialogWalletSection from './AccountDialogWalletSection'
@@ -15,8 +13,6 @@ import ReferralEarningsSection from './ReferralEarningsSection'
 
 export type AccountDialogWalletTabProps = {
     state: PlayerActivityState
-    draw: boolean
-    prizePoolContext: PrizePoolContext | undefined
 
     eth: bigint
     weth: bigint
@@ -50,7 +46,7 @@ function formatEur(minor: number): string {
 
 export default function AccountDialogWalletTab(props: AccountDialogWalletTabProps) {
     const {
-        state, draw, prizePoolContext,
+        state,
         eth, weth, enteredEurMinor, wonEurMinor, profitEurMinor, isCompliant,
         blockedUntil,
         decision, isClaiming, claimRequestPending, opStatus, opError,
@@ -202,13 +198,6 @@ export default function AccountDialogWalletTab(props: AccountDialogWalletTabProp
                 )}
             </VStack>
 
-            {!draw && (
-                <PrizePoolPreCommitBanner
-                    state={state}
-                    context={prizePoolContext}
-                    onVerify={onVerify}
-                />
-            )}
         </VStack>
     )
 }

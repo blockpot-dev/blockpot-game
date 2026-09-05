@@ -41,8 +41,6 @@ type Props = React.ComponentProps<typeof AccountDialogWalletTab>
 function makeProps(over: Partial<Props> = {}): Props {
     return {
         state: T1_STATE,
-        draw: true,
-        prizePoolContext: undefined,
         eth: 0n,
         weth: 0n,
         enteredEurMinor: 100_00n,

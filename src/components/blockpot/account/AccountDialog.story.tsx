@@ -1,9 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react'
 import AccountDialogView, { AccountDialogViewProps } from './AccountDialogView'
 import type { PlayerActivityState, PlayerTier } from '@/hooks/player-summary/usePlayerActivityState'
-import type { GateRecord, GateType } from '@/hooks/player/usePlayerKyc'
 import type { ClaimDecision } from '@/hooks/claim/types'
-import { GATE_BIT_POSITION } from '@/lib/kyc/gateBitmask'
 
 const meta: Meta<typeof AccountDialogView> = {
     component: AccountDialogView,
@@ -47,24 +45,9 @@ const TIER_LADDER: Record<PlayerTier, {
     T4: { inflowCap: null, outflowCap: null, next: null },
 }
 
-const passed = (g: GateType): [GateType, GateRecord] => [g, { status: 'passed' }]
 
-function bitmapFor(gates: GateType[]): bigint {
-    return gates.reduce((acc, g) => acc | (1n << BigInt(GATE_BIT_POSITION[g])), 0n)
-}
 
-const T1_GATES: Partial<Record<GateType, GateRecord>> = Object.fromEntries([
-    passed('photo_id'),
-]) as Partial<Record<GateType, GateRecord>>
 
-const T1_BITMAP = bitmapFor(['photo_id'])
-
-const T2_GATES: Partial<Record<GateType, GateRecord>> = Object.fromEntries([
-    passed('photo_id'),
-    passed('proof_of_address'),
-]) as Partial<Record<GateType, GateRecord>>
-
-const T2_BITMAP = bitmapFor(['photo_id', 'proof_of_address'])
 
 function flow(used: number, cap: number | null) {
     if (cap === null) {
@@ -108,10 +91,6 @@ function baseArgs(over: Partial<AccountDialogViewProps>): AccountDialogViewProps
         open: true,
         onOpenChange: noop,
         state: undefined,
-        draw: false,
-        prizePoolContext: undefined,
-        kycGates: {},
-        onChainGates: 0n,
         eth: 0n,
         weth: 0n,
         enteredEurMinor: 0n,
@@ -141,8 +120,6 @@ export const CleanT2: Story = {
             won: 7_500_00,
             largestSingleWin: 7_500_00,
         }),
-        kycGates: T2_GATES,
-        onChainGates: T2_BITMAP,
         enteredEurMinor: 1_200_00n,
         wonEurMinor: 7_500_00n,
         profitEurMinor: 6_300_00n,
@@ -163,7 +140,6 @@ export const NoWinnings_T0Idle: Story = {
             won: 0,
             largestSingleWin: 0,
         }),
-        kycGates: {},
         enteredEurMinor: 50_00n,
         wonEurMinor: 0n,
         profitEurMinor: 0n,
@@ -182,8 +158,6 @@ export const AllClaimable_T1: Story = {
             won: 850_00,
             largestSingleWin: 700_00,
         }),
-        kycGates: T1_GATES,
-        onChainGates: T1_BITMAP,
         enteredEurMinor: 100_00n,
         wonEurMinor: 850_00n,
         profitEurMinor: 750_00n,
@@ -204,7 +178,6 @@ export const CapSplit_T0: Story = {
             largestSingleWin: 1_500_00,
             pendingClaim: 600_00,
         }),
-        kycGates: {},
         enteredEurMinor: 200_00n,
         wonEurMinor: 1_500_00n,
         profitEurMinor: 1_300_00n,
@@ -225,8 +198,6 @@ export const PostT1Release: Story = {
             largestSingleWin: 12_000_00,
             pendingClaim: 3_000_00,
         }),
-        kycGates: T1_GATES,
-        onChainGates: T1_BITMAP,
         enteredEurMinor: 500_00n,
         wonEurMinor: 12_000_00n,
         profitEurMinor: 11_500_00n,
@@ -252,7 +223,6 @@ export const ClaimDecisionRejected: Story = {
             won: 2_500_00,
             largestSingleWin: 2_500_00,
         }),
-        kycGates: {},
         enteredEurMinor: 100_00n,
         wonEurMinor: 2_500_00n,
         profitEurMinor: 2_400_00n,
@@ -273,7 +243,6 @@ export const PendingClaimOnly: Story = {
             largestSingleWin: 1_800_00,
             pendingClaim: 900_00,
         }),
-        kycGates: {},
         enteredEurMinor: 300_00n,
         wonEurMinor: 1_800_00n,
         profitEurMinor: 1_500_00n,
@@ -293,8 +262,6 @@ export const ProximityNudge_T2: Story = {
             won: 0,
             largestSingleWin: 0,
         }),
-        kycGates: T2_GATES,
-        onChainGates: T2_BITMAP,
         enteredEurMinor: 9_500_00n,
         wonEurMinor: 0n,
         profitEurMinor: 0n,

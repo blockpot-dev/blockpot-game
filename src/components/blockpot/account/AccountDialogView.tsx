@@ -4,8 +4,6 @@ import HStack from '@/components/core/HStack/HStack'
 import VStack from '@/components/core/VStack/VStack'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ClaimDecision } from '@/hooks/claim/types'
-import { GateRecord, GateType } from '@/hooks/player/usePlayerKyc'
-import { PrizePoolContext } from '@/hooks/player-summary/usePrizePoolContext'
 import { PlayerActivityState } from '@/hooks/player-summary/usePlayerActivityState'
 import AccountDialogWalletSection from './AccountDialogWalletSection'
 import AccountDialogWalletTab from './AccountDialogWalletTab'
@@ -20,10 +18,6 @@ export type AccountDialogViewProps = {
     stateLoading?: boolean
     /** Refetches the account state after a failed load. */
     onRetryState?: () => void
-    draw: boolean
-    prizePoolContext: PrizePoolContext | undefined
-    kycGates: Partial<Record<GateType, GateRecord>> | undefined
-    onChainGates: bigint
 
     eth: bigint
     weth: bigint
@@ -49,7 +43,7 @@ export type AccountDialogViewProps = {
 export default function AccountDialogView(props: AccountDialogViewProps) {
     const {
         open, onOpenChange,
-        state, stateLoading, onRetryState, draw, prizePoolContext, kycGates, onChainGates,
+        state, stateLoading, onRetryState,
         eth, weth, enteredEurMinor, wonEurMinor, profitEurMinor, isCompliant,
         blockedUntil,
         decision, isClaiming, claimRequestPending, opStatus, opError,
@@ -82,8 +76,6 @@ export default function AccountDialogView(props: AccountDialogViewProps) {
                                 <TabsContent value='wallet'>
                                     <AccountDialogWalletTab
                                         state={state}
-                                        draw={draw}
-                                        prizePoolContext={prizePoolContext}
                                         eth={eth}
                                         weth={weth}
                                         enteredEurMinor={enteredEurMinor}
@@ -104,12 +96,7 @@ export default function AccountDialogView(props: AccountDialogViewProps) {
                                     />
                                 </TabsContent>
                                 <TabsContent value='verification'>
-                                    <AccountDialogVerificationTab
-                                        state={state}
-                                        kycGates={kycGates}
-                                        onChainGates={onChainGates}
-                                        onVerify={onVerify}
-                                    />
+                                    <AccountDialogVerificationTab onVerify={onVerify} />
                                 </TabsContent>
                             </Tabs>
                         )
