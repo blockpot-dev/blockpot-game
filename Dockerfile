@@ -123,6 +123,14 @@ FROM nginx:alpine AS runtime
 # sees with whatever's in the env, blanking unknown ones.
 COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 ENV NGINX_ENVSUBST_FILTER_VARS=PORT
+
+# Pre-launch password gate (see docker/30-basic-auth.sh). Runtime env:
+#   GAME_PASSWORD   set it and every request needs HTTP basic auth; unset it
+#                   and the site is public. No rebuild required.
+#   GAME_USER       basic-auth username (default "blockpot").
+# openssl is only here to apr1-hash the password at container start.
+RUN apk add --no-cache openssl
+COPY docker/30-basic-auth.sh /docker-entrypoint.d/30-basic-auth.sh
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # EXPOSE is informational only — Railway routes traffic to whatever port

@@ -9,6 +9,20 @@ server {
     root   /usr/share/nginx/html;
     index  index.html;
 
+    # Pre-launch password gate. docker/30-basic-auth.sh writes this file at
+    # container start: real auth_basic directives when GAME_PASSWORD is set,
+    # `auth_basic off;` otherwise. Applies to every location below except
+    # /healthz.
+    include /etc/nginx/basic-auth.conf;
+
+    # Railway's healthcheck must not need credentials.
+    location = /healthz {
+        auth_basic off;
+        access_log off;
+        add_header Content-Type text/plain;
+        return 200 "ok";
+    }
+
     # SPA fallback — everything that isn't a static file resolves to
     # index.html so TanStack Router can take over client-side.
     location / {
