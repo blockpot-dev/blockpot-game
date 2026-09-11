@@ -21,8 +21,12 @@ HTPASSWD=/etc/nginx/.htpasswd
 if [ -n "${GAME_PASSWORD:-}" ]; then
   user="${GAME_USER:-blockpot}"
   hash="$(openssl passwd -apr1 "$GAME_PASSWORD")"
-  umask 077
   printf '%s:%s\n' "$user" "$hash" > "$HTPASSWD"
+  # The master runs as root but the workers run as `nginx`, and it is the
+  # workers that open this file per request. Root-only perms give every
+  # authenticated request a 500 (Permission denied in the error log).
+  chown root:nginx "$HTPASSWD"
+  chmod 0640 "$HTPASSWD"
   cat > "$AUTH_CONF" <<CONF
 auth_basic "Blockpot";
 auth_basic_user_file $HTPASSWD;
