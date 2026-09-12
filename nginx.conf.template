@@ -28,6 +28,11 @@ server {
     root   /usr/share/nginx/html;
     index  index.html;
 
+    # Railway terminates TLS and forwards to $PORT, so an absolute redirect
+    # would point browsers at http://host:8080/. Relative keeps the sign-in
+    # redirect on the public https origin.
+    absolute_redirect off;
+
     # Pre-launch password gate. docker/30-basic-auth.sh writes this file
     # (and conf.d/00-gate-maps.conf) at container start: real auth
     # directives when GAME_PASSWORD is set, `auth_basic off;` otherwise.
