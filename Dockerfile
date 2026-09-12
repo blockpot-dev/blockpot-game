@@ -128,9 +128,12 @@ ENV NGINX_ENVSUBST_FILTER_VARS=PORT
 #   GAME_PASSWORD   set it and every request needs HTTP basic auth; unset it
 #                   and the site is public. No rebuild required.
 #   GAME_USER       basic-auth username (default "blockpot").
+# Testers sign in once via ?user=<GAME_USER>&pass=<GAME_PASSWORD>, which
+# sets a session cookie; see docker/30-basic-auth.sh.
 # openssl is only here to apr1-hash the password at container start.
 RUN apk add --no-cache openssl
 COPY docker/30-basic-auth.sh /docker-entrypoint.d/30-basic-auth.sh
+COPY docker/401.html /etc/nginx/gate/__gate.html
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # EXPOSE is informational only — Railway routes traffic to whatever port

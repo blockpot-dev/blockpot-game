@@ -1,3 +1,22 @@
+# While gated ($bp_gated is set to 1 by /etc/nginx/basic-auth.conf), the
+# served index.html has its product copy blanked and a noindex meta added,
+# so a signed-in tester's tab title, share preview or cache says nothing
+# about what this is. Off means the original copy passes through untouched.
+# Search strings live in the sub_filter rules below and must match
+# index.html exactly; update both if the copy there changes.
+map $bp_gated $bp_title_suffix {
+    1       "";
+    default " · Prize draws you can check";
+}
+map $bp_gated $bp_description {
+    1       "";
+    default "Check every draw yourself: the entries, the random seed, the proof, and the settlement are all on-chain. Prizes are claimed straight to your own wallet.";
+}
+map $bp_gated $bp_head_inject {
+    1       '<meta name="robots" content="noindex, nofollow, noarchive">';
+    default "";
+}
+
 server {
     # ${PORT} is substituted by nginx's docker-entrypoint at container start
     # (envsubst). Railway sets PORT to the port its proxy and healthchecker
@@ -9,23 +28,57 @@ server {
     root   /usr/share/nginx/html;
     index  index.html;
 
-    # Pre-launch password gate. docker/30-basic-auth.sh writes this file at
-    # container start: real auth_basic directives when GAME_PASSWORD is set,
-    # `auth_basic off;` otherwise. Applies to every location below except
-    # /healthz.
+    # Pre-launch password gate. docker/30-basic-auth.sh writes this file
+    # (and conf.d/00-gate-maps.conf) at container start: real auth
+    # directives when GAME_PASSWORD is set, `auth_basic off;` otherwise.
+    # Applies to every location below except /healthz and /robots.txt.
     include /etc/nginx/basic-auth.conf;
+
+    # Never index this host. Repeated in every location that sets its own
+    # add_header, because add_header is not inherited once a location
+    # defines one. `always` covers the 401 responses too.
+    add_header X-Robots-Tag "noindex, nofollow, noarchive" always;
+
+    # Neutral 401 page: says nothing about the product. Internal-only so it
+    # cannot be requested directly.
+    error_page 401 /__gate.html;
+    location = /__gate.html {
+        internal;
+        auth_basic off;
+        root /etc/nginx/gate;
+        add_header X-Robots-Tag "noindex, nofollow, noarchive" always;
+    }
 
     # Railway's healthcheck must not need credentials.
     location = /healthz {
         auth_basic off;
         access_log off;
         add_header Content-Type text/plain;
+        add_header X-Robots-Tag "noindex, nofollow, noarchive" always;
         return 200 "ok";
+    }
+
+    # Crawlers may read this without credentials, and it tells them to leave.
+    location = /robots.txt {
+        auth_basic off;
+        add_header Content-Type text/plain;
+        add_header X-Robots-Tag "noindex, nofollow, noarchive" always;
+        return 200 "User-agent: *\nDisallow: /\n";
     }
 
     # SPA fallback — everything that isn't a static file resolves to
     # index.html so TanStack Router can take over client-side.
     location / {
+        # Query-string sign-in for internal testers: ?user=&pass= matching
+        # the gate mints the session cookie and redirects to the same path
+        # with the credentials stripped from the URL. $bp_login is only ever
+        # 1 while the gate is on.
+        if ($bp_login) {
+            add_header Set-Cookie "bp_session=$bp_token; Path=/; Max-Age=43200; HttpOnly; Secure; SameSite=Lax";
+            add_header X-Robots-Tag "noindex, nofollow, noarchive" always;
+            return 302 $uri;
+        }
+        add_header X-Robots-Tag "noindex, nofollow, noarchive" always;
         try_files $uri $uri/ /index.html;
     }
 
@@ -35,6 +88,7 @@ server {
     location ~* "^/(js|assets)/.*-[A-Za-z0-9_-]{8,}\.[^/]+$" {
         expires 1y;
         add_header Cache-Control "public, immutable";
+        add_header X-Robots-Tag "noindex, nofollow, noarchive" always;
         try_files $uri =404;
     }
 
@@ -42,10 +96,16 @@ server {
     # but the URL stays /index.html, so a cached copy would pin the old build.
     location = /index.html {
         add_header Cache-Control "no-store, no-cache, must-revalidate";
+        add_header X-Robots-Tag "noindex, nofollow, noarchive" always;
+        # Gate-aware copy rewrite; see the maps at the top of this file.
+        sub_filter_once off;
+        sub_filter 'Blockpot · Prize draws you can check' 'Blockpot$bp_title_suffix';
+        sub_filter 'Check every draw yourself: the entries, the random seed, the proof, and the settlement are all on-chain. Prizes are claimed straight to your own wallet.' '$bp_description';
+        sub_filter '</head>' '$bp_head_inject</head>';
     }
 
     gzip on;
     gzip_vary on;
     gzip_min_length 1024;
-    gzip_types text/plain text/css text/javascript application/javascript application/json application/xml image/svg+xml;
+    gzip_types text/plain text/css text/javascript application/javascript application/json image/svg+xml;
 }
