@@ -27,8 +27,13 @@ MAPS=/etc/nginx/conf.d/00-gate-maps.conf
 AUTH_CONF=/etc/nginx/basic-auth.conf
 HTPASSWD=/etc/nginx/.htpasswd
 
+# The session-cookie map keys on a 64-char sha256 token, which overflows
+# nginx's default map_hash_bucket_size of 64. The directive must precede
+# the map, and this file sorts first in conf.d/, so it lives here rather
+# than in default.conf.
 if [ -z "${GAME_PASSWORD:-}" ]; then
   cat > "$MAPS" <<CONF
+map_hash_bucket_size 128;
 map \$cookie_bp_session \$bp_realm { default off; }
 map "\$arg_user:\$arg_pass" \$bp_login { default 0; }
 CONF
@@ -68,6 +73,7 @@ chown root:nginx "$HTPASSWD"
 chmod 0640 "$HTPASSWD"
 
 cat > "$MAPS" <<CONF
+map_hash_bucket_size 128;
 # A valid session cookie switches auth_basic off for the request.
 map \$cookie_bp_session \$bp_realm { default "Blockpot"; "$token" off; }
 $login_line

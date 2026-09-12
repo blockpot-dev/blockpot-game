@@ -1,7 +1,3 @@
-# The gate's session-cookie map (conf.d/00-gate-maps.conf) keys on a
-# 64-char sha256 token, which overflows the default bucket size of 64.
-map_hash_bucket_size 128;
-
 # While gated ($bp_gated is set to 1 by /etc/nginx/basic-auth.conf), the
 # served index.html has its product copy blanked and a noindex meta added,
 # so a signed-in tester's tab title, share preview or cache says nothing
